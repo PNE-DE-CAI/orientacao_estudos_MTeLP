@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SP em Ação – Matemática 1 | Gestão de Turma</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root {
+    --vm:  #D0021B; --vm-e: #A00015; --vm-l: #FFF0F1;
+    --az:  #0A1F44; --az-m: #163272; --az-l: #EEF2FA;
+    --pt:  #111111; --pt-m: #333333; --pt-c: #666666;
+    --cl:  #F3F4F8; --bd:   #DCDFE8; --br:   #FFFFFF;
+    --vd:  #138A36; --vd-l: #E6F5EC;
+    --am:  #B8860B; --am-l: #FFF8E1;
+    --sh:  0 4px 20px rgba(10,31,68,.10);
+    --sh2: 0 8px 36px rgba(10,31,68,.16);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Sora',sans-serif;background:var(--cl);color:var(--pt);min-height:100vh}
+
+  /* HEADER */
+  header{background:var(--az);position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.30);border-bottom:3px solid var(--vm)}
+  .h-inner{max-width:1440px;margin:0 auto;padding:9px 24px;display:flex;align-items:center;gap:14px}
+  .h-logo{height:44px;width:auto;border-radius:5px;background:#fff;padding:2px 5px;object-fit:contain;flex-shrink:0}
+  .h-div{width:2px;height:34px;background:rgba(255,255,255,.18);border-radius:2px;flex-shrink:0}
+  .h-txt{flex:1;min-width:0}
+  .h-title{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.2px;line-height:1.2}
+  .h-sub{font-size:10.5px;color:rgba(255,255,255,.55);margin-top:2px}
+  .h-badge{background:var(--vm);color:#fff;font-weight:800;font-size:10px;padding:3px 10px;border-radius:20px;letter-spacing:1.2px;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+  .hvol{background:rgba(255,255,255,.15);color:#fff;font-weight:700;font-size:10px;padding:3px 10px;border-radius:20px;white-space:nowrap}
+  .nav{display:flex;gap:3px;flex-wrap:wrap}
+  .nt{background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);border:none;padding:6px 12px;border-radius:7px;font-family:'Sora',sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap}
+  .nt.active{background:var(--vm);color:#fff}
+  .nt:hover:not(.active){background:rgba(255,255,255,.16);color:#fff}
+
+  /* LAYOUT */
+  .main{max-width:1440px;margin:0 auto;padding:24px}
+  .card{background:#fff;border-radius:14px;box-shadow:var(--sh);padding:22px;margin-bottom:18px;border:1px solid var(--bd)}
+  .ctitle{font-size:12px;font-weight:800;color:var(--vm);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+
+  /* PANELS */
+  .panel{display:none}.panel.active{display:block}
+
+  /* PLANEJ */
+  .pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .bc{border-radius:11px;overflow:hidden;border:2px solid var(--bd)}
+  .bh{background:var(--az);color:#fff;font-weight:800;font-size:11px;padding:9px 13px;text-align:center;text-transform:uppercase;letter-spacing:.5px}
+  .mr{display:flex;justify-content:space-between;align-items:center;padding:7px 13px;border-bottom:1px solid var(--bd);font-size:11.5px}
+  .mr:last-child{border-bottom:none}
+  .mn{font-weight:700;color:var(--vm)}
+  .mi{color:#999;font-family:'DM Mono',monospace;font-size:10px}
+
+  /* TABELAS */
+  .mht{width:100%;border-collapse:collapse;font-size:11.5px}
+  .mht th{background:var(--az);color:#fff;padding:7px 11px;text-align:left;font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px}
+  .mht td{padding:7px 11px;border-bottom:1px solid var(--bd);vertical-align:top}
+  .mht tr:hover td{background:var(--az-l)}
+  .th{display:inline-block;background:var(--az-l);color:var(--az-m);font-family:'DM Mono',monospace;font-size:9.5px;padding:2px 7px;border-radius:20px;margin:1px;font-weight:700}
+  .tn{display:inline-block;background:var(--vm-l);color:var(--vm-e);font-family:'DM Mono',monospace;font-size:9.5px;padding:2px 7px;border-radius:20px;margin:1px;font-weight:700}
+
+  /* EIXOS */
+  .egrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .eblk{border-left:4px solid var(--vm);padding:13px 15px;background:var(--cl);border-radius:0 10px 10px 0}
+  .enome{font-weight:800;font-size:11px;color:var(--az);margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px}
+  .hlist{list-style:none}
+  .hlist li{font-size:11px;padding:3px 0;border-bottom:1px dashed #ddd;color:var(--pt-m);display:flex;gap:8px;line-height:1.4}
+  .hlist li:last-child{border-bottom:none}
+  .hc{font-family:'DM Mono',monospace;font-weight:700;color:var(--vm);min-width:46px;flex-shrink:0}
+
+  /* ESCALA */
+  .etbl{width:100%;border-collapse:collapse;font-size:11px}
+  .etbl th{background:var(--az);color:#fff;padding:7px 11px;text-align:left;font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px}
+  .etbl td{padding:5px 11px;border-bottom:1px solid var(--bd)}
+  .etbl tr:hover td{background:var(--az-l)}
+  .nb{font-weight:800;font-size:9.5px;padding:2px 8px;border-radius:20px;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px}
+  .n0{background:#f5d5d8;color:#7a0010}.n1{background:#fce4e4;color:#900}
+  .n2{background:#fdebd0;color:#7a4400}.n3{background:#fef9e7;color:#5a4800}
+  .n4{background:#e8f5e9;color:#155724}.n5{background:#c8e6c9;color:#0d3b1a}
+  .n6{background:#dce9ff;color:#0a1f44}.n7{background:#b8d4ff;color:#0a1f44}
+  .n8{background:#e1d5f5;color:#2e0070}.n9{background:#c9b8ef;color:#1a003d}
+  .n10{background:#7c3aed;color:#fff}
+
+  /* BNCC */
+  .btbl{width:100%;border-collapse:collapse;font-size:11px}
+  .btbl th{background:var(--az);color:#fff;padding:7px 11px;text-align:left;font-weight:700;font-size:10.5px;text-transform:uppercase}
+  .btbl td{padding:6px 11px;border-bottom:1px solid var(--bd);vertical-align:top}
+  .btbl tr:hover td{background:var(--cl)}
+  .bsaeb{font-family:'DM Mono',monospace;font-weight:800;color:var(--vm);white-space:nowrap;font-size:11.5px}
+  .bcode{font-family:'DM Mono',monospace;font-size:10px;color:var(--az-m);font-weight:600}
+  .brev td{background:var(--am-l)!important}.brev:hover td{background:#fff3c4!important}
+
+  /* TURMA */
+  .agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:13px}
+  .ac{background:#fff;border-radius:12px;padding:15px;border:2px solid var(--bd);transition:all .2s;position:relative}
+  .ac:hover{border-color:var(--vm);box-shadow:var(--sh)}
+  .ac.proficiente{border-left:5px solid var(--vd)}
+  .ac.basico{border-left:5px solid var(--am)}
+  .ac.abaixo{border-left:5px solid var(--vm)}
+  .anh{display:flex;justify-content:space-between;align-items:flex-start;gap:7px}
+  .an{font-weight:700;font-size:13.5px;color:var(--az)}
+  .anum{font-family:'DM Mono',monospace;font-size:10px;color:#bbb;margin-top:1px}
+  .np{font-size:9px;font-weight:800;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;flex-shrink:0}
+  .pp{background:var(--vd-l);color:#0a3d1e}.pb{background:var(--am-l);color:#5a3a00}
+  .pa{background:var(--vm-l);color:var(--vm-e)}.ps{background:var(--cl);color:#999}
+  .ab{margin-top:9px}
+  .sr{margin-bottom:7px}
+  .sr label{font-size:10px;color:#bbb;font-weight:700;display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px}
+  .sr select,.sr input{width:100%;padding:5px 9px;border:1.5px solid var(--bd);border-radius:8px;font-family:'Sora',sans-serif;font-size:11.5px;color:var(--pt);background:var(--cl);transition:border .2s}
+  .sr select:focus,.sr input:focus{outline:none;border-color:var(--vm)}
+  .am2{font-size:10px;color:#bbb;margin-top:3px;line-height:1.4}
+  .brm{position:absolute;top:9px;right:9px;background:none;border:none;color:#ddd;font-size:15px;cursor:pointer;padding:2px 5px;border-radius:4px;line-height:1}
+  .brm:hover{color:var(--vm);background:var(--vm-l)}
+
+  /* BUTTONS */
+  .btn{padding:9px 18px;border-radius:9px;font-family:'Sora',sans-serif;font-weight:700;font-size:12.5px;cursor:pointer;border:none;transition:all .18s;display:inline-flex;align-items:center;gap:6px}
+  .btp{background:var(--vm);color:#fff}.btp:hover{background:var(--vm-e)}
+  .bts{background:var(--az);color:#fff}.bts:hover{background:var(--az-m)}
+  .bto{background:#fff;color:var(--az);border:2px solid var(--az)}.bto:hover{background:var(--az);color:#fff}
+  .btk{background:var(--pt);color:#fff}.btk:hover{background:var(--pt-m)}
+  .bsm{padding:6px 11px;font-size:10.5px;border-radius:7px}
+
+  /* ADD */
+  .addarea{background:var(--cl);border:2px dashed var(--bd);border-radius:11px;padding:18px;margin-bottom:18px}
+  .adr{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+  .adr .sr{flex:1;min-width:140px;margin-bottom:0}
+  .impta{width:100%;min-height:70px;padding:9px;border:1.5px solid var(--bd);border-radius:8px;font-family:'DM Mono',monospace;font-size:11.5px;resize:vertical;margin-top:9px;margin-bottom:5px}
+  .impth{font-size:10.5px;color:#bbb}
+
+  /* SUMARIO */
+  .sbar{display:flex;gap:11px;flex-wrap:wrap;margin-bottom:18px}
+  .sch{background:#fff;border-radius:10px;padding:10px 15px;border:2px solid;display:flex;flex-direction:column;align-items:center;min-width:85px}
+  .scn{font-size:22px;font-weight:900}.scl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#bbb;margin-top:2px}
+  .sc-p{border-color:var(--vd)}.sc-p .scn{color:var(--vd)}
+  .sc-b{border-color:var(--am)}.sc-b .scn{color:var(--am)}
+  .sc-a{border-color:var(--vm)}.sc-a .scn{color:var(--vm)}
+  .sc-t{border-color:var(--az)}.sc-t .scn{color:var(--az)}
+
+  /* AGRUP */
+  .aintro{background:linear-gradient(135deg,var(--az-l),#f0f4ff);border-radius:11px;padding:16px 20px;margin-bottom:18px;border-left:5px solid var(--az)}
+  .aintro p{font-size:12.5px;color:var(--az);line-height:1.65}
+  .aintro strong{color:var(--vm)}
+  .atbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+  .ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+  .gc{background:#fff;border-radius:13px;overflow:hidden;box-shadow:var(--sh);border:2px solid var(--bd)}
+  .gh{background:var(--az);color:#fff;padding:10px 15px;font-weight:800;font-size:12.5px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid var(--vm)}
+  .gn{background:var(--vm);color:#fff;font-size:9.5px;font-weight:800;padding:2px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px}
+  .gb{padding:13px}
+  .gm{display:flex;align-items:flex-start;gap:9px;padding:8px 9px;border-radius:8px;margin-bottom:5px}
+  .gm:last-child{margin-bottom:0}
+  .gm-p{background:var(--vd-l);border-left:3px solid var(--vd)}
+  .gm-b{background:var(--am-l);border-left:3px solid var(--am)}
+  .gm-a{background:var(--vm-l);border-left:3px solid var(--vm)}
+  .mico{font-size:17px;margin-top:1px}
+  .minf{flex:1}
+  .mnome{font-weight:800;font-size:12.5px;color:var(--az)}
+  .mrole{font-size:9px;color:#bbb;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
+  .mdesc{font-size:10.5px;color:var(--pt-m);margin-top:2px;line-height:1.35}
+  .mrec{background:var(--az-l);border-radius:7px;padding:7px 11px;margin-top:9px;font-size:10.5px;color:var(--az-m);border-left:3px solid var(--az)}
+  .mrec strong{color:var(--vm)}
+
+  /* EIXO TABS */
+  .etabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+  .etab{padding:5px 13px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;border:2px solid var(--bd);background:#fff;color:#999;transition:all .18s}
+  .etab.active{background:var(--vm);color:#fff;border-color:var(--vm)}
+  .ecnt{display:none}.ecnt.active{display:block}
+
+  /* SEARCH */
+  .si{padding:7px 13px;border:2px solid var(--bd);border-radius:9px;font-family:'Sora',sans-serif;font-size:12px;width:200px;transition:border .2s}
+  .si:focus{outline:none;border-color:var(--vm)}
+  .fs{padding:7px 13px;border:2px solid var(--bd);border-radius:9px;font-family:'Sora',sans-serif;font-size:12px;background:#fff;color:var(--pt);cursor:pointer}
+  .fs:focus{outline:none;border-color:var(--vm)}
+
+  /* EMPTY */
+  .empty{text-align:center;padding:45px 20px;color:#ccc}
+  .empty .ico{font-size:46px;margin-bottom:11px}
+  .empty p{font-size:13px;line-height:1.6}
+
+  /* MODAL */
+  .moverlay{display:none;position:fixed;inset:0;background:rgba(10,31,68,.55);z-index:1000;align-items:center;justify-content:center}
+  .moverlay.open{display:flex}
+  .modal{background:#fff;border-radius:17px;width:450px;max-width:95vw;max-height:85vh;overflow-y:auto;padding:26px;box-shadow:var(--sh2);border-top:4px solid var(--vm)}
+  .mtitle{font-size:16px;font-weight:900;color:var(--az);margin-bottom:18px}
+  .mfoot{display:flex;gap:9px;justify-content:flex-end;margin-top:18px}
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar{width:5px;height:5px}
+  ::-webkit-scrollbar-track{background:#f0f0f0;border-radius:3px}
+  ::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px}
+  ::-webkit-scrollbar-thumb:hover{background:var(--vm)}
+
+  @media(max-width:768px){
+    .h-inner{flex-direction:column;align-items:flex-start;padding:10px 14px}
+    .pgrid{grid-template-columns:1fr 1fr}
+    .egrid{grid-template-columns:1fr}
+    .main{padding:12px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-inner">
+    <img src="https://i.ibb.co/0p01LzxB/logo3de.jpg" alt="SP em Acao" class="h-logo" onerror="this.style.display='none'">
+    <div class="h-div"></div>
+    <div class="h-txt">
+      <div class="h-title">SP em Ação · Matemática Livro vol.01 Ano EF</div>
+      <div class="h-sub">Manual do Professor · Gestão de Turma · 6º ano e 7º ano  · BNCC</div>
+    </div>
+    <div class="hvol">Vol. 1</div>
+    <div class="h-badge">URE-CAIEIRAS</div>
+    <nav class="nav">
+      <button class="nt active" onclick="switchPanel('planejamento',this)">📅 Planejamento</button>
+      <button class="nt" onclick="switchPanel('habilidades',this)">📚 Habilidades</button>
+      <button class="nt" onclick="switchPanel('escala',this)">📊 Escala Saeb</button>
+      <button class="nt" onclick="switchPanel('bncc',this)">🔗 Saeb × BNCC</button>
+      <button class="nt" onclick="switchPanel('turma',this)">👥 Minha Turma</button>
+      <button class="nt" onclick="switchPanel('agrupamentos',this)">🤝 Agrupamentos</button>
+    </nav>
+  </div>
+</header>
+
+<div class="main">
+<div style="padding:8px 0 4px">
+  <a href="painel.html" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);color:rgba(255,255,255,.55);font-size:10.5px;font-weight:700;padding:5px 14px;border-radius:20px;text-decoration:none;margin-bottom:14px;">← Painel Principal</a></div>
+<!-- PLANEJAMENTO -->
+<div id="panel-planejamento" class="panel active">
+  <div class="card">
+    <div class="ctitle">📅 Planejamento Anual – Distribuição das Missões</div>
+    <p style="font-size:12.5px;color:var(--pt-c);margin-bottom:16px;line-height:1.65">Material complementar ao didático regular. <strong style="color:var(--az)">32 semanas · 4 bimestres · 4 missões por bimestre.</strong> Cada missão = 2 semanas = 4 aulas.</p>
+    <div class="pgrid">
+      <div class="bc"><div class="bh">1º Bimestre</div>
+        <div class="mr"><span class="mn">Missão 1</span><span class="mi">Sem 1–2 · Aulas 1–4</span></div>
+        <div class="mr"><span class="mn">Missão 2</span><span class="mi">Sem 3–4 · Aulas 5–8</span></div>
+        <div class="mr"><span class="mn">Missão 3</span><span class="mi">Sem 5–6 · Aulas 9–12</span></div>
+        <div class="mr"><span class="mn">Missão 4</span><span class="mi">Sem 7–8 · Aulas 13–16</span></div>
+      </div>
+      <div class="bc"><div class="bh">2º Bimestre</div>
+        <div class="mr"><span class="mn">Missão 5</span><span class="mi">Sem 9–10 · Aulas 17–20</span></div>
+        <div class="mr"><span class="mn">Missão 6</span><span class="mi">Sem 11–12 · Aulas 21–24</span></div>
+        <div class="mr"><span class="mn">Missão 7</span><span class="mi">Sem 13–14 · Aulas 25–28</span></div>
+        <div class="mr"><span class="mn">Missão 8</span><span class="mi">Sem 15–16 · Aulas 29–32</span></div>
+      </div>
+      <div class="bc"><div class="bh">3º Bimestre</div>
+        <div class="mr"><span class="mn">Missão 9</span><span class="mi">Sem 17–18 · Aulas 33–36</span></div>
+        <div class="mr"><span class="mn">Missão 10</span><span class="mi">Sem 19–20 · Aulas 37–40</span></div>
+        <div class="mr"><span class="mn">Missão 11</span><span class="mi">Sem 21–22 · Aulas 41–44</span></div>
+        <div class="mr"><span class="mn">Missão 12</span><span class="mi">Sem 23–24 · Aulas 45–48</span></div>
+      </div>
+      <div class="bc"><div class="bh">4º Bimestre</div>
+        <div class="mr"><span class="mn">Missão 13</span><span class="mi">Sem 25–26 · Aulas 49–52</span></div>
+        <div class="mr"><span class="mn">Missão 14</span><span class="mi">Sem 27–28 · Aulas 53–56</span></div>
+        <div class="mr"><span class="mn">Missão 15</span><span class="mi">Sem 29–30 · Aulas 57–60</span></div>
+        <div class="mr"><span class="mn">Missão 16</span><span class="mi">Sem 31–32 · Aulas 61–64</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle">🎯 Missões × Habilidades do Saeb</div>
+    <div style="overflow-x:auto"><table class="mht"><thead><tr><th>Missão</th><th>Habilidades Saeb</th><th>Níveis</th><th>Foco Principal</th></tr></thead><tbody id="mtbody"></tbody></table></div>
+  </div>
+</div>
+
+<!-- HABILIDADES -->
+<div id="panel-habilidades" class="panel">
+  <div class="card">
+    <div class="ctitle">📚 Matriz de Referência do Saeb – Eixos do Conhecimento</div>
+    <div class="etabs" id="etabs"></div>
+    <div id="ecnts"></div>
+  </div>
+</div>
+
+<!-- ESCALA -->
+<div id="panel-escala" class="panel">
+  <div class="card">
+    <div class="ctitle">📊 Escala de Proficiência do Saeb – Matemática – 5º ano</div>
+    <p style="font-size:12.5px;color:var(--pt-c);margin-bottom:14px">Foco deste volume: <strong style="color:var(--vm)">níveis 1 a 6</strong>. Itens associados a cada atividade no boxe "De olho no Saeb".</p>
+    <div style="overflow-x:auto;max-height:68vh;overflow-y:auto"><table class="etbl" id="etable"></table></div>
+  </div>
+</div>
+
+<!-- BNCC -->
+<div id="panel-bncc" class="panel">
+  <div class="card">
+    <div class="ctitle">🔗 Articulação entre Saeb e BNCC</div>
+    <p style="font-size:12.5px;color:var(--pt-c);margin-bottom:5px">Articulação das habilidades da Matriz do Saeb (2019) com as habilidades da BNCC para os Anos Iniciais.</p>
+    <p style="font-size:11.5px;color:#aaa;margin-bottom:14px"><span style="background:var(--am-l);padding:2px 7px;border-radius:4px;font-weight:700;color:var(--am)">Fundo amarelo</span> = habilidades de anos anteriores retomadas neste volume.</p>
+    <div class="etabs" id="btabs"></div>
+    <div style="overflow-x:auto"><table class="btbl"><thead><tr><th style="width:85px">Saeb</th><th>Habilidade BNCC</th></tr></thead><tbody id="bbody"></tbody></table></div>
+  </div>
+</div>
+
+<!-- TURMA -->
+<div id="panel-turma" class="panel">
+  <div class="card">
+    <div class="ctitle">➕ Adicionar Estudantes</div>
+    <div class="addarea">
+      <div class="adr">
+        <div class="sr"><label>Nome do estudante</label><input type="text" id="inp-nome" placeholder="Ex: Ana Silva" onkeydown="if(event.key==='Enter')addAluno()"></div>
+        <div class="sr"><label>Ano/Série atual</label>
+          <select id="inp-serie"><option value="1">1º ano EF</option><option value="2">2º ano EF</option><option value="3">3º ano EF</option><option value="4">4º ano EF</option><option value="5" selected>5º ano EF</option><option value="6">6º ano EF</option></select>
+        </div>
+        <div class="sr"><label>Missão atual</label>
+          <select id="inp-missao"><option value="">– não definida –</option></select>
+        </div>
+        <div class="sr"><label>Etapa atual</label>
+          <select id="inp-etapa"><option value="">– não definida –</option><option value="1">Etapa 01</option><option value="2">Etapa 02</option><option value="3">Etapa 03</option><option value="4">Etapa 04</option></select>
+        </div>
+        <button class="btn btp" onclick="addAluno()">+ Adicionar</button>
+      </div>
+      <div style="margin-top:12px;border-top:1px solid #ddd;padding-top:12px">
+        <div style="font-size:10.5px;font-weight:800;color:#bbb;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px">📋 Importar lista (um nome por linha, máx. 45):</div>
+        <textarea class="impta" id="import-area" placeholder="Ana Silva&#10;Bruno Costa&#10;Carla Mendes&#10;..."></textarea>
+        <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap">
+          <button class="btn bts bsm" onclick="importarLista()">📥 Importar Lista</button>
+          <span class="impth">Configure Série e Missão em cada card após importar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="sbar" class="sbar" style="display:none"></div>
+  <div class="card" style="padding-bottom:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:9px;margin-bottom:14px">
+      <div class="ctitle" style="margin-bottom:0">👥 Estudantes <span id="cbadge" style="font-size:11px;color:#ccc;font-weight:400">(0/45)</span></div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <input type="text" class="si" id="search-aluno" placeholder="🔍 Buscar..." oninput="renderTurma()">
+        <select class="fs" id="filter-nivel" onchange="renderTurma()">
+          <option value="">Todos os níveis</option>
+          <option value="proficiente">✅ Proficiente</option>
+          <option value="basico">⚠️ Básico</option>
+          <option value="abaixo">❌ Abaixo do Básico</option>
+        </select>
+        <button class="btn bto bsm" onclick="limparTurma()">🗑 Limpar</button>
+      </div>
+    </div>
+    <div id="agrid" class="agrid"><div class="empty"><div class="ico">🎒</div><p>Nenhum estudante adicionado ainda.<br>Adicione individualmente ou importe uma lista.</p></div></div>
+  </div>
+</div>
+
+<!-- AGRUPAMENTOS -->
+<div id="panel-agrupamentos" class="panel">
+  <div class="aintro">
+    <p><strong>Agrupamentos Produtivos</strong> baseados na Zona de Desenvolvimento Proximal (Vygotsky).<br>
+    <strong>🌟 Monitor (Proficiente)</strong> orienta o <strong>📘 Par (Básico)</strong>, que apoia o <strong>🌱 Aprendente (Abaixo do Básico)</strong>.<br>
+    A linguagem entre pares reduz a barreira da vergonha e potencializa a recomposição de aprendizagens.</p>
+  </div>
+  <div class="atbar">
+    <button class="btn btk" onclick="exportarPDF()">📄 Baixar PDF dos Agrupamentos</button>
+    <span id="pdfst" style="font-size:12px;color:#aaa"></span>
+  </div>
+  <div id="agrup-area"><div class="empty card"><div class="ico">🤝</div><p>Cadastre estudantes na aba "Minha Turma" e configure o Ano/Série.<br>Os agrupamentos serão gerados automaticamente aqui.</p></div></div>
+</div>
+
+</div><!-- /main -->
+
+<!-- MODAL -->
+<div class="moverlay" id="moverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="mtitle">✏️ Editar Estudante</div>
+    <div class="sr"><label>Nome</label><input type="text" id="mnome"></div>
+    <div class="sr" style="margin-top:9px"><label>Ano/Série</label>
+      <select id="mserie"><option value="1">1º ano EF</option><option value="2">2º ano EF</option><option value="3">3º ano EF</option><option value="4">4º ano EF</option><option value="5">5º ano EF</option><option value="6">6º ano EF</option></select>
+    </div>
+    <div class="sr" style="margin-top:9px"><label>Missão</label>
+      <select id="mmissao"><option value="">– não definida –</option></select>
+    </div>
+    <div class="sr" style="margin-top:8px"><label>Etapa atual</label>
+      <select id="metapa"><option value="">– não definida –</option><option value="1">Etapa 01</option><option value="2">Etapa 02</option><option value="3">Etapa 03</option><option value="4">Etapa 04</option></select>
+    </div>
+    <div class="mfoot">
+      <button class="btn bto" onclick="closeModal()">Cancelar</button>
+      <button class="btn btp" onclick="saveModal()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────
+const MD = [
+  {n:1,h:['5G1.1','5G1.2','5G2.1'],nv:['N3.1'],f:'Geometria · Localização e deslocamento'},
+  {n:2,h:['5G1.6','5G1.7','5G2.2'],nv:['N3.2','N3.3'],f:'Geometria · Figuras planas'},
+  {n:3,h:['5G1.3','5G1.4','5G1.5','5M1.4'],nv:['N4.2','N5.2'],f:'Geometria · Figuras espaciais e planificações'},
+  {n:4,h:['5A2.1','5A2.2','5G1.9','5M2.3','5M2.4'],nv:['N1.1','N5.3','N6.5'],f:'Álgebra · Proporcionalidade · Área e Perímetro'},
+  {n:5,h:['5N1.1','5N1.2','5N1.4','5N2.1','5N2.2'],nv:['N4.14','N4.17','N5.16','N5.18','N6.13','N6.18','N6.20'],f:'Números · Naturais e valor posicional'},
+  {n:6,h:['5N1.5','5N1.6','5N2.1','5A1.5','5A1.6'],nv:['N2.1','N4.10','N4.11','N5.8','N5.11'],f:'Números · Adição, subtração e equações'},
+  {n:7,h:['5N1.6','5N2.2','5N2.6','5A1.5','5A1.6'],nv:['N4.8','N4.12','N4.13','N5.10','N5.13','N6.8','N6.9','N6.19','N6.21'],f:'Números · Multiplicação, divisão e combinatória'},
+  {n:8,h:['5M1.5','5M2.2','5M2.5'],nv:['N3.5','N4.4','N4.5','N4.6','N4.7','N5.4','N5.5','N6.2','N6.3','N6.4'],f:'Grandezas · Tempo e medidas'},
+  {n:9,h:['5M1.2','5M2.1','5M2.2'],nv:['N5.7','N7.6','N7.7','N7.8','N8.8'],f:'Grandezas · Comprimento, capacidade e massa'},
+  {n:10,h:['5M1.3','5M2.3'],nv:['N7.3'],f:'Grandezas · Perímetro'},
+  {n:11,h:['5N2.2','5M1.3','5M2.4'],nv:['N1.1','N5.3','N6.6'],f:'Grandezas · Área'},
+  {n:12,h:['5N2.1','5N2.3','5E1.2','5E1.3','5E1.4','5E1.5','5E1.6','5E2.1','5E2.2'],nv:['N2.2','N3.8','N3.9','N4.19','N4.20','N6.22','N6.23'],f:'Estatística · Tabelas e gráficos'},
+  {n:13,h:['5N1.1','5N1.8','5N1.9','5N2.3','5N2.7','5E2.3'],nv:['N3.6','N4.15','N5.17','N6.7','N6.14'],f:'Números · Frações e porcentagens'},
+  {n:14,h:['5N2.3','5N2.4','5M1.6','5M2.6'],nv:['N3.4','N3.7','N4.3','N4.8','N5.6','N5.9','N5.12','N6.16','N6.17'],f:'Números · Sistema monetário'},
+  {n:15,h:['5N2.7','5M2.6'],nv:['N4.16','N6.10','N6.11','N6.12'],f:'Números · Porcentagens e finanças'},
+  {n:16,h:['5N1.3','5A1.1','5A1.2','5A1.3'],nv:['N4.9','N4.18','N5.14','N5.15','N6.15'],f:'Álgebra · Sequências e reta numérica'},
+];
+const EIXOS=[
+  {id:'num',nome:'I. Números',
+   c1:[{c:'5N1.1',d:'Escrever números racionais (naturais até 6 ordens, fracionária ou decimal até milésimos) em algarismos ou língua materna.'},{c:'5N1.2',d:'Identificar a ordem ou valor posicional de um algarismo em número natural até 6 ordens.'},{c:'5N1.3',d:'Comparar ou ordenar números racionais (até 6 ordens, fracionária ou decimal até milésimos), com/sem reta numérica.'},{c:'5N1.4',d:'Compor ou decompor números naturais até 6 ordens na forma aditiva, em ordens ou em adições e multiplicações.'},{c:'5N1.5',d:'Calcular o resultado de adições ou subtrações envolvendo números naturais até 6 ordens.'},{c:'5N1.6',d:'Calcular o resultado de multiplicações ou divisões envolvendo números naturais até 6 ordens.'},{c:'5N1.8',d:'Representar frações menores ou maiores que a unidade via representações pictóricas.'},{c:'5N1.9',d:'Identificar frações equivalentes.'}],
+   c2:[{c:'5N2.1',d:'Resolver problemas de adição ou subtração (naturais até 6 ordens): juntar, acrescentar, separar, retirar, comparar ou completar.'},{c:'5N2.2',d:'Resolver problemas de multiplicação ou divisão (naturais até 6 ordens): grupos iguais, proporcionalidade, disposição retangular.'},{c:'5N2.3',d:'Resolver problemas de adição ou subtração com decimais finitos até milésimos.'},{c:'5N2.4',d:'Resolver problemas de multiplicação ou divisão com decimais finitos até milésimos.'},{c:'5N2.6',d:'Resolver problemas simples de contagem (combinatória).'},{c:'5N2.7',d:'Resolver problemas com 10%, 25%, 50%, 75% e 100%.'}]},
+  {id:'alg',nome:'II. Álgebra',
+   c1:[{c:'5A1.1',d:'Inferir ou descrever atributos/propriedades comuns de uma sequência recursiva de números naturais.'},{c:'5A1.2',d:'Inferir o padrão ou regularidade de uma sequência de números naturais ordenados, objetos ou figuras.'},{c:'5A1.3',d:'Inferir os elementos ausentes em uma sequência de números naturais ordenados, objetos ou figuras.'},{c:'5A1.5',d:'Determinar o número desconhecido que torna verdadeira uma igualdade com operações fundamentais (até 6 ordens).'},{c:'5A1.6',d:'Identificar/inferir a equação que modela um problema envolvendo as quatro operações.'}],
+   c2:[{c:'5A2.1',d:'Resolver problemas que envolvam variação de proporcionalidade direta entre duas grandezas.'},{c:'5A2.2',d:'Resolver problemas que envolvam a partilha de uma quantidade em duas partes proporcionais.'}]},
+  {id:'geo',nome:'III. Geometria',
+   c1:[{c:'5G1.1',d:'Identificar localização ou descrição/esboço do deslocamento em representações bidimensionais (mapas, croquis).'},{c:'5G1.2',d:'Interpretar ou descrever localização/movimentação no plano cartesiano (1º quadrante).'},{c:'5G1.3',d:'Reconhecer/nomear figuras geométricas espaciais (prismas, pirâmides, cilindros, cones, esferas).'},{c:'5G1.4',d:'Reconhecer/nomear, contar ou comparar elementos de figuras espaciais (vértice, aresta, face, base).'},{c:'5G1.5',d:'Relacionar figuras espaciais a suas planificações.'},{c:'5G1.6',d:'Reconhecer/nomear figuras geométricas planas (polígonos, circunferência, círculo).'},{c:'5G1.7',d:'Reconhecer/nomear, contar ou comparar elementos de figuras planas.'},{c:'5G1.9',d:'Reconhecer congruência dos ângulos e proporcionalidade entre lados em ampliação/redução em malhas.'}],
+   c2:[{c:'5G2.1',d:'Descrever ou esboçar deslocamento em representações bidimensionais ou plantas de ambientes.'},{c:'5G2.2',d:'Construir/desenhar figuras geométricas planas ou espaciais que satisfaçam condições dadas.'}]},
+  {id:'med',nome:'IV. Grandezas',
+   c1:[{c:'5M1.2',d:'Estimar/inferir ou medir comprimento, capacidade ou massa, com unidades convencionais ou não.'},{c:'5M1.3',d:'Medir ou comparar perímetro ou área de figuras planas em malha quadriculada.'},{c:'5M1.4',d:'Reconhecer volume como grandeza de sólidos geométricos ou medir volumes por empilhamento de cubos.'},{c:'5M1.5',d:'Identificar horas em relógios analógicos ou associar horas em relógios analógicos e digitais.'},{c:'5M1.6',d:'Relacionar valores de moedas e/ou cédulas do sistema monetário brasileiro.'}],
+   c2:[{c:'5M2.1',d:'Explicar que o resultado de uma medida depende da unidade de medida utilizada.'},{c:'5M2.2',d:'Resolver problemas com medidas de grandezas com conversões entre unidades usuais.'},{c:'5M2.3',d:'Resolver problemas que envolvam perímetro de figuras planas.'},{c:'5M2.4',d:'Resolver problemas que envolvam área de figuras planas.'},{c:'5M2.5',d:'Determinar o horário de início, término ou duração de um acontecimento.'},{c:'5M2.6',d:'Resolver problemas que envolvam moedas e/ou cédulas do sistema monetário brasileiro.'}]},
+  {id:'est',nome:'V. Estatística',
+   c1:[{c:'5E1.2',d:'Ler/identificar ou comparar dados estatísticos em tabelas.'},{c:'5E1.3',d:'Ler/identificar ou comparar dados em gráficos (barras, colunas, pictóricos ou linhas).'},{c:'5E1.4',d:'Identificar indivíduos, variáveis ou tipos de variáveis em um conjunto de dados.'},{c:'5E1.5',d:'Representar ou associar dados de pesquisa em listas, tabelas ou gráficos.'},{c:'5E1.6',d:'Inferir a finalidade de uma pesquisa estatística a partir de tabela ou gráfico.'}],
+   c2:[{c:'5E2.1',d:'Resolver problemas que envolvam dados apresentados em tabelas ou gráficos estatísticos.'},{c:'5E2.2',d:'Argumentar ou analisar argumentações/conclusões com base em tabelas ou gráficos.'},{c:'5E2.3',d:'Determinar a probabilidade de um resultado em eventos aleatórios equiprováveis.'}]},
+];
+const ESCALA=[
+  {n:'Nível 0',r:'< 125',cls:'n0',it:[{c:'–',d:'Não avaliado. Estudantes abaixo de 125 requerem atenção especial.'}]},
+  {n:'Nível 1',r:'125–149',cls:'n1',it:[{c:'N1.1',d:'Determinar a área de figuras desenhadas em malhas quadriculadas por meio de contagem.'}]},
+  {n:'Nível 2',r:'150–174',cls:'n2',it:[{c:'N2.1',d:'Resolver problemas do cotidiano envolvendo adição de pequenas quantias de dinheiro.'},{c:'N2.2',d:'Localizar informações relativas ao maior ou menor elemento em tabelas ou gráficos.'}]},
+  {n:'Nível 3',r:'175–199',cls:'n3',it:[{c:'N3.1',d:'Localizar ponto ou objeto em malha quadriculada a partir de duas coordenadas.'},{c:'N3.2',d:'Reconhecer dentre polígonos aquele com maior número de ângulos.'},{c:'N3.3',d:'Associar figuras geométricas elementares a seus nomes.'},{c:'N3.4',d:'Converter uma quantia (unidades de real) em seu equivalente em moedas.'},{c:'N3.5',d:'Determinar o horário final de um evento a partir do início e intervalo (horas inteiras).'},{c:'N3.6',d:'Associar a fração 1/4 a uma de suas representações gráficas.'},{c:'N3.7',d:'Determinar o resultado da subtração de decimais no contexto do sistema monetário.'},{c:'N3.8',d:'Reconhecer o maior valor em tabela de dupla entrada com dados de até duas ordens.'},{c:'N3.9',d:'Reconhecer informações em gráfico de colunas duplas.'}]},
+  {n:'Nível 4',r:'200–224',cls:'n4',it:[{c:'N4.2',d:'Reconhecer a planificação de uma pirâmide.'},{c:'N4.3',d:'Determinar o total de uma quantia a partir de moedas de 25 e/ou 50 centavos.'},{c:'N4.4',d:'Determinar a duração de evento cujos horários inicial e final estão em minutos diferentes de uma mesma hora.'},{c:'N4.5',d:'Converter uma hora em minutos.'},{c:'N4.6',d:'Converter mais de uma semana inteira em dias.'},{c:'N4.7',d:'Interpretar horas em relógios de ponteiros.'},{c:'N4.8',d:'Determinar resultado de multiplicação de naturais por valores monetários e posterior adição.'},{c:'N4.9',d:'Determinar os termos desconhecidos em sequência numérica de múltiplos de cinco.'},{c:'N4.10',d:'Determinar a adição, com reserva, de até três números naturais com até quatro ordens.'},{c:'N4.11',d:'Determinar a subtração de números naturais usando a noção de completar.'},{c:'N4.12',d:'Determinar a multiplicação de número natural de até três ordens por cinco, com reserva.'},{c:'N4.13',d:'Determinar a divisão exata por números de um algarismo.'},{c:'N4.14',d:'Reconhecer o princípio do valor posicional do Sistema de Numeração Decimal.'},{c:'N4.15',d:'Reconhecer uma fração como relação parte-todo, com apoio de até cinco figuras.'},{c:'N4.16',d:'Associar a metade de um total ao seu equivalente em porcentagem.'},{c:'N4.17',d:'Associar um número natural à sua decomposição expressa por extenso.'},{c:'N4.18',d:'Localizar número em reta numérica graduada.'},{c:'N4.19',d:'Reconhecer o maior valor em tabela cujos dados possuem até oito ordens.'},{c:'N4.20',d:'Localizar um dado em tabelas de dupla entrada.'}]},
+  {n:'Nível 5',r:'225–249',cls:'n5',it:[{c:'N5.2',d:'Reconhecer a planificação de um cubo.'},{c:'N5.3',d:'Determinar a área de um terreno retangular representado em malha quadriculada.'},{c:'N5.4',d:'Determinar o horário final de evento a partir do início (horas e minutos) e intervalo superior a uma hora.'},{c:'N5.5',d:'Converter mais de uma hora inteira em minutos.'},{c:'N5.6',d:'Converter quantia em moedas de 5, 25 e 50 centavos e 1 real em cédulas.'},{c:'N5.7',d:'Estimar a altura de um objeto com referência a régua graduada em centímetros.'},{c:'N5.8',d:'Determinar o resultado da subtração (com recursos à ordem superior) entre naturais até cinco ordens.'},{c:'N5.10',d:'Determinar o resultado da divisão de naturais com resto, por número de uma ordem.'},{c:'N5.11',d:'Resolver problemas envolvendo análise do algoritmo da adição.'},{c:'N5.12',d:'Resolver problemas no sistema monetário envolvendo adição e subtração.'},{c:'N5.13',d:'Resolver problemas com a metade e o triplo de números naturais.'},{c:'N5.16',d:'Reconhecer o valor posicional do algarismo na 4ª ordem de um número natural.'},{c:'N5.17',d:'Reconhecer fração como relação parte-todo, com apoio de polígono dividido em oito partes ou mais.'},{c:'N5.18',d:'Associar um número natural às suas ordens e vice-versa.'}]},
+  {n:'Nível 6',r:'250–274',cls:'n6',it:[{c:'N6.2',d:'Determinar a duração de evento a partir dos horários de início e término (horas e minutos) sem coincidência.'},{c:'N6.3',d:'Converter duração de intervalo de tempo (horas e minutos) para minutos.'},{c:'N6.4',d:'Resolver problemas com intervalos de tempo em meses, passando pelo final do ano.'},{c:'N6.5',d:'Reconhecer que quanto maior o ladrilho, menor a quantidade para cobrir uma região.'},{c:'N6.6',d:'Reconhecer o m² como unidade de medida de área.'},{c:'N6.7',d:'Determinar o resultado da diferença entre dois números racionais na forma decimal.'},{c:'N6.8',d:'Determinar o resultado da multiplicação de número natural de uma ordem por outro de até três ordens (proporcionalidade).'},{c:'N6.9',d:'Determinar o resultado da divisão exata entre dois naturais (divisor até quatro).'},{c:'N6.10',d:'Determinar 50% de um número natural com até três ordens.'},{c:'N6.11',d:'Determinar porcentagens simples (25%, 50%).'},{c:'N6.12',d:'Associar a metade de um total a equivalente em fração ou porcentagem.'},{c:'N6.13',d:'Associar números naturais à quantidade de agrupamentos de 1.000.'},{c:'N6.14',d:'Reconhecer uma fração como relação parte-todo, sem apoio de figuras.'},{c:'N6.22',d:'Interpretar dados em uma tabela simples.'},{c:'N6.23',d:'Comparar dados representados pelas alturas de colunas em um gráfico.'}]},
+];
+const BNCC=[
+  {eixo:'I. Números',items:[
+    {s:'5N1.1\n5N1.2',b:'EF05MA01',d:'Ler, escrever e ordenar números naturais até centenas de milhar com compreensão das características do sistema de numeração decimal.',r:false},
+    {s:'5N1.3',b:'EF05MA02',d:'Ler, escrever e ordenar números racionais na forma decimal, usando composição, decomposição e reta numérica.',r:false},
+    {s:'5N1.4',b:'EF04MA02',d:'Mostrar por decomposição e composição que todo número natural pode ser escrito por meio de adições e multiplicações por potências de dez.',r:true},
+    {s:'5N1.5\n5N1.6',b:'EF04MA04\nEF04MA05',d:'Utilizar relações entre adição/subtração e multiplicação/divisão para ampliar estratégias de cálculo. Utilizar propriedades das operações para desenvolver estratégias de cálculo.',r:true},
+    {s:'5N1.8',b:'EF05MA03',d:'Identificar e representar frações (menores e maiores que a unidade), associando-as ao resultado de uma divisão ou à parte de um todo.',r:false},
+    {s:'5N1.9',b:'EF05MA04',d:'Identificar frações equivalentes.',r:false},
+    {s:'5N2.1',b:'EF05MA07',d:'Resolver e elaborar problemas de adição e subtração com naturais e racionais (decimal finita), usando estratégias diversas.',r:false},
+    {s:'5N2.2',b:'EF05MA08',d:'Resolver e elaborar problemas de multiplicação e divisão com naturais e racionais (decimal finita), usando estratégias diversas.',r:false},
+    {s:'5N2.6',b:'EF05MA09',d:'Resolver e elaborar problemas simples de contagem envolvendo o princípio multiplicativo.',r:false},
+    {s:'5N2.7',b:'EF05MA06',d:'Associar 10%, 25%, 50%, 75% e 100% à décima parte, quarta parte, metade, três quartos e inteiro.',r:false},
+  ]},
+  {eixo:'II. Álgebra',items:[
+    {s:'5A1.1',b:'EF04MA11\nEF03MA10',d:'Identificar regularidades em sequências numéricas de múltiplos. Identificar regularidades em sequências resultantes de adições ou subtrações sucessivas.',r:true},
+    {s:'5A1.2\n5A1.3',b:'–',d:'Alinhadas à BNCC, porém sem associação direta com uma habilidade específica.',r:false},
+    {s:'5A1.5',b:'EF04MA15',d:'Determinar o número desconhecido que torna verdadeira uma igualdade com operações fundamentais com números naturais.',r:true},
+    {s:'5A1.6',b:'EF05MA11',d:'Resolver e elaborar problemas cuja conversão em sentença matemática seja uma igualdade com um termo desconhecido.',r:false},
+    {s:'5A2.1',b:'EF05MA12',d:'Resolver problemas que envolvam variação de proporcionalidade direta entre duas grandezas.',r:false},
+    {s:'5A2.2',b:'EF05MA13',d:'Resolver problemas envolvendo partilha de uma quantidade em duas partes desiguais, com compreensão da ideia de razão.',r:false},
+  ]},
+  {eixo:'III. Geometria',items:[
+    {s:'5G1.1',b:'EF04MA16',d:'Descrever deslocamentos e localização de pessoas e objetos por meio de malhas, mapas e croquis.',r:true},
+    {s:'5G1.2',b:'EF05MA15',d:'Interpretar, descrever e representar localização ou movimentação no plano cartesiano (1º quadrante).',r:false},
+    {s:'5G1.3',b:'EF03MA13',d:'Associar figuras geométricas espaciais a objetos do mundo físico e nomeá-las.',r:true},
+    {s:'5G1.5',b:'EF05MA16',d:'Associar figuras espaciais a suas planificações e analisar, nomear e comparar seus atributos.',r:false},
+    {s:'5G1.6',b:'EF03MA15',d:'Classificar e comparar figuras planas em relação a seus lados e vértices.',r:true},
+    {s:'5G1.7',b:'EF05MA17',d:'Reconhecer, nomear e comparar polígonos considerando lados, vértices e ângulos.',r:false},
+    {s:'5G1.9',b:'EF05MA18',d:'Reconhecer a congruência dos ângulos e proporcionalidade entre lados correspondentes em ampliação e redução em malhas.',r:false},
+    {s:'5G2.1',b:'EF03MA12',d:'Descrever e representar por meio de esboços de trajetos ou croquis a movimentação de pessoas/objetos.',r:true},
+  ]},
+  {eixo:'IV. Grandezas',items:[
+    {s:'5M1.2',b:'EF03MA19\nEF03MA20',d:'Estimar, medir e comparar comprimentos (metro, cm, mm). Estimar e medir capacidade e massa.',r:true},
+    {s:'5M1.3',b:'EF04MA20\nEF04MA21',d:'Medir e estimar comprimentos incluindo perímetros. Medir, comparar e estimar área de figuras planas em malha quadriculada.',r:true},
+    {s:'5M1.4',b:'EF05MA21',d:'Reconhecer volume como grandeza de sólidos geométricos e medir volumes por empilhamento de cubos.',r:false},
+    {s:'5M1.5',b:'EF03MA23',d:'Ler horas em relógios digitais e analógicos e reconhecer a relação entre hora/minuto e minuto/segundo.',r:true},
+    {s:'5M2.1',b:'EF03MA17',d:'Reconhecer que o resultado de uma medida depende da unidade de medida utilizada.',r:true},
+    {s:'5M2.2',b:'EF05MA19',d:'Resolver e elaborar problemas envolvendo medidas de grandezas com transformações entre unidades usuais.',r:false},
+    {s:'5M2.5',b:'EF04MA22',d:'Ler e registrar medidas e intervalos de tempo em horas, minutos e segundos.',r:true},
+    {s:'5M2.6',b:'EF04MA25',d:'Resolver e elaborar problemas que envolvam situações de compra e venda e formas de pagamento.',r:true},
+  ]},
+  {eixo:'V. Estatística',items:[
+    {s:'5E1.2\n5E1.3',b:'EF04MA27',d:'Analisar dados em tabelas e gráficos e produzir texto com síntese de análise.',r:true},
+    {s:'5E1.6',b:'EF05MA25',d:'Realizar pesquisa com variáveis categóricas e numéricas, organizar dados em tabelas e gráficos.',r:false},
+    {s:'5E2.1',b:'EF03MA26',d:'Resolver problemas cujos dados estão em tabelas de dupla entrada, gráficos de barras ou de colunas.',r:true},
+    {s:'5E2.2',b:'EF05MA24',d:'Interpretar dados estatísticos em textos, tabelas e gráficos e produzir textos com síntese de conclusões.',r:false},
+    {s:'5E2.3',b:'EF05MA23',d:'Determinar a probabilidade de ocorrência de um resultado em eventos aleatórios equiprováveis.',r:false},
+  ]},
+];
+
+// ── STATE ──
+let alunos=[], editingId=null;
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded',()=>{
+  populateMissaoSelects();
+  renderMissoes();
+  renderHabilidades();
+  renderEscala();
+  renderBNCC();
+  renderTurma();
+});
+
+function populateMissaoSelects(){
+  ['inp-missao','mmissao'].forEach(id=>{
+    const s=document.getElementById(id);
+    if(!s)return;
+    MD.forEach(m=>{ const o=document.createElement('option'); o.value=m.n; o.textContent=`Missão ${m.n} – ${m.f.split('·')[0].trim()}`; s.appendChild(o); });
+  });
+}
+
+// ── NAV ──
+function switchPanel(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nt').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(id==='agrupamentos')renderAgrupamentos();
+}
+
+// ── PLANEJ ──
+function renderMissoes(){
+  document.getElementById('mtbody').innerHTML=MD.map(m=>`<tr>
+    <td><strong style="color:var(--az)">Missão ${m.n}</strong></td>
+    <td>${m.h.map(h=>`<span class="th">${h}</span>`).join('')}</td>
+    <td>${m.nv.map(n=>`<span class="tn">${n}</span>`).join('')}</td>
+    <td style="font-size:11.5px;color:var(--pt-m)">${m.f}</td>
+  </tr>`).join('');
+}
+
+// ── HABILIDADES ──
+function renderHabilidades(){
+  document.getElementById('etabs').innerHTML=EIXOS.map((e,i)=>`<button class="etab ${i===0?'active':''}" onclick="switchEixo('${e.id}',this)">${e.nome}</button>`).join('');
+  document.getElementById('ecnts').innerHTML=EIXOS.map((e,i)=>`
+    <div class="ecnt ${i===0?'active':''}" id="ec-${e.id}">
+      <div class="egrid">
+        <div class="eblk"><div class="enome">Eixo Cognitivo I – Compreender e Aplicar</div>
+          <ul class="hlist">${e.c1.map(h=>`<li><span class="hc">${h.c}</span><span>${h.d}</span></li>`).join('')}</ul></div>
+        <div class="eblk"><div class="enome">Eixo Cognitivo II – Resolver Problemas e Argumentar</div>
+          <ul class="hlist">${e.c2.map(h=>`<li><span class="hc">${h.c}</span><span>${h.d}</span></li>`).join('')}</ul></div>
+      </div>
+    </div>`).join('');
+}
+function switchEixo(id,btn){
+  document.querySelectorAll('.ecnt').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('#etabs .etab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('ec-'+id).classList.add('active'); btn.classList.add('active');
+}
+
+// ── ESCALA ──
+function renderEscala(){
+  document.getElementById('etable').innerHTML=`<thead><tr><th style="width:105px">Nível</th><th style="width:80px">Pontuação</th><th style="width:55px">Código</th><th>Descrição</th></tr></thead>
+  <tbody>${ESCALA.map(n=>n.it.map((it,i)=>`<tr>
+    ${i===0?`<td rowspan="${n.it.length}"><span class="nb ${n.cls}">${n.n}</span></td><td rowspan="${n.it.length}" style="font-family:'DM Mono',monospace;font-size:10px;color:#ccc">${n.r}</td>`:''}
+    <td style="font-family:'DM Mono',monospace;font-size:10.5px;font-weight:700;color:var(--vm)">${it.c}</td>
+    <td style="font-size:11.5px">${it.d}</td></tr>`).join('')).join('')}</tbody>`;
+}
+
+// ── BNCC ──
+function renderBNCC(){
+  document.getElementById('btabs').innerHTML=BNCC.map((g,i)=>`<button class="etab ${i===0?'active':''}" onclick="switchBncc(${i},this)">${g.eixo}</button>`).join('');
+  renderBnccTable(0);
+}
+function switchBncc(i,btn){
+  document.querySelectorAll('#btabs .etab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active'); renderBnccTable(i);
+}
+function renderBnccTable(i){
+  document.getElementById('bbody').innerHTML=BNCC[i].items.map(it=>`<tr ${it.r?'class="brev"':''}>
+    <td><span class="bsaeb">${it.s.replace(/\n/g,'<br>')}</span></td>
+    <td><div class="bcode">${it.b.replace(/\n/g,' · ')}</div>
+    <div style="font-size:11.5px;color:var(--pt-m);margin-top:3px;line-height:1.45">${it.d}</div>
+    ${it.r?'<div style="font-size:9.5px;color:var(--am);margin-top:2px;font-weight:700">⚠ Retomada de anos anteriores</div>':''}</td>
+  </tr>`).join('');
+}
+
+// ── TURMA ──
+function calcNivel(a){
+  if(!a.missao)return null;
+  const d=5-parseInt(a.serie);
+  return d<=0?'proficiente':d<=2?'basico':'abaixo';
+}
+function addAluno(){
+  const nome=document.getElementById('inp-nome').value.trim();
+  if(!nome){document.getElementById('inp-nome').focus();return;}
+  if(alunos.length>=45){alert('Limite de 45 estudantes atingido.');return;}
+  alunos.push({id:Date.now()+Math.random(),nome,serie:document.getElementById('inp-serie').value,missao:document.getElementById('inp-missao').value,etapa:document.getElementById('inp-etapa').value});
+  document.getElementById('inp-nome').value='';
+  renderTurma();renderAgrupamentos();
+}
+function importarLista(){
+  const txt=document.getElementById('import-area').value.trim();
+  if(!txt)return;
+  txt.split('\n').map(n=>n.trim()).filter(n=>n).slice(0,45-alunos.length).forEach(nome=>{
+    if(alunos.length<45)alunos.push({id:Date.now()+Math.random(),nome,serie:'5',missao:'',etapa:''});
+  });
+  document.getElementById('import-area').value='';
+  renderTurma();renderAgrupamentos();
+}
+function removeAluno(id){alunos=alunos.filter(a=>a.id!==id);renderTurma();renderAgrupamentos();}
+function updateAluno(id,f,v){const a=alunos.find(a=>a.id===id);if(a){a[f]=v;renderTurma();renderAgrupamentos();}}
+function limparTurma(){if(!alunos.length)return;if(confirm('Remover todos os estudantes?')){alunos=[];renderTurma();renderAgrupamentos();}}
+
+function renderTurma(){
+  const grid=document.getElementById('agrid');
+  const search=document.getElementById('search-aluno').value.toLowerCase();
+  const filter=document.getElementById('filter-nivel').value;
+  document.getElementById('cbadge').textContent=`(${alunos.length}/45)`;
+  const prof=alunos.filter(a=>calcNivel(a)==='proficiente').length;
+  const bas=alunos.filter(a=>calcNivel(a)==='basico').length;
+  const ab=alunos.filter(a=>calcNivel(a)==='abaixo').length;
+  const sb=document.getElementById('sbar');
+  if(alunos.length>0){
+    sb.style.display='flex';
+    const pct=v=>alunos.length?Math.round(v/alunos.length*100):0;
+    sb.innerHTML=`<div class="sch sc-t"><div class="scn">${alunos.length}</div><div class="scl">Total</div></div>
+    <div class="sch sc-p"><div class="scn">${prof}</div><div class="scl">✅ Proficiente</div></div>
+    <div class="sch sc-b"><div class="scn">${bas}</div><div class="scl">⚠️ Básico</div></div>
+    <div class="sch sc-a"><div class="scn">${ab}</div><div class="scl">❌ Abaixo</div></div>
+    <div style="flex:1;background:#fff;border-radius:10px;padding:11px 16px;border:2px solid var(--bd);min-width:150px">
+      <div style="font-size:9px;font-weight:800;color:#ccc;text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px">Distribuição da turma</div>
+      <div style="display:flex;height:7px;border-radius:4px;overflow:hidden;background:#eee">
+        <div style="width:${pct(prof)}%;background:var(--vd)"></div>
+        <div style="width:${pct(bas)}%;background:var(--am)"></div>
+        <div style="width:${pct(ab)}%;background:var(--vm)"></div>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:5px;font-size:9.5px">
+        <span style="color:var(--vd);font-weight:700">■ ${pct(prof)}%</span>
+        <span style="color:var(--am);font-weight:700">■ ${pct(bas)}%</span>
+        <span style="color:var(--vm);font-weight:700">■ ${pct(ab)}%</span>
+      </div>
+    </div>`;
+  }else{sb.style.display='none';}
+  const filtered=alunos.filter(a=>a.nome.toLowerCase().includes(search)&&(!filter||calcNivel(a)===filter));
+  if(!alunos.length){grid.innerHTML=`<div class="empty"><div class="ico">🎒</div><p>Nenhum estudante adicionado ainda.<br>Adicione individualmente ou importe uma lista.</p></div>`;return;}
+  if(!filtered.length){grid.innerHTML=`<div class="empty"><div class="ico">🔍</div><p>Nenhum estudante encontrado.</p></div>`;return;}
+  grid.innerHTML=filtered.map(a=>{
+    const nv=calcNivel(a);
+    let pc='ps',pl='– sem dado',cc='';
+    if(nv==='proficiente'){pc='pp';pl='✅ Proficiente';cc='proficiente';}
+    else if(nv==='basico'){pc='pb';pl='⚠️ Básico';cc='basico';}
+    else if(nv==='abaixo'){pc='pa';pl='❌ Abaixo';cc='abaixo';}
+    const sl=['1º','2º','3º','4º','5º','6º'][parseInt(a.serie)-1]+' ano EF';
+    const mo=a.missao?MD.find(m=>m.n===parseInt(a.missao)):null;
+    return `<div class="ac ${cc}">
+      <button class="brm" onclick="removeAluno(${a.id})">✕</button>
+      <div class="anh">
+        <div><div class="an">${a.nome}</div><div class="anum">${sl} · ${a.missao?'Missão '+a.missao:'–'}${a.etapa?' · Etapa 0'+a.etapa:''}</div></div>
+        <span class="np ${pc}">${pl}</span>
+      </div>
+      <div class="ab">
+        <div class="sr"><label>Ano/Série</label>
+          <select onchange="updateAluno(${a.id},'serie',this.value)">
+            ${[1,2,3,4,5,6].map(n=>`<option value="${n}" ${a.serie==n?'selected':''}>${n}º ano EF</option>`).join('')}
+          </select>
+        </div>
+        <div class="sr"><label>Missão atual</label>
+          <select onchange="updateAluno(${a.id},'missao',this.value)">
+            <option value="" ${!a.missao?'selected':''}>– não definida –</option>
+            ${MD.map(m=>`<option value="${m.n}" ${a.missao==m.n?'selected':''}>Missão ${m.n} – ${m.f.split('·')[0].trim()}</option>`).join('')}
+          </select>
+        </div>
+        <div class="sr"><label>Etapa atual</label>
+          <select onchange="updateAluno(${a.id},'etapa',this.value)">
+            <option value="" ${!a.etapa?'selected':''}>– não definida –</option>
+            ${['1','2','3','4'].map(e=>`<option value="${e}" ${a.etapa===e?'selected':''}>Etapa 0${e}</option>`).join('')}
+          </select>
+        </div>
+        ${mo?`<div class="am2">🎯 ${mo.f}<br>${mo.h.slice(0,4).map(h=>`<span class="th">${h}</span>`).join('')}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── AGRUPAMENTOS ──
+const RL={monitor:'Monitor (Proficiente)',par:'Par (Básico)',aprendente:'Aprendente (Abaixo do Básico)'};
+const RD={monitor:'Orienta e explica usando linguagem entre pares (ZDP).',par:'Auxilia o aprendente e consolida seu próprio conhecimento.',aprendente:'Recebe suporte em ambiente seguro e colaborativo.'};
+const RE={monitor:'🌟',par:'📘',aprendente:'🌱'};
+const RC={monitor:'gm-p',par:'gm-b',aprendente:'gm-a'};
+
+function buildGrupos(){
+  const P=[...alunos.filter(a=>calcNivel(a)==='proficiente')];
+  const B=[...alunos.filter(a=>calcNivel(a)==='basico')];
+  const A=[...alunos.filter(a=>calcNivel(a)==='abaixo')];
+  const gs=[];let g=1;
+  while(P.length||B.length||A.length){
+    const gr={n:g++,membros:[]};
+    if(P.length)gr.membros.push({...P.shift(),role:'monitor'});
+    if(B.length)gr.membros.push({...B.shift(),role:'par'});
+    if(A.length)gr.membros.push({...A.shift(),role:'aprendente'});
+    gs.push(gr);if(g>60)break;
+  }
+  return gs;
+}
+
+function renderAgrupamentos(){
+  const area=document.getElementById('agrup-area');
+  if(!alunos.length){area.innerHTML=`<div class="empty card"><div class="ico">🤝</div><p>Cadastre estudantes na aba "Minha Turma" e configure o Ano/Série.<br>Os agrupamentos serão gerados automaticamente aqui.</p></div>`;return;}
+  const gs=buildGrupos();
+  const sem=alunos.filter(a=>!calcNivel(a));
+  const profN=alunos.filter(a=>calcNivel(a)==='proficiente').length;
+  const basN=alunos.filter(a=>calcNivel(a)==='basico').length;
+  const abN=alunos.filter(a=>calcNivel(a)==='abaixo').length;
+  let html=`<div style="display:flex;gap:11px;flex-wrap:wrap;margin-bottom:16px">
+    <div style="background:#fff;border-radius:10px;padding:11px 16px;border:2px solid var(--az)"><div style="font-size:22px;font-weight:900;color:var(--az)">${gs.length}</div><div style="font-size:9px;color:#ccc;font-weight:700;text-transform:uppercase">Grupos</div></div>
+    <div style="background:#fff;border-radius:10px;padding:11px 16px;border:2px solid var(--vd)"><div style="font-size:22px;font-weight:900;color:var(--vd)">${profN}</div><div style="font-size:9px;color:#ccc;font-weight:700;text-transform:uppercase">🌟 Monitores</div></div>
+    <div style="background:#fff;border-radius:10px;padding:11px 16px;border:2px solid var(--am)"><div style="font-size:22px;font-weight:900;color:var(--am)">${basN}</div><div style="font-size:9px;color:#ccc;font-weight:700;text-transform:uppercase">📘 Pares</div></div>
+    <div style="background:#fff;border-radius:10px;padding:11px 16px;border:2px solid var(--vm)"><div style="font-size:22px;font-weight:900;color:var(--vm)">${abN}</div><div style="font-size:9px;color:#ccc;font-weight:700;text-transform:uppercase">🌱 Aprendentes</div></div>
+  </div>`;
+  if(!gs.length){html+=`<div class="card empty"><div class="ico">⚙️</div><p>Configure o Ano/Série e a Missão atual dos estudantes para gerar os grupos.</p></div>`;}
+  else{html+=`<div class="ggrid">${gs.map(g=>{
+    const miss=[...new Set(g.membros.map(m=>m.missao).filter(Boolean))];
+    const hrec=miss.length?MD.filter(m=>miss.includes(String(m.n))):[];
+    return `<div class="gc"><div class="gh"><span>Grupo ${g.n}</span><span class="gn">${g.membros.length} membros</span></div>
+      <div class="gb">
+        ${g.membros.map(m=>`<div class="gm ${RC[m.role]}">
+          <div class="mico">${RE[m.role]}</div>
+          <div class="minf">
+            <div class="mnome">${m.nome}</div>
+            <div class="mrole">${RL[m.role]}</div>
+            <div class="mdesc">${RD[m.role]}</div>
+            ${m.missao?`<div style="font-size:9.5px;color:#ccc;margin-top:2px">📍 Missão ${m.missao}</div>`:''}
+          </div>
+        </div>`).join('')}
+        ${hrec.length?`<div class="mrec">💡 <strong>Foco:</strong> ${hrec.map(m=>m.h.slice(0,3).join(', ')).join(' · ')}</div>`:''}
+      </div></div>`;
+  }).join('')}</div>`;}
+  if(sem.length){html+=`<div class="card" style="margin-top:14px"><div class="ctitle">⚠️ Sem classificação (${sem.length})</div>
+    <p style="font-size:12.5px;color:var(--pt-c);margin-bottom:9px">Defina o Ano/Série e a Missão destes estudantes para incluí-los nos grupos.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:7px">${sem.map(a=>`<span style="background:var(--cl);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700;border:1px solid var(--bd)">${a.nome}</span>`).join('')}</div>
+  </div>`;}
+  area.innerHTML=html;
+}
+
+// ── PDF ──
+function exportarPDF(){
+  const st=document.getElementById('pdfst');
+  if(!alunos.length){st.textContent='⚠️ Nenhum estudante cadastrado.';return;}
+  st.textContent='⏳ Gerando PDF...';
+  try{
+    const {jsPDF}=window.jspdf;
+    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const W=210,M=14,date=new Date().toLocaleDateString('pt-BR');
+    const gs=buildGrupos();
+    const profN=alunos.filter(a=>calcNivel(a)==='proficiente').length;
+    const basN=alunos.filter(a=>calcNivel(a)==='basico').length;
+    const abN=alunos.filter(a=>calcNivel(a)==='abaixo').length;
+
+    function drawHeader(pg1){
+      // Fundo azul
+      doc.setFillColor(10,31,68);doc.rect(0,0,W,pg1?30:16,'F');
+      // Faixa vermelha
+      doc.setFillColor(208,2,27);doc.rect(0,pg1?30:16,W,2.5,'F');
+      doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');
+      if(pg1){
+        doc.setFontSize(14);doc.text('SP em Acao - Matematica 1 | Agrupamentos Produtivos',M,13);
+        doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(160,180,220);
+        doc.text(`Gerado em ${date}  |  Total: ${alunos.length} estudantes  |  ${gs.length} grupos formados`,M,22);
+      }else{
+        doc.setFontSize(9);doc.text('SP em Acao - Matematica 1 | Agrupamentos (continuacao)',M,10);
+        doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(160,180,220);
+        doc.text(`Data: ${date}`,W-M,10,{align:'right'});
+      }
+    }
+
+    drawHeader(true);
+
+    // Legenda
+    let y=40;
+    doc.setFontSize(8);
+    [{cor:[19,138,54],l:'MONITOR (Proficiente) - orienta e explica usando linguagem entre pares'},{cor:[184,134,11],l:'PAR (Basico) - auxilia o aprendente e consolida o proprio conhecimento'},{cor:[208,2,27],l:'APRENDENTE (Abaixo do Basico) - recebe suporte em ambiente colaborativo'}]
+    .forEach(lg=>{
+      doc.setFillColor(...lg.cor);doc.roundedRect(M,y,4,4,1,1,'F');
+      doc.setTextColor(60,60,60);doc.text(lg.l,M+6,y+3.2);y+=7;
+    });
+
+    // Sumário
+    y+=3;
+    doc.setFillColor(238,241,250);doc.roundedRect(M,y,W-M*2,15,3,3,'F');
+    const ri=[{v:gs.length,l:'GRUPOS'},{v:profN,l:'MONITORES'},{v:basN,l:'PARES'},{v:abN,l:'APRENDENTES'}];
+    const rx=[M+5,M+52,M+100,M+150];
+    ri.forEach((r,i)=>{
+      doc.setFont('helvetica','bold');doc.setFontSize(16);doc.setTextColor(208,2,27);
+      doc.text(String(r.v),rx[i],y+9.5);
+      doc.setFontSize(7);doc.setFont('helvetica','normal');doc.setTextColor(130,130,130);
+      doc.text(r.l,rx[i],y+13.5);
+    });
+    y+=22;
+
+    // Grupos (2 colunas)
+    const CW=(W-M*2-5)/2, LH=8.5, BH=14;
+    let col=0,colY=[y,y];
+
+    gs.forEach(g=>{
+      const ch=BH+g.membros.length*LH+2;
+      if(colY[col]+ch>283){
+        doc.addPage();drawHeader(false);
+        colY=[22,22];col=0;
+      }
+      const cx=M+col*(CW+5), cy=colY[col];
+      // Sombra sutil
+      doc.setFillColor(215,218,228);doc.roundedRect(cx+1,cy+1,CW,ch,3,3,'F');
+      // Card
+      doc.setFillColor(255,255,255);doc.roundedRect(cx,cy,CW,ch,3,3,'F');
+      // Header azul
+      doc.setFillColor(10,31,68);doc.roundedRect(cx,cy,CW,10,3,3,'F');
+      doc.rect(cx,cy+5,CW,5,'F');
+      // Linha vermelha
+      doc.setFillColor(208,2,27);doc.rect(cx,cy+9.5,CW,1.5,'F');
+      // Título
+      doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(255,255,255);
+      doc.text(`GRUPO ${g.n}`,cx+3.5,cy+7);
+      doc.setFontSize(7);doc.setTextColor(160,185,220);
+      doc.text(`${g.membros.length} membros`,cx+CW-3,cy+7,{align:'right'});
+
+      // Membros
+      const corR={monitor:[19,138,54],par:[184,134,11],aprendente:[208,2,27]};
+      let my=cy+14;
+      g.membros.forEach(m=>{
+        const [r,gv,b]=corR[m.role];
+        doc.setFillColor(r,gv,b);doc.roundedRect(cx+3,my-3,3,5.5,0.8,0.8,'F');
+        doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(10,31,68);
+        const nome=m.nome.length>24?m.nome.substring(0,23)+'…':m.nome;
+        doc.text(nome,cx+8,my+0.8);
+        doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.setTextColor(r,gv,b);
+        doc.text(RL[m.role],cx+8,my+5);
+        if(m.missao){doc.setTextColor(180,180,180);doc.text(`M${m.missao}`,cx+CW-3,my+0.8,{align:'right'});}
+        my+=LH;
+      });
+      colY[col]+=ch+5;col=(col+1)%2;
+    });
+
+    // Rodapé em todas as páginas
+    const total=doc.getNumberOfPages();
+    for(let i=1;i<=total;i++){
+      doc.setPage(i);
+      doc.setFillColor(10,31,68);doc.rect(0,288,W,9,'F');
+      doc.setFillColor(208,2,27);doc.rect(0,288,W,1.5,'F');
+      doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.setTextColor(100,130,180);
+      doc.text('SP em Acao - Matematica | Agrupamentos Produtivos gerados com base em Vygotsky (ZDP)',M,293.5);
+      doc.text(`Pag. ${i}/${total}`,W-M,293.5,{align:'right'});
+    }
+
+    doc.save(`Agrupamentos_SP_em_Acao_${date.replace(/\//g,'-')}.pdf`);
+    st.textContent='✅ PDF baixado com sucesso!';
+    setTimeout(()=>{st.textContent='';},3500);
+  }catch(e){
+    console.error(e);
+    st.textContent='❌ Erro ao gerar PDF.';
+  }
+}
+
+// ── MODAL ──
+function openModal(id){
+  editingId=id;const a=alunos.find(a=>a.id===id);
+  document.getElementById('mnome').value=a.nome;
+  document.getElementById('mserie').value=a.serie;
+  document.getElementById('mmissao').value=a.missao||'';
+  document.getElementById('metapa').value=a.etapa||'';
+  document.getElementById('moverlay').classList.add('open');
+}
+function closeModal(){document.getElementById('moverlay').classList.remove('open');editingId=null;}
+function saveModal(){
+  if(!editingId)return;const a=alunos.find(a=>a.id===editingId);
+  a.nome=document.getElementById('mnome').value.trim()||a.nome;
+  a.serie=document.getElementById('mserie').value;
+  a.missao=document.getElementById('mmissao').value;
+  a.etapa=document.getElementById('metapa').value;
+  closeModal();renderTurma();renderAgrupamentos();
+}
+</script>
+
+<footer style="border-top:1px solid rgba(10,31,68,.15);padding:16px 28px;text-align:center;font-size:11px;color:#aaa;background:#f0f2f7;">
+  <strong style="color:#D0021B;font-size:11.5px;">URE-CAIEIRAS</strong><span style="margin:0 6px;color:#ccc">·</span>
+  <strong>SP em Ação · Matemática</strong> — Portal do Professor · Seduc-SP
+  <span style="margin:0 6px;color:#ccc">·</span> Agrupamentos baseados em Vygotsky (ZDP)
+  <br><a href="painel.html" style="color:#999;font-size:10px;text-decoration:none;margin-top:4px;display:inline-block;">← Voltar ao Painel Principal</a>
+</footer>
+</body>
+</html>

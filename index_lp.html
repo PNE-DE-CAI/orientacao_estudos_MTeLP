@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SP em Ação – Língua Portuguesa | Portal do Professor</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --az:#0A1F44;--az-m:#163272;
+  --lp:#E65100;--lp-m:#BF360C;
+  --sh:0 6px 28px rgba(10,31,68,.12);
+  --sh-lg:0 16px 56px rgba(10,31,68,.20);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Sora',sans-serif;background:var(--az);color:white;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 10% 20%, rgba(230,81,0,.18) 0%, transparent 60%),radial-gradient(ellipse 60% 70% at 90% 80%, rgba(22,50,114,.5) 0%, transparent 60%),radial-gradient(ellipse 40% 40% at 50% 50%, rgba(10,31,68,.8) 0%, transparent 100%);pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+.wrap{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;}
+header{border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(12px);background:rgba(10,31,68,.7);position:sticky;top:0;z-index:100;}
+.header-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:16px;}
+.logo{height:48px;width:auto;border-radius:7px;background:white;padding:3px 7px;object-fit:contain;flex-shrink:0;}
+.divider{width:2px;height:36px;background:rgba(255,255,255,.15);flex-shrink:0;}
+.header-texts{flex:1}
+.header-title{font-size:17px;font-weight:900;letter-spacing:-.3px;line-height:1.2}
+.header-sub{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px}
+.header-badge{background:var(--lp);color:white;font-weight:800;font-size:10px;padding:4px 12px;border-radius:20px;letter-spacing:1.2px;text-transform:uppercase;flex-shrink:0;white-space:nowrap;}
+.hero{text-align:center;padding:64px 28px 40px;max-width:760px;margin:0 auto;}
+.hero-eyebrow{display:inline-block;background:rgba(230,81,0,.2);border:1px solid rgba(230,81,0,.4);color:rgba(255,150,100,.9);font-size:10.5px;font-weight:800;padding:4px 16px;border-radius:20px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px;}
+.hero h1{font-size:clamp(28px,5vw,46px);font-weight:900;line-height:1.1;letter-spacing:-1px;margin-bottom:18px;}
+.hero h1 span{color:var(--lp);position:relative;display:inline-block;}
+.hero h1 span::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:3px;background:var(--lp);border-radius:2px;opacity:.5;}
+.hero-desc{font-size:15px;color:rgba(255,255,255,.6);line-height:1.7;max-width:520px;margin:0 auto 36px;}
+.stats{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-bottom:60px;}
+.stat{text-align:center;}
+.stat-num{font-size:32px;font-weight:900;color:white;font-family:'DM Mono',monospace;line-height:1;}
+.stat-num span{color:var(--lp);}
+.stat-label{font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-top:4px;font-weight:700;}
+.stat-sep{width:1px;background:rgba(255,255,255,.1);margin:4px 0;}
+.cards-section{max-width:1100px;margin:0 auto;padding:0 28px 80px;}
+.section-label{font-size:10.5px;font-weight:800;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:2px;margin-bottom:20px;display:flex;align-items:center;gap:12px;}
+.section-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08);}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;}
+.vol-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);border-radius:20px;padding:28px;position:relative;overflow:hidden;cursor:pointer;transition:all .3s cubic-bezier(.2,.8,.2,1);text-decoration:none;display:block;color:white;}
+.vol-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg, rgba(255,255,255,.06) 0%, transparent 60%);opacity:0;transition:opacity .3s;}
+.vol-card:hover{border-color:rgba(230,81,0,.5);background:rgba(255,255,255,.07);transform:translateY(-4px);box-shadow:var(--sh-lg), 0 0 0 1px rgba(230,81,0,.3);}
+.vol-card:hover::before{opacity:1;}
+.vol-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--lp);border-radius:20px 20px 0 0;opacity:.6;transition:opacity .3s;}
+.vol-card:hover::after{opacity:1;}
+.card-vol{display:inline-flex;align-items:center;gap:6px;background:rgba(230,81,0,.15);border:1px solid rgba(230,81,0,.3);color:rgba(255,150,100,.9);font-size:10px;font-weight:800;padding:3px 12px;border-radius:20px;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px;}
+.card-title{font-size:19px;font-weight:900;letter-spacing:-.3px;margin-bottom:6px;line-height:1.2;}
+.card-subtitle{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:18px;font-weight:600;}
+.card-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.info-block{background:rgba(255,255,255,.05);border-radius:10px;padding:10px 12px;border:1px solid rgba(255,255,255,.06);}
+.info-label{font-size:8.5px;color:rgba(255,255,255,.35);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;}
+.info-value{font-size:13px;font-weight:700;color:white;}
+.card-features{list-style:none;margin-bottom:22px;}
+.card-features li{font-size:11.5px;color:rgba(255,255,255,.6);padding:4px 0;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.04);}
+.card-features li:last-child{border-bottom:none;}
+.card-features li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--lp);flex-shrink:0;opacity:.7;}
+.card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:20px;}
+.tag{font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:20px;font-family:'DM Mono',monospace;}
+.tag-saeb{background:rgba(20,80,180,.25);color:rgba(130,180,255,.9);border:1px solid rgba(80,140,255,.2);}
+.tag-bncc{background:rgba(20,140,60,.2);color:rgba(100,220,140,.9);border:1px solid rgba(60,180,100,.2);}
+.tag-series{background:rgba(230,81,0,.2);color:rgba(255,180,140,.9);border:1px solid rgba(230,130,80,.2);}
+.card-cta{display:flex;align-items:center;justify-content:space-between;background:rgba(230,81,0,.15);border:1px solid rgba(230,81,0,.3);border-radius:10px;padding:12px 16px;font-size:13px;font-weight:700;color:rgba(255,150,100,.95);transition:all .25s;}
+.vol-card:hover .card-cta{background:var(--lp);border-color:var(--lp);color:white;}
+.cta-arrow{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .25s;flex-shrink:0;}
+.vol-card:hover .cta-arrow{background:rgba(255,255,255,.2);transform:translateX(3px);}
+.vol-card.vol2::after{background:rgba(80,130,220,1);}
+.vol-card.vol3::after{background:#C49A00;}
+.vol-card.vol2 .card-vol{background:rgba(40,80,200,.2);border-color:rgba(80,140,255,.3);color:rgba(140,180,255,.9);}
+.vol-card.vol3 .card-vol{background:rgba(180,130,0,.2);border-color:rgba(220,170,30,.3);color:rgba(240,200,80,.9);}
+.vol-card.vol2 .card-cta{background:rgba(40,80,200,.15);border-color:rgba(80,140,255,.3);color:rgba(140,180,255,.95);}
+.vol-card.vol3 .card-cta{background:rgba(180,130,0,.15);border-color:rgba(220,170,30,.3);color:rgba(240,200,80,.95);}
+.vol-card.vol2:hover{box-shadow:var(--sh-lg), 0 0 40px rgba(22,50,114,.3), 0 0 0 1px rgba(80,120,220,.3);}
+.vol-card.vol3:hover{box-shadow:var(--sh-lg), 0 0 40px rgba(180,130,0,.15), 0 0 0 1px rgba(200,160,30,.3);}
+.vol-card.vol2:hover .card-cta{background:var(--az-m);border-color:var(--az-m);color:white;}
+.vol-card.vol3:hover .card-cta{background:#C49A00;border-color:#C49A00;color:white;}
+.info-section{max-width:1100px;margin:0 auto;padding:0 28px 60px;}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;}
+.info-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:20px;}
+.info-card-icon{font-size:24px;margin-bottom:10px;}
+.info-card-title{font-size:13px;font-weight:800;margin-bottom:6px;color:rgba(255,255,255,.9);}
+.info-card-desc{font-size:11.5px;color:rgba(255,255,255,.45);line-height:1.6;}
+footer{border-top:1px solid rgba(255,255,255,.07);padding:24px 28px;text-align:center;font-size:11px;color:rgba(255,255,255,.25);margin-top:auto;}
+footer strong{color:rgba(255,255,255,.45);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.vol-card{animation:fadeUp .5s ease both;}
+.vol-card:nth-child(1){animation-delay:.1s}
+.vol-card:nth-child(2){animation-delay:.2s}
+.vol-card:nth-child(3){animation-delay:.3s}
+.hero{animation:fadeUp .6s ease both;}
+.stats{animation:fadeUp .6s ease .15s both;}
+@media(max-width:600px){.header-inner{padding:10px 16px;}.hero{padding:40px 16px 28px;}.cards-section,.info-section{padding:0 16px 50px;}.stats{gap:16px;}.stat-num{font-size:24px;}}
+/* portal link back to math */
+.portal-link{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.6);font-size:11px;font-weight:700;padding:5px 13px;border-radius:20px;text-decoration:none;transition:all .2s;margin-bottom:12px;}
+.portal-link:hover{background:rgba(255,255,255,.12);color:white;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="header-inner">
+    <img src="https://i.ibb.co/0p01LzxB/logo3de.jpg" alt="SP em Ação" class="logo" onerror="this.style.display='none'">
+    <div class="divider"></div>
+    <div class="header-texts">
+      <div class="header-title">SP em Ação · Língua Portuguesa</div>
+      <div class="header-sub">Portal do Professor · Gestão de Turma · Seduc-SP</div>
+    </div>
+    <div class="header-badge">Seduc-SP</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <a href="painel.html" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);color:rgba(255,255,255,.55);font-size:10.5px;font-weight:700;padding:5px 14px;border-radius:20px;text-decoration:none;margin-bottom:14px;">← Painel Principal</a>
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);color:rgba(255,255,255,.55);font-size:10.5px;font-weight:700;padding:5px 14px;border-radius:20px;text-decoration:none;margin-bottom:14px;">← Portal de Matemática</a>
+       <div class="hero-eyebrow">Portal do Professor – OE LP</div>
+    <h1>SP em Ação<br><span>Língua Portuguesa</span></h1>
+    <p class="hero-desc">
+      Plataforma de gestão de turma para os três volumes da coleção de Língua Portuguesa.
+      Classifique estudantes pela Escala Saeb, gere agrupamentos produtivos e exporte relatórios em PDF.
+    </p>
+    <div class="stats">
+      <div class="stat"><div class="stat-num">3<span>×</span></div><div class="stat-label">Volumes LP</div></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><div class="stat-num">48</div><div class="stat-label">Missões / Jornadas</div></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><div class="stat-num">45</div><div class="stat-label">Alunos por turma</div></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><div class="stat-num">5<span>×</span></div><div class="stat-label">Modos de agrupamento</div></div>
+    </div>
+  </section>
+
+  <section class="cards-section">
+    <div class="section-label">Selecione o volume</div>
+    <div class="cards-grid">
+
+      <!-- LP VOL 1 – 5º ano EF -->
+      <a href="lp1_5ano_turma.html" class="vol-card vol1">
+        <div class="card-vol">📕 LP Vol. 1</div>
+        <div class="card-title">Língua Portuguesa 1</div>
+        <div class="card-subtitle">5º ano do Ensino Fundamental</div>
+        <div class="card-info">
+          <div class="info-block"><div class="info-label">Referência Saeb</div><div class="info-value">6º ano EF & 7º ano EF</div></div>
+          <div class="info-block"><div class="info-label">Missões</div><div class="info-value">16 missões</div></div>
+          <div class="info-block"><div class="info-label">Bimestres</div><div class="info-value">4 bimestres</div></div>
+          <div class="info-block"><div class="info-label">Aulas</div><div class="info-value">64 aulas</div></div>
+        </div>
+        <ul class="card-features">
+          <li>Leitura · Análise Linguística/Semiótica · Produção de Textos</li>
+          <li>Domínio literário, jornalístico/midiático, divulgação científica</li>
+          <li>Escala de Proficiência LP Saeb (Níveis 1–8)</li>
+          <li>Articulação Saeb × BNCC Anos Finais EF</li>
+          <li>Missões 9 e 13 com estrutura especial ampliada</li>
+          <li>Campo de Etapa 01–04 · Agrupamentos com PDF</li>
+        </ul>
+        <div class="card-tags">
+          <span class="tag tag-saeb">Saeb LP 5º ano</span>
+          <span class="tag tag-bncc">BNCC EF</span>
+          <span class="tag tag-series">Anos Iniciais</span>
+        </div>
+        <div class="card-cta">Abrir LP Vol. 1<div class="cta-arrow">→</div></div>
+      </a>
+
+      <!-- LP VOL 2 – 9º ano EF -->
+      <a href="lp2_9ano_turma.html" class="vol-card vol2">
+        <div class="card-vol">📘 LP Vol. 2</div>
+        <div class="card-title">Língua Portuguesa 2</div>
+        <div class="card-subtitle">9º ano do Ensino Fundamental</div>
+        <div class="card-info">
+          <div class="info-block"><div class="info-label">Referência Saeb</div><div class="info-value">8º ano EF, 9º ano EF & 1ª série EM</div></div>
+          <div class="info-block"><div class="info-label">Missões</div><div class="info-value">16 missões</div></div>
+          <div class="info-block"><div class="info-label">Bimestres</div><div class="info-value">4 bimestres</div></div>
+          <div class="info-block"><div class="info-label">Aulas</div><div class="info-value">64 aulas</div></div>
+        </div>
+        <ul class="card-features">
+          <li>Leitura · Análise Linguística/Semiótica · Produção de Textos</li>
+          <li>Domínio literário, jornalístico/midiático, divulgação científica</li>
+          <li>Escala de Proficiência LP Saeb (Níveis 1–8)</li>
+          <li>Articulação Saeb × BNCC Anos Finais EF</li>
+          <li>Missões 9 e 13 com estrutura especial ampliada</li>
+          <li>Campo de Etapa 01–04 · Agrupamentos com PDF</li>
+        </ul>
+        <div class="card-tags">
+          <span class="tag tag-saeb">Saeb LP 9º ano</span>
+          <span class="tag tag-bncc">BNCC EF</span>
+          <span class="tag tag-series">Anos Finais</span>
+        </div>
+        <div class="card-cta">Abrir LP Vol. 2<div class="cta-arrow">→</div></div>
+      </a>
+
+      <!-- LP VOL 3 – 3ª série EM -->
+      <a href="lp3_3serieEM_turma.html" class="vol-card vol3">
+        <div class="card-vol">📗 LP Vol. 3</div>
+        <div class="card-title">Língua Portuguesa 3</div>
+        <div class="card-subtitle">3ª série do Ensino Médio</div>
+        <div class="card-info">
+          <div class="info-block"><div class="info-label">Referência Saeb</div><div class="info-value">2ª série EM & 3ª série EM</div></div>
+          <div class="info-block"><div class="info-label">Jornadas</div><div class="info-value">16 jornadas</div></div>
+          <div class="info-block"><div class="info-label">Bimestres</div><div class="info-value">4 bimestres</div></div>
+          <div class="info-block"><div class="info-label">Aulas</div><div class="info-value">64 aulas</div></div>
+        </div>
+        <ul class="card-features">
+          <li>Leitura · Análise Linguística · Produção de Textos</li>
+          <li>Campos: todos os campos, jornalístico-midiático, artístico-literário</li>
+          <li>Escala de Proficiência LP Saeb EM (Níveis 1–8)</li>
+          <li>Competências específicas de Linguagens (CELGG) BNCC EM</li>
+          <li>Descritores Saeb LP 3ª série EM (2001): 6 tópicos</li>
+          <li>Campo de Etapa 01–04 · Agrupamentos com PDF</li>
+        </ul>
+        <div class="card-tags">
+          <span class="tag tag-saeb">Saeb LP 3ª EM</span>
+          <span class="tag tag-bncc">BNCC EM</span>
+          <span class="tag tag-series">Ensino Médio</span>
+        </div>
+        <div class="card-cta">Abrir LP Vol. 3 <div class="cta-arrow">→</div></div>
+      </a>
+
+    </div>
+  </section>
+
+  <section class="info-section">
+    <div class="section-label">Recursos disponíveis em todos os volumes</div>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-icon">📚</div>
+        <div class="info-card-title">Matriz de Referência do Saeb LP</div>
+        <div class="info-card-desc">Todas as habilidades organizadas por eixo do conhecimento (Leitura, Análise Linguística/Semiótica e Produção de Textos) e por eixo cognitivo (Reconhecer, Analisar, Avaliar, Produzir).</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">🔗</div>
+        <div class="info-card-title">Articulação Saeb × BNCC</div>
+        <div class="info-card-desc">Cada habilidade do Saeb articulada às habilidades específicas de Língua Portuguesa da BNCC, com código e descrição completa para planejamento curricular.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">📊</div>
+        <div class="info-card-title">Escala de Proficiência</div>
+        <div class="info-card-desc">Tabela completa com todos os níveis, códigos e descritores da Escala de Proficiência do Saeb para LP, específica para cada série (5º ano EF, 9º ano EF ou 3ª série EM).</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">👥</div>
+        <div class="info-card-title">Gestão de até 45 estudantes</div>
+        <div class="info-card-desc">Adicione individualmente ou importe uma lista. Configure Série, Missão/Jornada e <strong style="color:rgba(255,255,255,.65)">Etapa (01–04)</strong> para classificação automática por nível de proficiência.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">🤝</div>
+        <div class="info-card-title">5 modos de agrupamento</div>
+        <div class="info-card-desc">Trio, Quarteto (4 alunos), Sexteto (6 alunos), Dupla e Individual. Baseado na ZDP de Vygotsky: <strong style="color:rgba(255,255,255,.65)">Monitor → Par → Aprendente</strong>.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">📄</div>
+        <div class="info-card-title">Exportar PDF dos Agrupamentos</div>
+        <div class="info-card-desc">Relatório em PDF com todos os grupos formados, papéis de cada membro (Monitor, Par, Aprendente), Missão/Jornada e habilidades Saeb em foco.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <strong><span style="color:#FF8A65;font-size:12px;letter-spacing:.5px;">URE-CAIEIRAS</span></strong><span style="margin:0 6px;opacity:.35">·</span>
+  <span style="margin:0 6px;opacity:.35">·</span>
+  <strong>SP em Ação · Língua Portuguesa</strong> — Portal do Professor · Seduc-SP ·
+  Material complementar ao didático regular da rede de ensino ·
+  Agrupamentos baseados em Vygotsky (ZDP)
+  <br>
+  <br><a href="painel.html" style="color:rgba(255,255,255,.4);font-size:10px;text-decoration:none;margin-top:5px;display:inline-block;">← Voltar ao Painel Principal</a>
+</footer>
+
+</div>
+</body>
+</html>

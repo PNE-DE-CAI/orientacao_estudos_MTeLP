@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SP em Ação – Língua Portuguesa 3 | 9º ano EF</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --vm:#D0021B;--vm-e:#A00015;--vm-l:#FFF0F1;
+  --az:#0A1F44;--az-m:#163272;--az-l:#EEF2FA;
+  --lp:#E65100;--lp-m:#BF360C;--lp-l:#FFF3E0;
+  --pt:#111;--pt-m:#333;--pt-c:#666;
+  --cl:#F3F4F8;--bd:#DCDFE8;
+  --vd:#138A36;--vd-l:#E6F5EC;
+  --am:#B8860B;--am-l:#FFF8E1;
+  --sh:0 4px 20px rgba(10,31,68,.10);--sh2:0 8px 36px rgba(10,31,68,.16);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sora',sans-serif;background:var(--cl);color:var(--pt);min-height:100vh}
+header{background:var(--az);position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.30);border-bottom:3px solid var(--lp)}
+.hi{max-width:1440px;margin:0 auto;padding:9px 22px;display:flex;align-items:center;gap:13px;flex-wrap:wrap}
+.hlogo{height:42px;width:auto;border-radius:5px;background:#fff;padding:2px 5px;object-fit:contain;flex-shrink:0}
+.hdiv{width:2px;height:32px;background:rgba(255,255,255,.18);flex-shrink:0}
+.htxt{flex:1;min-width:0}
+.htitle{font-size:14px;font-weight:800;color:#fff;line-height:1.2}
+.hsub{font-size:10px;color:rgba(255,255,255,.55);margin-top:1px}
+.hbadge{background:var(--lp);color:#fff;font-weight:800;font-size:9.5px;padding:3px 9px;border-radius:20px;letter-spacing:1.2px;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+.hvol{background:rgba(255,255,255,.15);color:#fff;font-weight:700;font-size:10px;padding:3px 10px;border-radius:20px;white-space:nowrap}
+nav{display:flex;gap:3px;flex-wrap:wrap}
+.nt{background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);border:none;padding:6px 11px;border-radius:7px;font-family:'Sora',sans-serif;font-size:10.5px;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap}
+.nt.active{background:var(--lp);color:#fff}
+.nt:hover:not(.active){background:rgba(255,255,255,.16);color:#fff}
+.main{max-width:1440px;margin:0 auto;padding:22px}
+.card{background:#fff;border-radius:13px;box-shadow:var(--sh);padding:20px;margin-bottom:16px;border:1px solid var(--bd)}
+.ct{font-size:11.5px;font-weight:800;color:var(--lp);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:13px;display:flex;align-items:center;gap:7px}
+.panel{display:none}.panel.active{display:block}
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+.bc{border-radius:10px;overflow:hidden;border:2px solid var(--bd)}
+.bh{background:var(--az);color:#fff;font-weight:800;font-size:10.5px;padding:8px 12px;text-align:center;text-transform:uppercase;letter-spacing:.5px}
+.mr{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-bottom:1px solid var(--bd);font-size:11px}
+.mr:last-child{border-bottom:none}
+.mn{font-weight:700;color:var(--lp)}
+.mi{color:#aaa;font-family:'DM Mono',monospace;font-size:9.5px}
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{background:var(--az);color:#fff;padding:7px 10px;text-align:left;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+.tbl td{padding:6px 10px;border-bottom:1px solid var(--bd);vertical-align:top}
+.tbl tr:hover td{background:var(--az-l)}
+.th{display:inline-block;background:var(--lp-l);color:var(--lp-m);font-family:'DM Mono',monospace;font-size:9px;padding:2px 6px;border-radius:20px;margin:1px;font-weight:700}
+.tn{display:inline-block;background:var(--az-l);color:var(--az-m);font-family:'DM Mono',monospace;font-size:9px;padding:2px 6px;border-radius:20px;margin:1px;font-weight:700}
+.etabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:13px}
+.etab{padding:5px 12px;border-radius:20px;font-size:10.5px;font-weight:700;cursor:pointer;border:2px solid var(--bd);background:#fff;color:#999;transition:all .18s}
+.etab.active{background:var(--lp);color:#fff;border-color:var(--lp)}
+.ecnt{display:none}.ecnt.active{display:block}
+.egrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.eblk{border-left:4px solid var(--lp);padding:12px 14px;background:var(--cl);border-radius:0 9px 9px 0}
+.enome{font-weight:800;font-size:10.5px;color:var(--az);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.hlist{list-style:none}
+.hlist li{font-size:10.5px;padding:3px 0;border-bottom:1px dashed #ddd;color:var(--pt-m);display:flex;gap:7px;line-height:1.4}
+.hlist li:last-child{border-bottom:none}
+.hc{font-family:'DM Mono',monospace;font-weight:700;color:var(--lp);min-width:90px;flex-shrink:0;font-size:9.5px}
+.nb{font-weight:800;font-size:9px;padding:2px 7px;border-radius:20px;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px}
+.n1{background:#fce4e4;color:#900}.n2{background:#fdebd0;color:#7a4400}.n3{background:#fef9e7;color:#5a4800}
+.n4{background:#e8f5e9;color:#155724}.n5{background:#c8e6c9;color:#0d3b1a}.n6{background:#dce9ff;color:#0a1f44}
+.n7{background:#b8d4ff;color:#0a1f44}.n8{background:#e1d5f5;color:#2e0070}
+.agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:12px}
+.ac{background:#fff;border-radius:11px;padding:14px;border:2px solid var(--bd);transition:all .2s;position:relative}
+.ac:hover{border-color:var(--lp);box-shadow:var(--sh)}
+.ac.proficiente{border-left:5px solid var(--vd)}
+.ac.basico{border-left:5px solid var(--am)}
+.ac.abaixo{border-left:5px solid var(--lp)}
+.anh{display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
+.an{font-weight:700;font-size:13px;color:var(--az)}
+.anum{font-family:'DM Mono',monospace;font-size:9.5px;color:#bbb;margin-top:1px}
+.np{font-size:8.5px;font-weight:800;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;flex-shrink:0}
+.pp{background:var(--vd-l);color:#0a3d1e}.pb{background:var(--am-l);color:#5a3a00}
+.pa{background:var(--lp-l);color:var(--lp-m)}.ps{background:var(--cl);color:#999}
+.ab{margin-top:8px}
+.sr{margin-bottom:6px}
+.sr label{font-size:9.5px;color:#bbb;font-weight:700;display:block;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px}
+.sr select,.sr input{width:100%;padding:5px 8px;border:1.5px solid var(--bd);border-radius:7px;font-family:'Sora',sans-serif;font-size:11px;color:var(--pt);background:var(--cl);transition:border .2s}
+.sr select:focus,.sr input:focus{outline:none;border-color:var(--lp)}
+.brm{position:absolute;top:8px;right:8px;background:none;border:none;color:#ddd;font-size:14px;cursor:pointer;padding:2px 4px;border-radius:4px;line-height:1}
+.brm:hover{color:var(--lp);background:var(--lp-l)}
+.btn{padding:8px 16px;border-radius:8px;font-family:'Sora',sans-serif;font-weight:700;font-size:12px;cursor:pointer;border:none;transition:all .18s;display:inline-flex;align-items:center;gap:5px}
+.btp{background:var(--lp);color:#fff}.btp:hover{background:var(--lp-m)}
+.bts{background:var(--az);color:#fff}.bts:hover{background:var(--az-m)}
+.bto{background:#fff;color:var(--az);border:2px solid var(--az)}.bto:hover{background:var(--az);color:#fff}
+.btk{background:var(--pt);color:#fff}.btk:hover{background:var(--pt-m)}
+.bsm{padding:5px 10px;font-size:10px;border-radius:6px}
+.addarea{background:var(--cl);border:2px dashed var(--bd);border-radius:10px;padding:16px;margin-bottom:16px}
+.adr{display:flex;gap:9px;align-items:flex-end;flex-wrap:wrap}
+.adr .sr{flex:1;min-width:130px;margin-bottom:0}
+.impta{width:100%;min-height:65px;padding:8px;border:1.5px solid var(--bd);border-radius:7px;font-family:'DM Mono',monospace;font-size:11px;resize:vertical;margin-top:8px;margin-bottom:5px}
+.sbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.sch{background:#fff;border-radius:9px;padding:9px 14px;border:2px solid;display:flex;flex-direction:column;align-items:center;min-width:80px}
+.scn{font-size:20px;font-weight:900}.scl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#bbb;margin-top:2px}
+.sc-p{border-color:var(--vd)}.sc-p .scn{color:var(--vd)}
+.sc-b{border-color:var(--am)}.sc-b .scn{color:var(--am)}
+.sc-a{border-color:var(--lp)}.sc-a .scn{color:var(--lp)}
+.sc-t{border-color:var(--az)}.sc-t .scn{color:var(--az)}
+.aintro{background:linear-gradient(135deg,var(--lp-l),#fff8f0);border-radius:10px;padding:14px 18px;margin-bottom:16px;border-left:5px solid var(--lp)}
+.aintro p{font-size:12px;color:var(--lp-m);line-height:1.6}
+.aintro strong{color:var(--az)}
+.agrup-ctrl{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;margin-bottom:16px;background:#fff;border-radius:10px;padding:14px 18px;border:2px solid var(--bd);box-shadow:var(--sh)}
+.agrup-ctrl label{font-size:11px;font-weight:700;color:var(--az);text-transform:uppercase;letter-spacing:.5px}
+.mode-btn{padding:7px 14px;border-radius:8px;font-family:'Sora',sans-serif;font-size:11px;font-weight:700;cursor:pointer;border:2px solid var(--bd);background:#fff;color:#888;transition:all .18s}
+.mode-btn.sel{background:var(--lp);color:#fff;border-color:var(--lp)}
+.mode-sep{width:1px;height:28px;background:var(--bd)}
+.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:13px}
+.gc{background:#fff;border-radius:12px;overflow:hidden;box-shadow:var(--sh);border:2px solid var(--bd)}
+.gh{background:var(--az);color:#fff;padding:9px 14px;font-weight:800;font-size:12px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid var(--lp)}
+.gn{background:var(--lp);color:#fff;font-size:9px;font-weight:800;padding:2px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px}
+.gb{padding:12px}
+.gm{display:flex;align-items:flex-start;gap:8px;padding:7px 8px;border-radius:7px;margin-bottom:5px}
+.gm:last-child{margin-bottom:0}
+.gm-p{background:var(--vd-l);border-left:3px solid var(--vd)}
+.gm-b{background:var(--am-l);border-left:3px solid var(--am)}
+.gm-a{background:var(--lp-l);border-left:3px solid var(--lp)}
+.mico{font-size:16px;margin-top:1px}
+.minf{flex:1}
+.mnome{font-weight:800;font-size:12px;color:var(--az)}
+.mrole{font-size:8.5px;color:#bbb;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
+.mdesc{font-size:10px;color:var(--pt-m);margin-top:2px;line-height:1.35}
+.mrec{background:var(--lp-l);border-radius:6px;padding:6px 10px;margin-top:8px;font-size:10px;color:var(--lp-m);border-left:3px solid var(--lp)}
+.si{padding:7px 12px;border:2px solid var(--bd);border-radius:8px;font-family:'Sora',sans-serif;font-size:11.5px;width:195px;transition:border .2s}
+.si:focus{outline:none;border-color:var(--lp)}
+.fs{padding:7px 12px;border:2px solid var(--bd);border-radius:8px;font-family:'Sora',sans-serif;font-size:11.5px;background:#fff;color:var(--pt);cursor:pointer}
+.empty{text-align:center;padding:40px 20px;color:#ccc}
+.empty .ico{font-size:42px;margin-bottom:10px}
+.empty p{font-size:12.5px;line-height:1.6}
+.moverlay{display:none;position:fixed;inset:0;background:rgba(10,31,68,.55);z-index:1000;align-items:center;justify-content:center}
+.moverlay.open{display:flex}
+.modal{background:#fff;border-radius:16px;width:440px;max-width:95vw;max-height:85vh;overflow-y:auto;padding:24px;box-shadow:var(--sh2);border-top:4px solid var(--lp)}
+.mtitle{font-size:15px;font-weight:900;color:var(--az);margin-bottom:16px}
+.mfoot{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.codigo-box{background:var(--lp-l);border:1px solid var(--lp);border-radius:10px;padding:14px 18px;margin-bottom:13px}
+.codigo-title{font-size:10px;font-weight:800;color:var(--lp);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.codigo-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:11px;color:var(--pt-m)}
+.codigo-part{background:#fff;border:1.5px solid var(--lp);color:var(--lp-m);font-family:'DM Mono',monospace;font-weight:800;font-size:11px;padding:3px 8px;border-radius:6px}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:#f0f0f0;border-radius:3px}
+::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--lp)}
+@media(max-width:768px){.hi{flex-direction:column;align-items:flex-start;padding:10px 14px}.pgrid{grid-template-columns:1fr 1fr}.egrid{grid-template-columns:1fr}.main{padding:12px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hi">
+    <img src="https://i.ibb.co/0p01LzxB/logo3de.jpg" alt="Logo" class="hlogo" onerror="this.style.display='none'">
+    <div class="hdiv"></div>
+    <div class="htxt">
+      <div class="htitle">SP em Ação · Língua Portuguesa 3 · Livro vol.03 · 3ª série EM</div>
+      <div class="hsub">Manual do Professor · Gestão de Turma · 2ª série EM & 3ª série EM · BNCC</div>
+    </div>
+    <div class="hvol">LP Vol. 3</div>
+    <div class="hbadge">URE-CAIEIRAS</div>
+    <nav>
+      <button class="nt active" onclick="switchPanel('planejamento',this)">📅 Planejamento</button>
+      <button class="nt" onclick="switchPanel('habilidades',this)">📚 Habilidades</button>
+      <button class="nt" onclick="switchPanel('escala',this)">📊 Escala Saeb</button>
+      <button class="nt" onclick="switchPanel('bncc',this)">🔗 Saeb × BNCC</button>
+      <button class="nt" onclick="switchPanel('turma',this)">👥 Minha Turma</button>
+      <button class="nt" onclick="switchPanel('agrupamentos',this)">🤝 Agrupamentos</button>
+    </nav>
+  </div>
+</header>
+<div style="background:rgba(10,31,68,.5);padding:5px 22px;border-bottom:1px solid rgba(255,255,255,.05);"><a href="painel.html" style="display:inline-flex;align-items:center;gap:5px;color:rgba(255,255,255,.45);font-size:10px;font-weight:700;text-decoration:none;">← Painel Principal</a></div>
+<div class="main">
+<div style="padding:8px 0 4px">
+  <a href="painel.html" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);color:rgba(255,255,255,.55);font-size:10.5px;font-weight:700;padding:5px 14px;border-radius:20px;text-decoration:none;margin-bottom:14px;">← Painel Principal</a></div>
+<!-- PLANEJAMENTO -->
+<div id="panel-planejamento" class="panel active">
+  <div class="card">
+    <div class="ct">📅 Planejamento Anual – 16 Missões · 4 Bimestres · LP 3ª série EM</div>
+    <div class="codigo-box">
+      <div class="codigo-title">Código de identificação das habilidades Saeb – LP</div>
+      <div class="codigo-row">
+        <span class="codigo-part">LP</span> Língua Portuguesa &nbsp;·&nbsp;
+        <span class="codigo-part">EM</span> 3ª série EM &nbsp;·&nbsp;
+        <span class="codigo-part">LE/LS/PT</span> Eixo (Leitura / Análise Ling. / Produção) &nbsp;·&nbsp;
+        <span class="codigo-part">RE/AN/AV/PR</span> Cognitivo &nbsp;·&nbsp;
+        <span class="codigo-part">01…</span> Nº habilidade
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--pt-c);margin-bottom:14px;line-height:1.6">Material complementar. <strong style="color:var(--az)">32 semanas · 4 missões/bimestre · 4 aulas cada.</strong> Missões 9 e 13 têm estrutura especial com mais atividades e conceitos pontuais.</p>
+    <div class="pgrid">
+      <div class="bc"><div class="bh">1º Bimestre</div>
+        <div class="mr"><span class="mn">Jornada 1</span><span class="mi">Sem 1–2 · Aulas 1–4</span></div>
+        <div class="mr"><span class="mn">Jornada 2</span><span class="mi">Sem 3–4 · Aulas 5–8</span></div>
+        <div class="mr"><span class="mn">Jornada 3</span><span class="mi">Sem 5–6 · Aulas 9–12</span></div>
+        <div class="mr"><span class="mn">Jornada 4</span><span class="mi">Sem 7–8 · Aulas 13–16</span></div>
+      </div>
+      <div class="bc"><div class="bh">2º Bimestre</div>
+        <div class="mr"><span class="mn">Jornada 5</span><span class="mi">Sem 9–10 · Aulas 17–20</span></div>
+        <div class="mr"><span class="mn">Jornada 6</span><span class="mi">Sem 11–12 · Aulas 21–24</span></div>
+        <div class="mr"><span class="mn">Jornada 7</span><span class="mi">Sem 13–14 · Aulas 25–28</span></div>
+        <div class="mr"><span class="mn">Jornada 8</span><span class="mi">Sem 15–16 · Aulas 29–32</span></div>
+      </div>
+      <div class="bc"><div class="bh">3º Bimestre</div>
+        <div class="mr"><span class="mn">Jornada 9 ⭐</span><span class="mi">Sem 17–18 · Aulas 33–36</span></div>
+        <div class="mr"><span class="mn">Jornada 10</span><span class="mi">Sem 19–20 · Aulas 37–40</span></div>
+        <div class="mr"><span class="mn">Jornada 11</span><span class="mi">Sem 21–22 · Aulas 41–44</span></div>
+        <div class="mr"><span class="mn">Jornada 12</span><span class="mi">Sem 23–24 · Aulas 45–48</span></div>
+      </div>
+      <div class="bc"><div class="bh">4º Bimestre</div>
+        <div class="mr"><span class="mn">Jornada 13 ⭐</span><span class="mi">Sem 25–26 · Aulas 49–52</span></div>
+        <div class="mr"><span class="mn">Jornada 14</span><span class="mi">Sem 27–28 · Aulas 53–56</span></div>
+        <div class="mr"><span class="mn">Jornada 15</span><span class="mi">Sem 29–30 · Aulas 57–60</span></div>
+        <div class="mr"><span class="mn">Jornada 16</span><span class="mi">Sem 31–32 · Aulas 61–64</span></div>
+      </div>
+    </div>
+    <p style="font-size:10px;color:#bbb;margin-top:10px">⭐ Missões 9 e 13 têm estrutura ampliada, com mais atividades e conceitos pontuais.</p>
+  </div>
+  <div class="card">
+    <div class="ct">🗺️ Jornadas × Habilidades e Níveis Saeb</div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Jornada</th><th>Habilidades Saeb</th><th>Níveis</th></tr></thead><tbody id="mtbody"></tbody></table></div>
+  </div>
+</div>
+
+<!-- HABILIDADES -->
+<div id="panel-habilidades" class="panel">
+  <div class="card">
+    <div class="ct">📚 Matriz de Referência do Saeb – LP 3ª série EM · Eixos do Conhecimento</div>
+    <div class="etabs" id="etabs"></div>
+    <div id="ecnts"></div>
+  </div>
+</div>
+
+<!-- ESCALA -->
+<div id="panel-escala" class="panel">
+  <div class="card">
+    <div class="ct">📊 Escala de Proficiência – LP – 9º ano EF</div>
+    <p style="font-size:12px;color:var(--pt-c);margin-bottom:13px">Foco neste volume: <strong style="color:var(--lp)">níveis 1 a 5</strong>. Escala LP 3ª série EM (Saeb 2001).</p>
+    <div style="overflow-x:auto;max-height:65vh;overflow-y:auto"><table class="tbl" id="etable"></table></div>
+  </div>
+</div>
+
+<!-- BNCC -->
+<div id="panel-bncc" class="panel">
+  <div class="card">
+    <div class="ct">🔗 Articulação Saeb × BNCC – LP 3ª série EM</div>
+    <p style="font-size:12px;color:var(--pt-c);margin-bottom:13px">Habilidades essenciais de LP da BNCC para os Anos Finais, organizadas por eixo do conhecimento.</p>
+    <div class="etabs" id="btabs"></div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th style="width:100px">Saeb</th><th>Habilidades BNCC</th></tr></thead><tbody id="bbody"></tbody></table></div>
+  </div>
+</div>
+
+<!-- TURMA -->
+<div id="panel-turma" class="panel">
+  <div class="card">
+    <div class="ct">➕ Adicionar Estudantes</div>
+    <div class="addarea">
+      <div class="adr">
+        <div class="sr"><label>Nome</label><input type="text" id="inp-nome" placeholder="Ex: Ana Silva" onkeydown="if(event.key==='Enter')addAluno()"></div>
+        <div class="sr"><label>Ano/Série</label>
+          <select id="inp-serie">
+            <option value="9ef">9º ano EF</option><option value="em1">1ª série EM</option>
+            <option value="em2">2ª série EM</option><option value="em3" selected>3ª série EM</option>
+          </select>
+        </div>
+        <div class="sr"><label>Jornada atual</label><select id="inp-missao"><option value="">– não definida –</option></select></div>
+        <div class="sr"><label>Etapa atual</label>
+          <select id="inp-etapa">
+            <option value="">– não definida –</option>
+            <option value="1">Etapa 01</option><option value="2">Etapa 02</option>
+            <option value="3">Etapa 03</option><option value="4">Etapa 04</option>
+          </select>
+        </div>
+        <button class="btn btp" onclick="addAluno()">+ Adicionar</button>
+      </div>
+      <div style="margin-top:11px;border-top:1px solid #ddd;padding-top:11px">
+        <div style="font-size:10px;font-weight:800;color:#bbb;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px">📋 Importar lista (um nome por linha, máx. 45):</div>
+        <textarea class="impta" id="import-area" placeholder="Ana Silva&#10;Bruno Costa&#10;..."></textarea>
+        <button class="btn bts bsm" onclick="importarLista()">📥 Importar Lista</button>
+      </div>
+    </div>
+  </div>
+  <div id="sbar" class="sbar" style="display:none"></div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:13px">
+      <div class="ct" style="margin-bottom:0">👥 Estudantes <span id="cbadge" style="font-size:11px;color:#ccc;font-weight:400">(0/45)</span></div>
+      <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
+        <input type="text" class="si" id="search-aluno" placeholder="🔍 Buscar..." oninput="renderTurma()">
+        <select class="fs" id="filter-nivel" onchange="renderTurma()">
+          <option value="">Todos os níveis</option>
+          <option value="proficiente">✅ Proficiente</option>
+          <option value="basico">⚠️ Básico</option>
+          <option value="abaixo">❌ Abaixo do Básico</option>
+        </select>
+        <button class="btn bto bsm" onclick="limparTurma()">🗑 Limpar</button>
+      </div>
+    </div>
+    <div id="agrid" class="agrid"><div class="empty"><div class="ico">📖</div><p>Nenhum estudante adicionado ainda.</p></div></div>
+  </div>
+</div>
+
+<!-- AGRUPAMENTOS -->
+<div id="panel-agrupamentos" class="panel">
+  <div class="aintro">
+    <p><strong>Agrupamentos Produtivos</strong> baseados na ZDP de Vygotsky. Configure o modo abaixo e os grupos serão gerados automaticamente.<br>
+    <strong>🌟 Monitor</strong> (Proficiente) orienta o <strong>📘 Par</strong> (Básico), que apoia o <strong>🌱 Aprendente</strong> (Abaixo do Básico).</p>
+  </div>
+  <div class="agrup-ctrl">
+    <div>
+      <label style="display:block;margin-bottom:6px">Modo de Agrupamento:</label>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="mode-btn sel" id="modo-trio" onclick="setModo('trio',this)">👥 Trio</button>
+        <button class="mode-btn" id="modo-quad" onclick="setModo('quad',this)">👥 Quarteto</button>
+        <button class="mode-btn" id="modo-sext" onclick="setModo('sext',this)">👥 Sexteto</button>
+        <div class="mode-sep"></div>
+        <button class="mode-btn" id="modo-dupla" onclick="setModo('dupla',this)">👫 Dupla</button>
+        <button class="mode-btn" id="modo-ind" onclick="setModo('ind',this)">👤 Individual</button>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
+    <button class="btn btk" onclick="exportarPDF()">📄 Baixar PDF dos Agrupamentos</button>
+    <span id="pdfst" style="font-size:11.5px;color:#aaa"></span>
+  </div>
+  <div id="agrup-area"><div class="empty card"><div class="ico">🤝</div><p>Cadastre estudantes na aba "Minha Turma" e configure o Ano/Série para gerar os agrupamentos.</p></div></div>
+</div>
+
+</div>
+
+<div class="moverlay" id="moverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="mtitle">✏️ Editar Estudante</div>
+    <div class="sr"><label>Nome</label><input type="text" id="mnome"></div>
+    <div class="sr" style="margin-top:8px"><label>Ano/Série</label>
+      <select id="mserie">
+        <option value="9ef">9º ano EF</option><option value="em1">1ª série EM</option>
+        <option value="em2">2ª série EM</option><option value="em3">3ª série EM</option>
+      </select>
+    </div>
+    <div class="sr" style="margin-top:8px"><label>Jornada</label><select id="mmissao"><option value="">– não definida –</option></select></div>
+    <div class="sr" style="margin-top:8px"><label>Etapa atual</label>
+      <select id="metapa">
+        <option value="">– não definida –</option>
+        <option value="1">Etapa 01</option><option value="2">Etapa 02</option>
+        <option value="3">Etapa 03</option><option value="4">Etapa 04</option>
+      </select>
+    </div>
+    <div class="mfoot">
+      <button class="btn bto" onclick="closeModal()">Cancelar</button>
+      <button class="btn btp" onclick="saveModal()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────
+const MD=[
+  {n:1,h:['EM13LP01','EM13LP02','EM13LP06','EM13LP07','EM13LP13','EM13LP36','EM13LP42','EM13LP45'],nv:['N1.4','N2.3','N3.1','N3.5','N3.8','N4.1'],f:'Jornada 1 · Nas Entrelinhas da Notícia'},
+  {n:2,h:['EM13LP03','EM13LP14','EM13LP36','EM13LP38','EM13LP42'],nv:['N1.1','N2.1','N2.4','N3.8','N4.6','N4.13','N5.9'],f:'Jornada 2 · Repercussão das Notícias nos Quadrinhos'},
+  {n:3,h:['EM13LP01','EM13LP06','EM13LP08','EM13LP49','EM13LP52'],nv:['N2.2','N2.3','N2.4','N3.3','N3.4','N3.6','N4.1','N4.9','N5.3'],f:'Jornada 3 · Contando o Dia a Dia · Crônicas'},
+  {n:4,h:['EM13LP02','EM13LP06','EM13LP36','EM13LP38','EM13LP49'],nv:['N1.2','N2.3','N2.4','N3.1','N3.5','N3.6','N4.1','N4.3','N4.6','N4.12','N4.13','N5.10'],f:'Jornada 4 · Diferentes Formas de Dizer'},
+  {n:5,h:['EM13LP01','EM13LP06','EM13LP49','EM13LP52'],nv:['N2.1','N2.3','N4.7','N4.11','N4.15','N5.10'],f:'Jornada 5 · Linguagem Poética · Versos e Rimas'},
+  {n:6,h:['EM13LP01','EM13LP04','EM13LP06','EM13LP46','EM13LP52'],nv:['N1.3','N2.1','N2.2','N3.4','N3.5','N3.7','N3.8','N4.1','N4.2','N4.3','N4.5','N4.8','N4.12'],f:'Jornada 6 · Lendas e Mitos'},
+  {n:7,h:['EM13LP02','EM13LP03','EM13LP06','EM13LP24','EM13LP45'],nv:['N1.4','N2.1','N2.2','N2.3','N3.1','N3.2','N4.3','N4.8','N5.9'],f:'Jornada 7 · Entre Manifestos e Reivindicações'},
+  {n:8,h:['EM13LP01','EM13LP02','EM13LP03','EM13LP29'],nv:['N3.7','N3.6','N4.8','N5.1','N5.8','N5.10'],f:'Jornada 8 · Das Resenhas às Videorresenhas'},
+  {n:9,h:['EM13LP41','EM13LP42','EM13LP45','EM13CHS206'],nv:['N1.2','N2.4','N4.1','N4.16','N5.4','N5.10'],f:'Jornada 9 · Informação Visual · Infográficos'},
+  {n:10,h:['EM13LP01','EM13LP12','EM13LP28','EM13LP31','EM13LP45'],nv:['N1.2','N2.4','N3.4','N4.1','N4.16','N5.4','N5.10'],f:'Jornada 10 · Infográficos Gráficos e Tabelas'},
+  {n:11,h:['EM13LP13','EM13LP20','EM13LP47','EM13LP48','EM13LP49'],nv:['N1.4','N3.5','N4.4','N4.7','N4.8','N4.11','N4.14','N4.15','N5.7','N5.9'],f:'Jornada 11 · Linguagem Poética: Slam e Canção'},
+  {n:12,h:['EM13LP14','EM13LP48','EM13LP49','EM13LP50','EM13LP52'],nv:['N1.2','N3.1','N4.7','N4.11','N4.15','N5.4','N5.7'],f:'Jornada 12 · Palavras Ilustrações e Paratextos'},
+  {n:13,h:['EM13LP38','EM13LP43','EM13CHS101','EM13CHS501','EM13CHS503'],nv:['N1.2','N2.4','N3.7','N4.1','N5.5'],f:'Jornada 13 · Recursos Midiáticos'},
+  {n:14,h:['EM13LP01','EM13LP02','EM13LP03','EM13LP05','EM13LP31','EM13LP42'],nv:['N5.2','N5.6','N5.10'],f:'Jornada 14 · Gêneros Científicos e Refutação'},
+  {n:15,h:['EM13LP01','EM13LP02','EM13LP06','EM13LP07','EM13LP08','EM13LP09','EM13LP10','EM13LP52'],nv:['N5.5'],f:'Jornada 15 · A Língua (A)Viva · Variedades'},
+  {n:16,h:['EM13LP02','EM13LP06','EM13LP14','EM13LP41','EM13LP44'],nv:['N3.7','N5.4'],f:'Jornada 16 · Anúncios para Você · Publicidade'},
+];
+
+const EIXOS=[
+  {id:'todos',nome:'Todos os Campos',
+   grupos:[
+    {cog:'Campo de Atuação – Todos os campos',cor:'#E65100',items:[
+      {c:'EM13LP01',d:'Relacionar o texto, tanto na produção como na leitura/escuta, com suas condições de produção e seu contexto sócio-histórico de circulação.'},
+      {c:'EM13LP02',d:'Estabelecer relações entre as partes do texto, considerando a construção composicional e o estilo do gênero.'},
+      {c:'EM13LP03',d:'Analisar relações de intertextualidade e interdiscursividade que permitam a explicitação de relações dialógicas.'},
+      {c:'EM13LP04',d:'Estabelecer relações de interdiscursividade e intertextualidade para explicitar, sustentar e conferir consistência a posicionamentos.'},
+      {c:'EM13LP05',d:'Analisar, em textos argumentativos, os posicionamentos assumidos, os movimentos argumentativos e os argumentos utilizados.'},
+      {c:'EM13LP06',d:'Analisar efeitos de sentido decorrentes de usos expressivos da linguagem, da escolha de determinadas palavras ou expressões.'},
+      {c:'EM13LP07',d:'Analisar marcas que expressam a posição do enunciador: uso de modalidades (epistêmica, deôntica e apreciativa) e modalizadores.'},
+      {c:'EM13LP08',d:'Analisar elementos e aspectos da sintaxe do Português: ordem dos constituintes, estrutura dos sintagmas, processos de coordenação e subordinação.'},
+      {c:'EM13LP09',d:'Comparar o tratamento dado pela gramática tradicional e pelas gramáticas de uso contemporâneas em relação a diferentes tópicos gramaticais.'},
+      {c:'EM13LP10',d:'Analisar o fenômeno da variação linguística em seus diferentes níveis e dimensões (regional, histórica, social, situacional, ocupacional, etária etc.).'},
+      {c:'EM13LP12',d:'Selecionar informações, dados e argumentos em fontes confiáveis, impressas e digitais, e utilizá-los de forma referenciada.'},
+    ]},
+  ]},
+  {id:'jornalistico',nome:'Jornalístico-Midiático',
+   grupos:[
+    {cog:'Campo Jornalístico-Midiático',cor:'#163272',items:[
+      {c:'EM13LP36',d:'Analisar os interesses que movem o campo jornalístico, os impactos das novas tecnologias e as condições que fazem da informação uma mercadoria.'},
+      {c:'EM13LP38',d:'Analisar os diferentes graus de parcialidade/imparcialidade em textos noticiosos, comparando relatos de diferentes fontes.'},
+      {c:'EM13LP41',d:'Analisar os processos humanos e automáticos de curadoria que operam nas redes sociais e outros domínios da internet.'},
+      {c:'EM13LP42',d:'Acompanhar, analisar e discutir a cobertura da mídia diante de acontecimentos e questões de relevância social.'},
+      {c:'EM13LP43',d:'Atuar de forma fundamentada, ética e crítica na produção e no compartilhamento de comentários, textos noticiosos e de opinião, memes, gifs etc.'},
+      {c:'EM13LP44',d:'Analisar formas contemporâneas de publicidade em contexto digital (advergame, anúncios em vídeos, social advertising, unboxing etc.).'},
+      {c:'EM13LP45',d:'Analisar, discutir, produzir e socializar, tendo em vista temas de interesse local ou global, notícias, reportagens, artigos de opinião, críticas da mídia etc.'},
+    ]},
+  ]},
+  {id:'literario',nome:'Artístico-Literário',
+   grupos:[
+    {cog:'Campo Artístico-Literário',cor:'#138A36',items:[
+      {c:'EM13LP46',d:'Compartilhar sentidos construídos na leitura/escuta de textos literários, percebendo diferenças entre as formas pessoais e coletivas.'},
+      {c:'EM13LP47',d:'Participar de eventos (saraus, competições orais, audições, mostras, feiras literárias, rodas e clubes de leitura, slams etc.).'},
+      {c:'EM13LP48',d:'Identificar assimilações, rupturas e permanências no processo de constituição da literatura brasileira.'},
+      {c:'EM13LP49',d:'Perceber as peculiaridades estruturais e estilísticas de diferentes gêneros literários (crônicas, poemas, romances, literatura marginal etc.).'},
+      {c:'EM13LP50',d:'Analisar relações intertextuais e interdiscursivas entre obras de diferentes autores e gêneros literários de um mesmo ou de diferentes momentos históricos.'},
+      {c:'EM13LP52',d:'Analisar obras significativas das literaturas brasileiras e de outros países e povos, com base em ferramentas da crítica literária.'},
+    ]},
+  ]},
+];
+
+const ESCALA=[
+  {n:'Nível 1',r:'225–249',cls:'n1',it:[
+    {c:'N1.1',d:'Identificar elementos da narrativa em história em quadrinhos.'},
+    {c:'N1.2',d:'Reconhecer a finalidade de recurso gráfico em artigos.'},
+    {c:'N1.3',d:'Reconhecer a relação de causa e consequência em lendas.'},
+    {c:'N1.4',d:'Inferir o sentido de palavra em letras de música e reportagens.'},
+  ]},
+  {n:'Nível 2',r:'250–274',cls:'n2',it:[
+    {c:'N2.1',d:'Reconhecer a ideia comum entre textos de gêneros diferentes e a ironia em tirinhas.'},
+    {c:'N2.2',d:'Reconhecer relações de sentido estabelecidas por conjunções ou locuções conjuntivas em letras de música e crônicas.'},
+    {c:'N2.3',d:'Reconhecer o uso de expressões características da linguagem (científica, profissional etc.) e a relação entre pronome e seu referente.'},
+    {c:'N2.4',d:'Inferir o efeito de sentido da linguagem verbal e não verbal em notícias e charges.'},
+  ]},
+  {n:'Nível 3',r:'275–299',cls:'n3',it:[
+    {c:'N3.1',d:'Localizar informação explícita em artigos de opinião.'},
+    {c:'N3.2',d:'Identificar a finalidade de relatórios científicos.'},
+    {c:'N3.3',d:'Reconhecer relações de sentido marcadas por conjunções, causa e consequência e relação entre pronome e referente em fragmentos de romances.'},
+    {c:'N3.4',d:'Reconhecer o tema de uma crônica.'},
+    {c:'N3.5',d:'Reconhecer variantes linguísticas em artigos.'},
+    {c:'N3.6',d:'Reconhecer o sentido e o efeito de sentido produzido pelo uso de recursos morfossintáticos em contos, artigos e crônicas.'},
+    {c:'N3.7',d:'Reconhecer opiniões divergentes sobre o mesmo tema em diferentes textos.'},
+    {c:'N3.8',d:'Inferir informação, sentido e efeito de sentido produzido por expressão em reportagens e tirinhas.'},
+  ]},
+  {n:'Nível 4',r:'300–324',cls:'n4',it:[
+    {c:'N4.1',d:'Localizar informações explícitas em infográficos, reportagens, crônicas e artigos.'},
+    {c:'N4.2',d:'Identificar o argumento em contos.'},
+    {c:'N4.3',d:'Identificar a finalidade e a informação principal em notícias.'},
+    {c:'N4.4',d:'Reconhecer a relação entre os pronomes e seus referentes em contos.'},
+    {c:'N4.5',d:'Reconhecer elementos da narrativa em contos.'},
+    {c:'N4.6',d:'Reconhecer variantes linguísticas em contos, notícias e reportagens.'},
+    {c:'N4.7',d:'Reconhecer o efeito de sentido produzido pelo uso de recursos morfossintáticos em poemas.'},
+    {c:'N4.8',d:'Reconhecer ideia comum e opiniões divergentes sobre o mesmo tema na comparação entre diferentes textos.'},
+    {c:'N4.9',d:'Reconhecer ironia e efeito de humor em crônicas e entrevistas.'},
+    {c:'N4.10',d:'Reconhecer a relação de causa e consequência em piadas e fragmentos de romance.'},
+    {c:'N4.11',d:'Comparar poemas que abordem o mesmo tema.'},
+    {c:'N4.12',d:'Diferenciar fato de opinião em contos, artigos e reportagens.'},
+    {c:'N4.13',d:'Diferenciar tese de argumentos em artigos, entrevistas e crônicas.'},
+    {c:'N4.14',d:'Inferir informação, sentido de expressão e o efeito de sentido decorrente do uso de recursos morfossintáticos em crônicas.'},
+    {c:'N4.15',d:'Inferir o sentido decorrente do uso de recursos gráficos em poemas.'},
+    {c:'N4.16',d:'Inferir o efeito de sentido da linguagem verbal e não verbal e o efeito de humor em tirinhas.'},
+  ]},
+  {n:'Nível 5',r:'325–349',cls:'n5',it:[
+    {c:'N5.1',d:'Localizar informação explícita em resumos.'},
+    {c:'N5.2',d:'Identificar a informação principal em reportagens.'},
+    {c:'N5.3',d:'Identificar elementos da narrativa e a relação entre argumento e ideia central em crônicas.'},
+    {c:'N5.4',d:'Reconhecer a finalidade de propagandas.'},
+    {c:'N5.5',d:'Reconhecer variantes linguísticas e o efeito de sentido de recursos gráficos em crônicas e artigos.'},
+    {c:'N5.6',d:'Reconhecer a relação de causa e consequência e relações de sentido marcadas por conjunções em reportagens, artigos e ensaios.'},
+    {c:'N5.7',d:'Reconhecer o tema em poemas.'},
+    {c:'N5.8',d:'Diferenciar fato de opinião em resenhas.'},
+    {c:'N5.9',d:'Inferir o sentido de palavras e expressões em piadas e letras de música.'},
+    {c:'N5.10',d:'Inferir informação em artigos; inferir o sentido de expressão em fragmentos de romances.'},
+  ]},
+];
+
+const BNCC_DATA=[
+  {eixo:'Todos os Campos',items:[
+    {s:'EM13LP01',b:'Todos os campos',d:'Relacionar o texto com suas condições de produção e contexto sócio-histórico de circulação.'},
+    {s:'EM13LP02',b:'Todos os campos',d:'Estabelecer relações entre as partes do texto considerando a construção composicional e o estilo do gênero.'},
+    {s:'EM13LP05',b:'Todos os campos',d:'Analisar, em textos argumentativos, os posicionamentos assumidos, os movimentos argumentativos e os argumentos.'},
+    {s:'EM13LP06',b:'Todos os campos',d:'Analisar efeitos de sentido decorrentes de usos expressivos da linguagem e da escolha de determinadas palavras.'},
+    {s:'EM13LP07',b:'Todos os campos',d:'Analisar marcas que expressam a posição do enunciador: modalidades e modalizadores.'},
+    {s:'EM13LP08',b:'Todos os campos',d:'Analisar elementos e aspectos da sintaxe do Português: ordem dos constituintes, sintagmas, coordenação e subordinação.'},
+    {s:'EM13LP12',b:'Todos os campos',d:'Selecionar informações, dados e argumentos em fontes confiáveis e utilizá-los de forma referenciada.'},
+  ]},
+  {eixo:'Jornalístico-Midiático',items:[
+    {s:'EM13LP36',b:'Jornalístico-midiático',d:'Analisar os interesses que movem o campo jornalístico, os impactos das novas tecnologias e da Web 2.0.'},
+    {s:'EM13LP38',b:'Jornalístico-midiático',d:'Analisar os diferentes graus de parcialidade em textos noticiosos, comparando relatos de diferentes fontes.'},
+    {s:'EM13LP41',b:'Jornalístico-midiático',d:'Analisar os processos humanos e automáticos de curadoria que operam nas redes sociais e outros domínios da internet.'},
+    {s:'EM13LP42',b:'Jornalístico-midiático',d:'Acompanhar, analisar e discutir a cobertura da mídia diante de acontecimentos e questões de relevância social.'},
+    {s:'EM13LP43',b:'Jornalístico-midiático',d:'Atuar de forma fundamentada, ética e crítica na produção e compartilhamento em redes sociais.'},
+    {s:'EM13LP44',b:'Jornalístico-midiático',d:'Analisar formas contemporâneas de publicidade em contexto digital (advergame, unboxing, narrative mercadológica etc.).'},
+    {s:'EM13LP45',b:'Jornalístico-midiático',d:'Analisar, discutir, produzir e socializar notícias, artigos de opinião, vlogs, podcasts, resenhas etc.'},
+  ]},
+  {eixo:'Artístico-Literário',items:[
+    {s:'EM13LP46',b:'Artístico-literário',d:'Compartilhar sentidos construídos na leitura de textos literários, percebendo diferenças entre formas pessoais e coletivas.'},
+    {s:'EM13LP47',b:'Artístico-literário',d:'Participar de saraus, slams, clubes de leitura, jograis, repentes e outros eventos culturais.'},
+    {s:'EM13LP48',b:'Artístico-literário',d:'Identificar assimilações, rupturas e permanências no processo de constituição da literatura brasileira.'},
+    {s:'EM13LP49',b:'Artístico-literário',d:'Perceber as peculiaridades estruturais e estilísticas de diferentes gêneros literários: crônicas, poemas, romances, literatura marginal.'},
+    {s:'EM13LP52',b:'Artístico-literário',d:'Analisar obras significativas das literaturas brasileiras e de outros países com base em ferramentas da crítica literária.'},
+  ]},
+];
+
+// ── STATE ──
+let alunos=[],editingId=null,modoAgrup='trio';
+
+document.addEventListener('DOMContentLoaded',()=>{
+  populateMissaoSelects();renderMissoes();renderHabilidades();renderEscala();renderBNCC();renderTurma();
+});
+function populateMissaoSelects(){
+  ['inp-missao','mmissao'].forEach(id=>{
+    const s=document.getElementById(id);if(!s)return;
+    MD.forEach(m=>{const o=document.createElement('option');o.value=m.n;o.textContent=`Jornada ${m.n} – ${m.f.substring(0,35)}`;s.appendChild(o);});
+  });
+}
+function switchPanel(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nt').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(id==='agrupamentos')renderAgrupamentos();
+}
+function renderMissoes(){
+  document.getElementById('mtbody').innerHTML=MD.map(m=>`<tr>
+    <td><strong style="color:var(--az)">Jornada ${m.n}</strong>${m.f.includes('⭐')?'<br><span style="font-size:9px;color:var(--lp);font-weight:700">Jornada especial ampliada</span>':''}</td>
+    <td>${m.h.map(h=>`<span class="th">${h}</span>`).join('')}</td>
+    <td>${m.nv.map(n=>`<span class="tn">${n}</span>`).join('')}</td>
+  </tr>`).join('');
+}
+function renderHabilidades(){
+  document.getElementById('etabs').innerHTML=EIXOS.map((e,i)=>`<button class="etab ${i===0?'active':''}" onclick="switchEixo('${e.id}',this)">${e.nome}</button>`).join('');
+  document.getElementById('ecnts').innerHTML=EIXOS.map((e,i)=>`
+    <div class="ecnt ${i===0?'active':''}" id="ec-${e.id}">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:13px">
+        ${e.grupos.map(g=>`<div class="eblk">
+          <div class="enome" style="color:${g.cor}">${g.cog}</div>
+          <ul class="hlist">${g.items.map(h=>`<li><span class="hc">${h.c}</span><span>${h.d}</span></li>`).join('')}</ul>
+        </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+function switchEixo(id,btn){
+  document.querySelectorAll('.ecnt').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('#etabs .etab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('ec-'+id).classList.add('active');btn.classList.add('active');
+}
+function renderEscala(){
+  document.getElementById('etable').innerHTML=`<thead><tr><th style="width:95px">Nível</th><th style="width:72px">Pontuação</th><th style="width:52px">Código</th><th>Descrição</th></tr></thead>
+  <tbody>${ESCALA.map(n=>n.it.map((it,i)=>`<tr>
+    ${i===0?`<td rowspan="${n.it.length}"><span class="nb ${n.cls}">${n.n}</span></td><td rowspan="${n.it.length}" style="font-family:'DM Mono',monospace;font-size:9.5px;color:#ccc">${n.r}</td>`:''}
+    <td style="font-family:'DM Mono',monospace;font-size:10px;font-weight:700;color:var(--lp)">${it.c}</td>
+    <td style="font-size:11px">${it.d}</td></tr>`).join('')).join('')}</tbody>`;
+}
+function renderBNCC(){
+  document.getElementById('btabs').innerHTML=BNCC_DATA.map((g,i)=>`<button class="etab ${i===0?'active':''}" onclick="switchBncc(${i},this)">${g.eixo}</button>`).join('');
+  renderBnccTable(0);
+}
+function switchBncc(i,btn){document.querySelectorAll('#btabs .etab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');renderBnccTable(i);}
+function renderBnccTable(i){
+  document.getElementById('bbody').innerHTML=BNCC_DATA[i].items.map(it=>`<tr>
+    <td><span style="font-family:'DM Mono',monospace;font-weight:800;color:var(--lp);font-size:11px">${it.s}</span></td>
+    <td><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--az-m);font-weight:600;margin-bottom:2px">${it.b}</div>
+    <div style="font-size:11px;color:var(--pt-m);line-height:1.4">${it.d}</div></td>
+  </tr>`).join('');
+}
+function calcNivel(a){
+  if(!a.missao)return null;
+  const m={'9ef':4,'em1':3,'em2':2,'em3':1,'em3t':0}; const def2=m[a.serie]??1; return def2<=1?'proficiente':def2<=3?'basico':'abaixo';
+  const def=m[a.serie]??0;
+  return def<=0?'proficiente':def<=2?'basico':'abaixo';
+}
+function addAluno(){
+  const nome=document.getElementById('inp-nome').value.trim();
+  if(!nome){document.getElementById('inp-nome').focus();return;}
+  if(alunos.length>=45){alert('Limite de 45 estudantes atingido.');return;}
+  alunos.push({id:Date.now()+Math.random(),nome,serie:document.getElementById('inp-serie').value,missao:document.getElementById('inp-missao').value,etapa:document.getElementById('inp-etapa').value});
+  document.getElementById('inp-nome').value='';renderTurma();renderAgrupamentos();
+}
+function importarLista(){
+  const txt=document.getElementById('import-area').value.trim();if(!txt)return;
+  txt.split('\n').map(n=>n.trim()).filter(n=>n).slice(0,45-alunos.length).forEach(nome=>{
+    if(alunos.length<45)alunos.push({id:Date.now()+Math.random(),nome,serie:'em3',missao:'',etapa:''});
+  });
+  document.getElementById('import-area').value='';renderTurma();renderAgrupamentos();
+}
+function removeAluno(id){alunos=alunos.filter(a=>a.id!==id);renderTurma();renderAgrupamentos();}
+function updateAluno(id,f,v){const a=alunos.find(a=>a.id===id);if(a){a[f]=v;renderTurma();renderAgrupamentos();}}
+function limparTurma(){if(!alunos.length)return;if(confirm('Remover todos os estudantes?')){alunos=[];renderTurma();renderAgrupamentos();}}
+function renderTurma(){
+  const grid=document.getElementById('agrid');
+  const search=document.getElementById('search-aluno').value.toLowerCase();
+  const filter=document.getElementById('filter-nivel').value;
+  document.getElementById('cbadge').textContent=`(${alunos.length}/45)`;
+  const prof=alunos.filter(a=>calcNivel(a)==='proficiente').length;
+  const bas=alunos.filter(a=>calcNivel(a)==='basico').length;
+  const ab=alunos.filter(a=>calcNivel(a)==='abaixo').length;
+  const sb=document.getElementById('sbar');
+  if(alunos.length>0){
+    sb.style.display='flex';
+    const pct=v=>alunos.length?Math.round(v/alunos.length*100):0;
+    sb.innerHTML=`<div class="sch sc-t"><div class="scn">${alunos.length}</div><div class="scl">Total</div></div>
+    <div class="sch sc-p"><div class="scn">${prof}</div><div class="scl">✅ Proficiente</div></div>
+    <div class="sch sc-b"><div class="scn">${bas}</div><div class="scl">⚠️ Básico</div></div>
+    <div class="sch sc-a"><div class="scn">${ab}</div><div class="scl">❌ Abaixo</div></div>
+    <div style="flex:1;background:#fff;border-radius:9px;padding:10px 15px;border:2px solid var(--bd);min-width:140px">
+      <div style="font-size:8.5px;font-weight:800;color:#ccc;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Distribuição</div>
+      <div style="display:flex;height:7px;border-radius:4px;overflow:hidden;background:#eee">
+        <div style="width:${pct(prof)}%;background:var(--vd)"></div>
+        <div style="width:${pct(bas)}%;background:var(--am)"></div>
+        <div style="width:${pct(ab)}%;background:var(--lp)"></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:4px;font-size:9px">
+        <span style="color:var(--vd);font-weight:700">■ ${pct(prof)}%</span>
+        <span style="color:var(--am);font-weight:700">■ ${pct(bas)}%</span>
+        <span style="color:var(--lp);font-weight:700">■ ${pct(ab)}%</span>
+      </div>
+    </div>`;
+  }else{sb.style.display='none';}
+  const serieLabel={'9ef':'9º EF','em1':'1ª EM','em2':'2ª EM','em3':'3ª EM'};
+  const filtered=alunos.filter(a=>a.nome.toLowerCase().includes(search)&&(!filter||calcNivel(a)===filter));
+  if(!alunos.length){grid.innerHTML=`<div class="empty"><div class="ico">📖</div><p>Nenhum estudante adicionado ainda.</p></div>`;return;}
+  if(!filtered.length){grid.innerHTML=`<div class="empty"><div class="ico">🔍</div><p>Nenhum estudante encontrado.</p></div>`;return;}
+  grid.innerHTML=filtered.map(a=>{
+    const nv=calcNivel(a);
+    let pc='ps',pl='– sem dado',cc='';
+    if(nv==='proficiente'){pc='pp';pl='✅ Proficiente';cc='proficiente';}
+    else if(nv==='basico'){pc='pb';pl='⚠️ Básico';cc='basico';}
+    else if(nv==='abaixo'){pc='pa';pl='❌ Abaixo';cc='abaixo';}
+    const mo=a.missao?MD.find(m=>m.n===parseInt(a.missao)):null;
+    return `<div class="ac ${cc}">
+      <button class="brm" onclick="removeAluno(${a.id})">✕</button>
+      <div class="anh">
+        <div><div class="an">${a.nome}</div><div class="anum">${serieLabel[a.serie]||a.serie} · ${a.missao?'J'+a.missao:'–'}${a.etapa?' · E0'+a.etapa:''}</div></div>
+        <span class="np ${pc}">${pl}</span>
+      </div>
+      <div class="ab">
+        <div class="sr"><label>Série</label>
+          <select onchange="updateAluno(${a.id},'serie',this.value)">
+            ${Object.entries(serieLabel).map(([k,v])=>`<option value="${k}" ${a.serie===k?'selected':''}>${v}</option>`).join('')}
+          </select>
+        </div>
+        <div class="sr"><label>Jornada</label>
+          <select onchange="updateAluno(${a.id},'missao',this.value)">
+            <option value="" ${!a.missao?'selected':''}>– não definida –</option>
+            ${MD.map(m=>`<option value="${m.n}" ${a.missao==m.n?'selected':''}>J${m.n} – ${m.f.substring(0,30)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="sr"><label>Etapa atual</label>
+          <select onchange="updateAluno(${a.id},'etapa',this.value)">
+            <option value="" ${!a.etapa?'selected':''}>– não definida –</option>
+            ${['1','2','3','4'].map(e=>`<option value="${e}" ${a.etapa===e?'selected':''}>Etapa 0${e}</option>`).join('')}
+          </select>
+        </div>
+        ${mo?`<div style="font-size:9.5px;color:#bbb;margin-top:3px">📖 ${mo.f.replace('⭐ ','')}<br>${mo.h.slice(0,3).map(h=>`<span class="th">${h}</span>`).join('')}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+function setModo(m,btn){modoAgrup=m;document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');renderAgrupamentos();}
+const RL={monitor:'Monitor (Proficiente)',par:'Par (Básico)',aprendente:'Aprendente (Abaixo do Básico)'};
+const RD={monitor:'Orienta e explica usando linguagem entre pares (ZDP).',par:'Auxilia o aprendente e consolida seu próprio conhecimento.',aprendente:'Recebe suporte em ambiente seguro e colaborativo.'};
+const RE={monitor:'🌟',par:'📘',aprendente:'🌱'};
+const RC={monitor:'gm-p',par:'gm-b',aprendente:'gm-a'};
+function buildGrupos(){
+  const P=[...alunos.filter(a=>calcNivel(a)==='proficiente')];
+  const B=[...alunos.filter(a=>calcNivel(a)==='basico')];
+  const A=[...alunos.filter(a=>calcNivel(a)==='abaixo')];
+  let grupos=[],g=1;
+  if(modoAgrup==='trio'){
+    while(P.length||B.length||A.length){const gr={n:g++,membros:[],tipo:'Trio'};if(P.length)gr.membros.push({...P.shift(),role:'monitor'});if(B.length)gr.membros.push({...B.shift(),role:'par'});if(A.length)gr.membros.push({...A.shift(),role:'aprendente'});grupos.push(gr);if(g>60)break;}
+  }else if(modoAgrup==='quad'){
+    while(P.length||B.length||A.length){const gr={n:g++,membros:[],tipo:'Quarteto'};if(P.length)gr.membros.push({...P.shift(),role:'monitor'});if(B.length)gr.membros.push({...B.shift(),role:'par'});if(A.length)gr.membros.push({...A.shift(),role:'aprendente'});if(A.length&&gr.membros.length<4)gr.membros.push({...A.shift(),role:'aprendente'});else if(B.length&&gr.membros.length<4)gr.membros.push({...B.shift(),role:'par'});else if(P.length&&gr.membros.length<4)gr.membros.push({...P.shift(),role:'monitor'});if(gr.membros.length)grupos.push(gr);if(g>60)break;}
+  }else if(modoAgrup==='sext'){
+    while(P.length||B.length||A.length){const gr={n:g++,membros:[],tipo:'Sexteto'};if(P.length)gr.membros.push({...P.shift(),role:'monitor'});if(B.length)gr.membros.push({...B.shift(),role:'par'});for(let i=0;i<3;i++)if(A.length)gr.membros.push({...A.shift(),role:'aprendente'});if(P.length&&gr.membros.length<6)gr.membros.push({...P.shift(),role:'monitor'});if(B.length&&gr.membros.length<6)gr.membros.push({...B.shift(),role:'par'});if(gr.membros.length)grupos.push(gr);if(g>60)break;}
+  }else if(modoAgrup==='dupla'){
+    while(P.length&&B.length){grupos.push({n:g++,membros:[{...P.shift(),role:'monitor'},{...B.shift(),role:'par'}],tipo:'Dupla'});}
+    while(B.length&&A.length){grupos.push({n:g++,membros:[{...B.shift(),role:'par'},{...A.shift(),role:'aprendente'}],tipo:'Dupla'});}
+    while(P.length){grupos.push({n:g++,membros:[{...P.shift(),role:'monitor'}],tipo:'Dupla'});}
+    while(B.length){grupos.push({n:g++,membros:[{...B.shift(),role:'par'}],tipo:'Dupla'});}
+    while(A.length){grupos.push({n:g++,membros:[{...A.shift(),role:'aprendente'}],tipo:'Dupla'});}
+  }else if(modoAgrup==='ind'){
+    const todos=[...alunos.filter(a=>calcNivel(a)==='proficiente').map(a=>({...a,role:'monitor'})),...alunos.filter(a=>calcNivel(a)==='basico').map(a=>({...a,role:'par'})),...alunos.filter(a=>calcNivel(a)==='abaixo').map(a=>({...a,role:'aprendente'})),...alunos.filter(a=>!calcNivel(a)).map(a=>({...a,role:'par'}))];
+    grupos=todos.map((a,i)=>({n:i+1,membros:[a],tipo:'Individual'}));
+  }
+  return grupos;
+}
+function modoLabel(){return{trio:'Trio',quad:'Quarteto',sext:'Sexteto',dupla:'Dupla',ind:'Individual'}[modoAgrup]||'Trio';}
+function renderAgrupamentos(){
+  const area=document.getElementById('agrup-area');
+  if(!alunos.length){area.innerHTML=`<div class="empty card"><div class="ico">🤝</div><p>Cadastre estudantes na aba "Minha Turma" para gerar os agrupamentos.</p></div>`;return;}
+  const gs=buildGrupos();
+  const sem=alunos.filter(a=>!calcNivel(a));
+  const profN=alunos.filter(a=>calcNivel(a)==='proficiente').length;
+  const basN=alunos.filter(a=>calcNivel(a)==='basico').length;
+  const abN=alunos.filter(a=>calcNivel(a)==='abaixo').length;
+  let html=`<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px">
+    <div style="background:#fff;border-radius:9px;padding:10px 14px;border:2px solid var(--az)"><div style="font-size:20px;font-weight:900;color:var(--az)">${gs.length}</div><div style="font-size:8.5px;color:#ccc;font-weight:700;text-transform:uppercase">${modoLabel()}s</div></div>
+    <div style="background:#fff;border-radius:9px;padding:10px 14px;border:2px solid var(--vd)"><div style="font-size:20px;font-weight:900;color:var(--vd)">${profN}</div><div style="font-size:8.5px;color:#ccc;font-weight:700;text-transform:uppercase">🌟 Monitores</div></div>
+    <div style="background:#fff;border-radius:9px;padding:10px 14px;border:2px solid var(--am)"><div style="font-size:20px;font-weight:900;color:var(--am)">${basN}</div><div style="font-size:8.5px;color:#ccc;font-weight:700;text-transform:uppercase">📘 Pares</div></div>
+    <div style="background:#fff;border-radius:9px;padding:10px 14px;border:2px solid var(--lp)"><div style="font-size:20px;font-weight:900;color:var(--lp)">${abN}</div><div style="font-size:8.5px;color:#ccc;font-weight:700;text-transform:uppercase">🌱 Aprendentes</div></div>
+  </div>`;
+  if(!gs.length){html+=`<div class="card empty"><div class="ico">⚙️</div><p>Configure a Série dos estudantes para gerar os grupos.</p></div>`;}
+  else{html+=`<div class="ggrid">${gs.map(g=>{
+    const miss=[...new Set(g.membros.map(m=>m.missao).filter(Boolean))];
+    const hrec=miss.length?MD.filter(m=>miss.includes(String(m.n))):[];
+    return `<div class="gc"><div class="gh"><span>${g.tipo} ${g.n}</span><span class="gn">${g.membros.length} membro${g.membros.length>1?'s':''}</span></div>
+      <div class="gb">
+        ${g.membros.map(m=>`<div class="gm ${RC[m.role]}">
+          <div class="mico">${RE[m.role]}</div>
+          <div class="minf"><div class="mnome">${m.nome}</div><div class="mrole">${RL[m.role]}</div><div class="mdesc">${RD[m.role]}</div>
+          ${m.missao?`<div style="font-size:9px;color:#bbb;margin-top:2px">📍 Jornada ${m.missao}${m.etapa?' · E0'+m.etapa:''}</div>`:''}</div>
+        </div>`).join('')}
+        ${hrec.length?`<div class="mrec">📖 <strong>Foco:</strong> ${hrec.map(m=>m.h.slice(0,2).join(', ')).join(' · ')}</div>`:''}
+      </div></div>`;
+  }).join('')}</div>`;}
+  if(sem.length){html+=`<div class="card" style="margin-top:13px"><div class="ct">⚠️ Sem classificação (${sem.length})</div><div style="display:flex;flex-wrap:wrap;gap:6px">${sem.map(a=>`<span style="background:var(--cl);border-radius:20px;padding:3px 11px;font-size:11px;font-weight:700;border:1px solid var(--bd)">${a.nome}</span>`).join('')}</div></div>`;}
+  area.innerHTML=html;
+}
+function exportarPDF(){
+  const st=document.getElementById('pdfst');
+  if(!alunos.length){st.textContent='⚠️ Nenhum estudante cadastrado.';return;}
+  st.textContent='⏳ Gerando PDF...';
+  try{
+    const {jsPDF}=window.jspdf;
+    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const W=210,M=14,date=new Date().toLocaleDateString('pt-BR');
+    const gs=buildGrupos();
+    const profN=alunos.filter(a=>calcNivel(a)==='proficiente').length;
+    const basN=alunos.filter(a=>calcNivel(a)==='basico').length;
+    const abN=alunos.filter(a=>calcNivel(a)==='abaixo').length;
+    function drawHeader(pg1){
+      doc.setFillColor(10,31,68);doc.rect(0,0,W,pg1?28:15,'F');
+      doc.setFillColor(230,81,0);doc.rect(0,pg1?28:15,W,2,'F');
+      doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');
+      if(pg1){
+        doc.setFontSize(13);doc.text('SP em Acao - Lingua Portuguesa 3 | 3a serie EM | Agrupamentos',M,11);
+        doc.setFontSize(8.5);doc.setFont('helvetica','normal');doc.setTextColor(160,180,220);
+        doc.text(`Modo: ${modoLabel()} | ${date} | ${alunos.length} estudantes | ${gs.length} grupos`,M,20);
+      }else{
+        doc.setFontSize(8.5);doc.text(`SP em Acao - LP1 | 9ano EF | Agrupamentos (cont.) | Modo: ${modoLabel()}`,M,10);
+        doc.setFont('helvetica','normal');doc.setTextColor(160,180,220);doc.text(date,W-M,10,{align:'right'});
+      }
+    }
+    drawHeader(true);
+    let y=37;
+    [{cor:[19,138,54],l:'MONITOR (Proficiente)'},{cor:[184,134,11],l:'PAR (Basico)'},{cor:[230,81,0],l:'APRENDENTE (Abaixo do Basico)'}]
+    .forEach(lg=>{doc.setFillColor(...lg.cor);doc.roundedRect(M,y,3.5,4,1,1,'F');doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(60,60,60);doc.text(lg.l,M+5.5,y+3);y+=6;});
+    y+=2;
+    doc.setFillColor(238,241,250);doc.roundedRect(M,y,W-M*2,13,3,3,'F');
+    [{v:gs.length,l:modoLabel()+'S'},{v:profN,l:'MONITORES'},{v:basN,l:'PARES'},{v:abN,l:'APRENDENTES'}]
+    .forEach((r,i)=>{const rx=M+5+i*49;doc.setFont('helvetica','bold');doc.setFontSize(14);doc.setTextColor(230,81,0);doc.text(String(r.v),rx,y+8.5);doc.setFontSize(6.5);doc.setFont('helvetica','normal');doc.setTextColor(130,130,130);doc.text(r.l,rx,y+12);});
+    y+=19;
+    const CW=(W-M*2-5)/2,LH=8,BH=13;let col=0,colY=[y,y];
+    gs.forEach(g=>{
+      const ch=BH+g.membros.length*LH+2;
+      if(colY[col]+ch>283){doc.addPage();drawHeader(false);colY=[20,20];col=0;}
+      const cx=M+col*(CW+5),cy=colY[col];
+      doc.setFillColor(215,218,228);doc.roundedRect(cx+1,cy+1,CW,ch,3,3,'F');
+      doc.setFillColor(255,255,255);doc.roundedRect(cx,cy,CW,ch,3,3,'F');
+      doc.setFillColor(10,31,68);doc.roundedRect(cx,cy,CW,9,3,3,'F');doc.rect(cx,cy+5,CW,4,'F');
+      doc.setFillColor(230,81,0);doc.rect(cx,cy+8.5,CW,1.5,'F');
+      doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(255,255,255);
+      doc.text(`${g.tipo.toUpperCase()} ${g.n}`,cx+3,cy+6.5);
+      doc.setFontSize(6.5);doc.setTextColor(160,185,220);doc.text(`${g.membros.length} membro${g.membros.length>1?'s':''}`,cx+CW-3,cy+6.5,{align:'right'});
+      const corR={monitor:[19,138,54],par:[184,134,11],aprendente:[230,81,0]};
+      let my=cy+13;
+      g.membros.forEach(m=>{
+        const [r,gv,b]=corR[m.role]||[100,100,100];
+        doc.setFillColor(r,gv,b);doc.roundedRect(cx+3,my-2.8,2.5,5,0.8,0.8,'F');
+        doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(10,31,68);
+        doc.text((m.nome.length>25?m.nome.substring(0,24)+'…':m.nome),cx+7,my+0.5);
+        doc.setFont('helvetica','normal');doc.setFontSize(6);doc.setTextColor(r,gv,b);
+        doc.text((RL[m.role]||m.role),cx+7,my+4.5);
+        if(m.missao){doc.setTextColor(180,180,180);doc.text(`J${m.missao}${m.etapa?'/E0'+m.etapa:''}`,cx+CW-3,my+0.5,{align:'right'});}
+        my+=LH;
+      });
+      colY[col]+=ch+4;col=(col+1)%2;
+    });
+    const total=doc.getNumberOfPages();
+    for(let i=1;i<=total;i++){
+      doc.setPage(i);doc.setFillColor(10,31,68);doc.rect(0,288,W,9,'F');doc.setFillColor(230,81,0);doc.rect(0,288,W,1.5,'F');
+      doc.setFont('helvetica','normal');doc.setFontSize(6);doc.setTextColor(100,130,180);
+      doc.text('SP em Acao - Lingua Portuguesa 3 | 3a serie EM | Agrupamentos baseados em Vygotsky (ZDP)',M,293.5);
+      doc.text(`Pag. ${i}/${total}`,W-M,293.5,{align:'right'});
+    }
+    doc.save(`Agrupamentos_LP3_3serieEM_${date.replace(/\//g,'-')}.pdf`);
+    st.textContent='✅ PDF baixado!';setTimeout(()=>{st.textContent='';},3500);
+  }catch(e){console.error(e);st.textContent='❌ Erro ao gerar PDF.';}
+}
+function openModal(id){
+  editingId=id;const a=alunos.find(a=>a.id===id);
+  document.getElementById('mnome').value=a.nome;
+  document.getElementById('mserie').value=a.serie;
+  document.getElementById('mmissao').value=a.missao||'';
+  document.getElementById('metapa').value=a.etapa||'';
+  document.getElementById('moverlay').classList.add('open');
+}
+function closeModal(){document.getElementById('moverlay').classList.remove('open');editingId=null;}
+function saveModal(){
+  if(!editingId)return;const a=alunos.find(a=>a.id===editingId);
+  a.nome=document.getElementById('mnome').value.trim()||a.nome;
+  a.serie=document.getElementById('mserie').value;
+  a.missao=document.getElementById('mmissao').value;
+  a.etapa=document.getElementById('metapa').value;
+  closeModal();renderTurma();renderAgrupamentos();
+}
+</script>
+
+<footer style="border-top:1px solid rgba(255,255,255,.07);padding:18px 28px;text-align:center;font-size:11px;color:rgba(255,255,255,.28);background:rgba(10,31,68,.6);">
+  <strong><span style="color:#FF8A65;font-size:12px;letter-spacing:.5px;">URE-CAIEIRAS</span></strong><span style="margin:0 6px;opacity:.35">·</span>
+  <strong>SP em Ação · Língua Portuguesa</strong> — Portal do Professor · Seduc-SP ·
+  Agrupamentos baseados em Vygotsky (ZDP)
+  <br><a href="painel.html" style="color:rgba(255,255,255,.4);font-size:10px;text-decoration:none;margin-top:5px;display:inline-block;">← Voltar ao Painel Principal</a>
+</footer>
+</body>
+</html>

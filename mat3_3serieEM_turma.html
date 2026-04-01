@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SP em Ação – Matemática 3 | Gestão de Turma</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --vm:#D0021B;--vm-e:#A00015;--vm-l:#FFF0F1;
+  --az:#0A1F44;--az-m:#163272;--az-l:#EEF2FA;
+  --pt:#111;--pt-m:#333;--pt-c:#666;
+  --cl:#F3F4F8;--bd:#DCDFE8;--br:#FFF;
+  --vd:#138A36;--vd-l:#E6F5EC;
+  --am:#B8860B;--am-l:#FFF8E1;
+  --gold:#C49A00;--gold-l:#FFFBEA;
+  --sh:0 4px 20px rgba(10,31,68,.10);
+  --sh2:0 8px 36px rgba(10,31,68,.16);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sora',sans-serif;background:var(--cl);color:var(--pt);min-height:100vh}
+
+header{background:var(--az);position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.30);border-bottom:3px solid var(--vm)}
+.hi{max-width:1440px;margin:0 auto;padding:9px 22px;display:flex;align-items:center;gap:13px;flex-wrap:wrap}
+.hlogo{height:42px;width:auto;border-radius:5px;background:#fff;padding:2px 5px;object-fit:contain;flex-shrink:0}
+.hdiv{width:2px;height:32px;background:rgba(255,255,255,.18);flex-shrink:0}
+.htxt{flex:1;min-width:0}
+.htitle{font-size:14px;font-weight:800;color:#fff;line-height:1.2}
+.hsub{font-size:10px;color:rgba(255,255,255,.55);margin-top:1px}
+.hbadge{background:var(--vm);color:#fff;font-weight:800;font-size:9.5px;padding:3px 9px;border-radius:20px;letter-spacing:1.2px;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+.hvol{background:rgba(255,255,255,.15);color:#fff;font-weight:700;font-size:10px;padding:3px 10px;border-radius:20px;white-space:nowrap}
+nav{display:flex;gap:3px;flex-wrap:wrap}
+.nt{background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);border:none;padding:6px 11px;border-radius:7px;font-family:'Sora',sans-serif;font-size:10.5px;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap}
+.nt.active{background:var(--vm);color:#fff}
+.nt:hover:not(.active){background:rgba(255,255,255,.16);color:#fff}
+
+.main{max-width:1440px;margin:0 auto;padding:22px}
+.card{background:#fff;border-radius:13px;box-shadow:var(--sh);padding:20px;margin-bottom:16px;border:1px solid var(--bd)}
+.ct{font-size:11.5px;font-weight:800;color:var(--vm);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:13px;display:flex;align-items:center;gap:7px}
+
+.panel{display:none}.panel.active{display:block}
+
+/* planej */
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+.bc{border-radius:10px;overflow:hidden;border:2px solid var(--bd)}
+.bh{background:var(--az);color:#fff;font-weight:800;font-size:10.5px;padding:8px 12px;text-align:center;text-transform:uppercase;letter-spacing:.5px}
+.jrow{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-bottom:1px solid var(--bd);font-size:11px}
+.jrow:last-child{border-bottom:none}
+.jn{font-weight:700;color:var(--vm);font-size:10.5px}
+.ji{color:#aaa;font-family:'DM Mono',monospace;font-size:9px}
+
+/* jornadas detalhadas */
+.jgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.jcard{background:white;border-radius:11px;border:2px solid var(--bd);padding:14px;transition:all .2s}
+.jcard:hover{border-color:var(--vm);box-shadow:var(--sh)}
+.jcard-title{font-weight:800;font-size:12.5px;color:var(--az);margin-bottom:5px}
+.jcard-obj{font-size:10.5px;color:var(--pt-m);line-height:1.4;margin-bottom:7px}
+.jtags{display:flex;flex-wrap:wrap;gap:3px}
+.jtag-bncc{display:inline-block;background:#E8F0FE;color:var(--az-m);font-family:'DM Mono',monospace;font-size:9px;padding:2px 7px;border-radius:20px;font-weight:700}
+.jtag-saeb{display:inline-block;background:var(--gold-l);color:var(--gold);font-family:'DM Mono',monospace;font-size:9px;padding:2px 7px;border-radius:20px;font-weight:700}
+.jtag-desc{display:inline-block;background:var(--vm-l);color:var(--vm-e);font-family:'DM Mono',monospace;font-size:9px;padding:2px 7px;border-radius:20px;font-weight:700}
+/* missões × habilidades table tags */
+.th{display:inline-block;background:var(--gold-l);color:var(--gold);font-family:'DM Mono',monospace;font-size:9px;padding:2px 6px;border-radius:20px;margin:1px;font-weight:700}
+.tn{display:inline-block;background:var(--az-l);color:var(--az-m);font-family:'DM Mono',monospace;font-size:9px;padding:2px 6px;border-radius:20px;margin:1px;font-weight:700}
+
+
+/* escala */
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{background:var(--az);color:#fff;padding:7px 10px;text-align:left;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+.tbl td{padding:6px 10px;border-bottom:1px solid var(--bd);vertical-align:top}
+.tbl tr:hover td{background:var(--az-l)}
+.nb{font-weight:800;font-size:9px;padding:2px 7px;border-radius:20px;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px}
+.n1{background:#fdebd0;color:#7a4400}.n2{background:#fef9e7;color:#5a4800}
+.n3{background:#e8f5e9;color:#155724}.n4{background:#c8e6c9;color:#0d3b1a}
+.n5{background:#dce9ff;color:#0a1f44}.n6{background:#b8d4ff;color:#0a1f44}
+.n7{background:#e1d5f5;color:#2e0070}.n8{background:#ce93d8;color:#1a003d}
+.n9{background:#ab47bc;color:white}.n10{background:#6a1b9a;color:white}
+
+/* BNCC competências */
+.cemat-card{background:var(--gold-l);border-radius:10px;padding:13px 16px;margin-bottom:12px;border-left:4px solid var(--gold)}
+.cemat-title{font-weight:800;font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.cemat-desc{font-size:11px;color:var(--pt-m);line-height:1.5;margin-bottom:7px}
+.cemat-habs{display:flex;flex-wrap:wrap;gap:4px}
+.cemat-hab{display:inline-block;background:white;color:var(--az-m);font-family:'DM Mono',monospace;font-size:9.5px;padding:3px 9px;border-radius:20px;font-weight:700;border:1.5px solid var(--bd)}
+
+/* turma */
+.agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:12px}
+.ac{background:#fff;border-radius:11px;padding:14px;border:2px solid var(--bd);transition:all .2s;position:relative}
+.ac:hover{border-color:var(--vm);box-shadow:var(--sh)}
+.ac.proficiente{border-left:5px solid var(--vd)}
+.ac.basico{border-left:5px solid var(--am)}
+.ac.abaixo{border-left:5px solid var(--vm)}
+.anh{display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
+.an{font-weight:700;font-size:13px;color:var(--az)}
+.anum{font-family:'DM Mono',monospace;font-size:9.5px;color:#bbb;margin-top:1px}
+.np{font-size:8.5px;font-weight:800;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;flex-shrink:0}
+.pp{background:var(--vd-l);color:#0a3d1e}.pb{background:var(--am-l);color:#5a3a00}
+.pa{background:var(--vm-l);color:var(--vm-e)}.ps{background:var(--cl);color:#999}
+.ab{margin-top:8px}
+.sr{margin-bottom:6px}
+.sr label{font-size:9.5px;color:#bbb;font-weight:700;display:block;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px}
+.sr select,.sr input{width:100%;padding:5px 8px;border:1.5px solid var(--bd);border-radius:7px;font-family:'Sora',sans-serif;font-size:11px;color:var(--pt);background:var(--cl);transition:border .2s}
+.sr select:focus,.sr input:focus{outline:none;border-color:var(--vm)}
+.brm{position:absolute;top:8px;right:8px;background:none;border:none;color:#ddd;font-size:14px;cursor:pointer;padding:2px 4px;border-radius:4px;line-height:1}
+.brm:hover{color:var(--vm);background:var(--vm-l)}
+
+.btn{padding:8px 16px;border-radius:8px;font-family:'Sora',sans-serif;font-weight:700;font-size:12px;cursor:pointer;border:none;transition:all .18s;display:inline-flex;align-items:center;gap:5px}
+.btp{background:var(--vm);color:#fff}.btp:hover{background:var(--vm-e)}
+.bts{background:var(--az);color:#fff}.bts:hover{background:var(--az-m)}
+.bto{background:#fff;color:var(--az);border:2px solid var(--az)}.bto:hover{background:var(--az);color:#fff}
+.btk{background:var(--pt);color:#fff}.btk:hover{background:var(--pt-m)}
+.bsm{padding:5px 10px;font-size:10px;border-radius:6px}
+
+.addarea{background:var(--cl);border:2px dashed var(--bd);border-radius:10px;padding:16px;margin-bottom:16px}
+.adr{display:flex;gap:9px;align-items:flex-end;flex-wrap:wrap}
+.adr .sr{flex:1;min-width:130px;margin-bottom:0}
+.impta{width:100%;min-height:65px;padding:8px;border:1.5px solid var(--bd);border-radius:7px;font-family:'DM Mono',monospace;font-size:11px;resize:vertical;margin-top:8px;margin-bottom:5px}
+
+.sbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.sch{background:#fff;border-radius:9px;padding:9px 14px;border:2px solid;display:flex;flex-direction:column;align-items:center;min-width:80px}
+.scn{font-size:20px;font-weight:900}.scl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#bbb;margin-top:2px}
+.sc-p{border-color:var(--vd)}.sc-p .scn{color:var(--vd)}
+.sc-b{border-color:var(--am)}.sc-b .scn{color:var(--am)}
+.sc-a{border-color:var(--vm)}.sc-a .scn{color:var(--vm)}
+.sc-t{border-color:var(--az)}.sc-t .scn{color:var(--az)}
+
+.aintro{background:linear-gradient(135deg,var(--az-l),#f0f4ff);border-radius:10px;padding:14px 18px;margin-bottom:16px;border-left:5px solid var(--az)}
+.aintro p{font-size:12px;color:var(--az);line-height:1.6}
+.aintro strong{color:var(--vm)}
+
+.agrup-ctrl{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px;background:#fff;border-radius:10px;padding:14px 18px;border:2px solid var(--bd);box-shadow:var(--sh)}
+.agrup-ctrl label{font-size:11px;font-weight:700;color:var(--az);text-transform:uppercase;letter-spacing:.5px}
+.mode-btn{padding:7px 14px;border-radius:8px;font-family:'Sora',sans-serif;font-size:11px;font-weight:700;cursor:pointer;border:2px solid var(--bd);background:#fff;color:#888;transition:all .18s}
+.mode-btn.sel{background:var(--vm);color:#fff;border-color:var(--vm)}
+.mode-sep{width:1px;height:28px;background:var(--bd)}
+
+.atbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:13px}
+.gc{background:#fff;border-radius:12px;overflow:hidden;box-shadow:var(--sh);border:2px solid var(--bd)}
+.gh{background:var(--az);color:#fff;padding:9px 14px;font-weight:800;font-size:12px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid var(--vm)}
+.gn{background:var(--vm);color:#fff;font-size:9px;font-weight:800;padding:2px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px}
+.gb{padding:12px}
+.gm{display:flex;align-items:flex-start;gap:8px;padding:7px 8px;border-radius:7px;margin-bottom:5px}
+.gm:last-child{margin-bottom:0}
+.gm-p{background:var(--vd-l);border-left:3px solid var(--vd)}
+.gm-b{background:var(--am-l);border-left:3px solid var(--am)}
+.gm-a{background:var(--vm-l);border-left:3px solid var(--vm)}
+.mico{font-size:16px;margin-top:1px}
+.minf{flex:1}
+.mnome{font-weight:800;font-size:12px;color:var(--az)}
+.mrole{font-size:8.5px;color:#bbb;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
+.mdesc{font-size:10px;color:var(--pt-m);margin-top:2px;line-height:1.35}
+.mrec{background:var(--gold-l);border-radius:6px;padding:6px 10px;margin-top:8px;font-size:10px;color:#7a5a00;border-left:3px solid var(--gold)}
+.mrec strong{color:var(--vm)}
+
+.etabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:13px}
+.etab{padding:5px 12px;border-radius:20px;font-size:10.5px;font-weight:700;cursor:pointer;border:2px solid var(--bd);background:#fff;color:#999;transition:all .18s}
+.etab.active{background:var(--vm);color:#fff;border-color:var(--vm)}
+.ecnt{display:none}.ecnt.active{display:block}
+
+.si{padding:7px 12px;border:2px solid var(--bd);border-radius:8px;font-family:'Sora',sans-serif;font-size:11.5px;width:195px;transition:border .2s}
+.si:focus{outline:none;border-color:var(--vm)}
+.fs{padding:7px 12px;border:2px solid var(--bd);border-radius:8px;font-family:'Sora',sans-serif;font-size:11.5px;background:#fff;color:var(--pt);cursor:pointer}
+.fs:focus{outline:none;border-color:var(--vm)}
+
+.empty{text-align:center;padding:40px 20px;color:#ccc}
+.empty .ico{font-size:42px;margin-bottom:10px}
+.empty p{font-size:12.5px;line-height:1.6}
+
+.moverlay{display:none;position:fixed;inset:0;background:rgba(10,31,68,.55);z-index:1000;align-items:center;justify-content:center}
+.moverlay.open{display:flex}
+.modal{background:#fff;border-radius:16px;width:440px;max-width:95vw;max-height:85vh;overflow-y:auto;padding:24px;box-shadow:var(--sh2);border-top:4px solid var(--vm)}
+.mtitle{font-size:15px;font-weight:900;color:var(--az);margin-bottom:16px}
+.mfoot{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:#f0f0f0;border-radius:3px}
+::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--vm)}
+
+@media(max-width:768px){.hi{flex-direction:column;align-items:flex-start;padding:10px 14px}.pgrid{grid-template-columns:1fr 1fr}.main{padding:12px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hi">
+    <img src="https://i.ibb.co/0p01LzxB/logo3de.jpg" alt="Logo" class="hlogo" onerror="this.style.display='none'">
+    <div class="hdiv"></div>
+    <div class="htxt">
+      <div class="htitle">SP em Ação · Matemática 3 · Livro vol.03 · 3ª série EM</div>
+      <div class="hsub">Manual do Professor · Gestão de Turma · 2ª série EM & 3ª série EM · BNCC EM</div>
+    </div>
+    <div class="hvol">Vol. 3</div>
+    <div class="hbadge">URE-CAIEIRAS</div>
+    <nav>
+      <button class="nt active" onclick="switchPanel('planejamento',this)">📅 Planejamento</button>
+      <button class="nt" onclick="switchPanel('jornadas',this)">🗺️ Jornadas</button>
+      <button class="nt" onclick="switchPanel('competencias',this)">📚 BNCC EM</button>
+      <button class="nt" onclick="switchPanel('escala',this)">📊 Escala Saeb</button>
+      <button class="nt" onclick="switchPanel('descritores',this)">📋 Descritores</button>
+      <button class="nt" onclick="switchPanel('turma',this)">👥 Minha Turma</button>
+      <button class="nt" onclick="switchPanel('agrupamentos',this)">🤝 Agrupamentos</button>
+    </nav>
+  </div>
+</header>
+
+<div class="main">
+<div style="padding:8px 0 4px">
+  <a href="painel.html" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);color:rgba(255,255,255,.55);font-size:10.5px;font-weight:700;padding:5px 14px;border-radius:20px;text-decoration:none;margin-bottom:14px;">← Painel Principal</a></div>
+<!-- PLANEJAMENTO -->
+<div id="panel-planejamento" class="panel active">
+  <div class="card">
+    <div class="ct">📅 Planejamento Anual – 16 Jornadas · 4 Bimestres · 3ª série EM</div>
+    <p style="font-size:12px;color:var(--pt-c);margin-bottom:14px;line-height:1.6"><strong style="color:var(--az)">32 semanas · 4 jornadas por bimestre · 4 aulas cada.</strong> Material articulado com BNCC Ensino Médio e Saeb 3ª série.</p>
+    <div class="pgrid">
+      <div class="bc"><div class="bh">1º Bimestre</div>
+        <div class="jrow"><span class="jn">Jornada 1</span><span class="ji">Medidas e Notação Científica</span></div>
+        <div class="jrow"><span class="jn">Jornada 2</span><span class="ji">Tabelas e Gráficos</span></div>
+        <div class="jrow"><span class="jn">Jornada 3</span><span class="ji">Porcentagem</span></div>
+        <div class="jrow"><span class="jn">Jornada 4</span><span class="ji">Juros Simples e Compostos</span></div>
+      </div>
+      <div class="bc"><div class="bh">2º Bimestre</div>
+        <div class="jrow"><span class="jn">Jornada 5</span><span class="ji">Equações e Funções de 1º Grau</span></div>
+        <div class="jrow"><span class="jn">Jornada 6</span><span class="ji">Gráficos de Funções de 1º Grau</span></div>
+        <div class="jrow"><span class="jn">Jornada 7</span><span class="ji">Equações e Funções de 2º Grau</span></div>
+        <div class="jrow"><span class="jn">Jornada 8</span><span class="ji">Gráficos de Funções de 2º Grau</span></div>
+      </div>
+      <div class="bc"><div class="bh">3º Bimestre</div>
+        <div class="jrow"><span class="jn">Jornada 9</span><span class="ji">Perímetro e Semelhança</span></div>
+        <div class="jrow"><span class="jn">Jornada 10</span><span class="ji">Área</span></div>
+        <div class="jrow"><span class="jn">Jornada 11</span><span class="ji">Razão e Proporção</span></div>
+        <div class="jrow"><span class="jn">Jornada 12</span><span class="ji">Sistemas de Equações Lineares</span></div>
+      </div>
+      <div class="bc"><div class="bh">4º Bimestre</div>
+        <div class="jrow"><span class="jn">Jornada 13</span><span class="ji">PA e PG</span></div>
+        <div class="jrow"><span class="jn">Jornada 14</span><span class="ji">Análise Combinatória</span></div>
+        <div class="jrow"><span class="jn">Jornada 15</span><span class="ji">Probabilidade</span></div>
+        <div class="jrow"><span class="jn">Jornada 16</span><span class="ji">Funções Exponenciais e Log.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct">🎯 Jornadas × Habilidades e Níveis Saeb</div>
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th style="width:110px">Jornada</th>
+            <th>Habilidades BNCC EM</th>
+            <th style="width:200px">Níveis Saeb</th>
+            <th>Foco</th>
+          </tr>
+        </thead>
+        <tbody id="mtbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- JORNADAS -->
+<div id="panel-jornadas" class="panel">
+  <div class="card">
+    <div class="ct">🗺️ Detalhamento das Jornadas – Conteúdos, BNCC e Saeb</div>
+    <div class="jgrid" id="jornadas-grid"></div>
+  </div>
+</div>
+
+<!-- COMPETÊNCIAS BNCC EM -->
+<div id="panel-competencias" class="panel">
+  <div class="card">
+    <div class="ct">📚 Competências e Habilidades BNCC – Ensino Médio</div>
+    <div id="cemat-area"></div>
+  </div>
+</div>
+
+<!-- ESCALA -->
+<div id="panel-escala" class="panel">
+  <div class="card">
+    <div class="ct">📊 Escala de Proficiência – Matemática – 3ª série EM</div>
+    <p style="font-size:12px;color:var(--pt-c);margin-bottom:13px">Foco: <strong style="color:var(--vm)">níveis 1 a 5</strong>. Descritores N2.2, N4.2 e N5.10 (EM) associados à Missão 12.</p>
+    <div style="overflow-x:auto;max-height:65vh;overflow-y:auto"><table class="tbl" id="etable"></table></div>
+  </div>
+</div>
+
+<!-- DESCRITORES SAEB EM -->
+<div id="panel-descritores" class="panel">
+  <div class="card">
+    <div class="ct">📋 Temas e Descritores Saeb – 3ª série do Ensino Médio (2001)</div>
+    <div class="etabs" id="desc-tabs"></div>
+    <div id="desc-content"></div>
+  </div>
+</div>
+
+<!-- TURMA -->
+<div id="panel-turma" class="panel">
+  <div class="card">
+    <div class="ct">➕ Adicionar Estudantes</div>
+    <div class="addarea">
+      <div class="adr">
+        <div class="sr"><label>Nome</label><input type="text" id="inp-nome" placeholder="Ex: Ana Silva" onkeydown="if(event.key==='Enter')addAluno()"></div>
+        <div class="sr"><label>Série atual</label>
+          <select id="inp-serie">
+            <option value="9ef">9º ano EF</option>
+            <option value="em1">1ª série EM</option>
+            <option value="em2">2ª série EM</option>
+            <option value="em3" selected>3ª série EM</option>
+          </select>
+        </div>
+        <div class="sr"><label>Jornada atual</label><select id="inp-missao"><option value="">– não definida –</option></select></div>
+        <div class="sr"><label>Etapa atual</label>
+          <select id="inp-etapa"><option value="">– não definida –</option><option value="1">Etapa 01</option><option value="2">Etapa 02</option><option value="3">Etapa 03</option><option value="4">Etapa 04</option></select>
+        </div>
+        <button class="btn btp" onclick="addAluno()">+ Adicionar</button>
+      </div>
+      <div style="margin-top:11px;border-top:1px solid #ddd;padding-top:11px">
+        <div style="font-size:10px;font-weight:800;color:#bbb;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px">📋 Importar lista (um nome por linha, máx. 45):</div>
+        <textarea class="impta" id="import-area" placeholder="Ana Silva&#10;Bruno Costa&#10;..."></textarea>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button class="btn bts bsm" onclick="importarLista()">📥 Importar Lista</button>
+          <span style="font-size:10.5px;color:#bbb">Configure Série e Jornada em cada card após importar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="sbar" class="sbar" style="display:none"></div>
+  <div class="card" style="padding-bottom:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:13px">
+      <div class="ct" style="margin-bottom:0">👥 Estudantes <span id="cbadge" style="font-size:11px;color:#ccc;font-weight:400">(0/45)</span></div>
+      <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
+        <input type="text" class="si" id="search-aluno" placeholder="🔍 Buscar..." oninput="renderTurma()">
+        <select class="fs" id="filter-nivel" onchange="renderTurma()">
+          <option value="">Todos os níveis</option>
+          <option value="proficiente">✅ Proficiente</option>
+          <option value="basico">⚠️ Básico</option>
+          <option value="abaixo">❌ Abaixo do Básico</option>
+        </select>
+        <button class="btn bto bsm" onclick="limparTurma()">🗑 Limpar</button>
+      </div>
+    </div>
+    <div id="agrid" class="agrid"><div class="empty"><div class="ico">🎒</div><p>Nenhum estudante adicionado ainda.</p></div></div>
+  </div>
+</div>
+
+<!-- AGRUPAMENTOS -->
+<div id="panel-agrupamentos" class="panel">
+  <div class="aintro">
+    <p><strong>Agrupamentos Produtivos</strong> baseados na ZDP (Vygotsky). Configure o modo abaixo.<br>
+    <strong>🌟 Monitor</strong> (Proficiente) orienta o <strong>📘 Par</strong> (Básico), que apoia o <strong>🌱 Aprendente</strong> (Abaixo do Básico).<br>
+    <strong>Dica:</strong> escolha Quarteto ou Sexteto quando há muitos Abaixo do Básico na turma.</p>
+  </div>
+  <div class="agrup-ctrl">
+    <div>
+      <label style="display:block;margin-bottom:6px">Modo de Agrupamento:</label>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="mode-btn sel" id="modo-trio" onclick="setModo('trio',this)">👥 Trio</button>
+        <button class="mode-btn" id="modo-quad" onclick="setModo('quad',this)">👥 Quarteto (≥ Abaixo)</button>
+        <button class="mode-btn" id="modo-sext" onclick="setModo('sext',this)">👥 Sexteto (muitos Abaixo)</button>
+        <div class="mode-sep"></div>
+        <button class="mode-btn" id="modo-dupla" onclick="setModo('dupla',this)">👫 Dupla</button>
+        <button class="mode-btn" id="modo-ind" onclick="setModo('ind',this)">👤 Individual</button>
+      </div>
+    </div>
+    <div id="agrup-sugestao" style="margin-top:10px;font-size:11px;color:var(--az-m);padding:8px 12px;background:var(--gold-l);border-radius:8px;border-left:3px solid var(--gold)"></div>
+  </div>
+  <div class="atbar">
+    <button class="btn btk" onclick="exportarPDF()">📄 Baixar PDF dos Agrupamentos</button>
+    <span id="pdfst" style="font-size:11.5px;color:#aaa"></span>
+  </div>
+  <div id="agrup-area"><div class="empty card"><div class="ico">🤝</div><p>Cadastre estudantes na aba "Minha Turma" para gerar os agrupamentos.</p></div></div>
+</div>
+
+</div>
+
+<div class="moverlay" id="moverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="mtitle">✏️ Editar Estudante</div>
+    <div class="sr"><label>Nome</label><input type="text" id="mnome"></div>
+    <div class="sr" style="margin-top:8px"><label>Série</label>
+      <select id="mserie">
+        <option value="9ef">9º ano EF</option><option value="em1">1ª série EM</option>
+        <option value="em2">2ª série EM</option><option value="em3">3ª série EM</option>
+      </select>
+    </div>
+    <div class="sr" style="margin-top:8px"><label>Jornada</label><select id="mmissao"><option value="">– não definida –</option></select></div>
+    <div class="sr" style="margin-top:8px"><label>Etapa atual</label>
+      <select id="metapa"><option value="">– não definida –</option><option value="1">Etapa 01</option><option value="2">Etapa 02</option><option value="3">Etapa 03</option><option value="4">Etapa 04</option></select>
+    </div>
+    <div class="mfoot">
+      <button class="btn bto" onclick="closeModal()">Cancelar</button>
+      <button class="btn btp" onclick="saveModal()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── JORNADAS DATA ──────────────────────────────────
+const JORNADAS=[
+  {n:1,titulo:'Medidas e Notação Científica',bncc:['EM13MAT103','EM13MAT313'],desc:['D11','D12','D13','D14','D15'],niveis:['N3.6'],obj:'Efetuar cálculos com potências; usar notação científica; resolver problemas com unidades de medida e conversões (incluindo armazenamento e velocidade de transferência de dados).',obj2:'Notação científica · Unidades de medida do SI · Armazenamento e velocidade de dados'},
+  {n:2,titulo:'Tabelas e Gráficos',bncc:['EM13MAT102','EM13MAT407'],desc:['D34'],niveis:['N1.1','N2.5','N3.3'],obj:'Interpretar e relacionar tabelas a gráficos; analisar pesquisas estatísticas; comparar conjuntos de dados por histogramas.',obj2:'Tabelas e gráficos (barras, colunas, linha, setores) · Frequências · Histogramas'},
+  {n:3,titulo:'Porcentagem',bncc:['EM13MAT104','EM13MAT203'],desc:['D16'],niveis:['N3.5','N5.3'],obj:'Calcular porcentagens, aumentos e descontos; resolver problemas com regra de sociedade; interpretar taxas e índices socioeconômicos.',obj2:'Porcentagem · Variação percentual · Aumentos e descontos sucessivos · Regra de sociedade'},
+  {n:4,titulo:'Juros Simples e Compostos',bncc:['EM13MAT303'],desc:['D16'],niveis:['N3.5'],obj:'Calcular diferenças entre pagamentos à vista e a prazo; resolver problemas com juros simples e compostos; interpretar e comparar crescimento linear × exponencial.',obj2:'Taxa de variação percentual · Juros simples · Juros compostos'},
+  {n:5,titulo:'Equações e Funções de 1º Grau',bncc:['EM13MAT302'],desc:['D18','D19'],niveis:['N2.3','N4.3','N5.4','N5.8'],obj:'Resolver problemas com equações polinomiais de 1º grau; analisar situações com dependências lineares; modelar com funções polinomiais de 1º grau.',obj2:'Valor numérico de expressões algébricas · Equação de 1º grau · Definição de função · Função de 1º grau'},
+  {n:6,titulo:'Gráficos de Funções de 1º Grau',bncc:['EM13MAT401','EM13MAT404','EM13MAT501'],desc:['D18','D19','D20','D21','D23','D24'],niveis:['N2.2','N4.2','N5.10'],obj:'Converter representações algébricas de funções de 1º grau em representações geométricas; reconhecer o gráfico e identificar a representação algébrica; analisar funções definidas por partes.',obj2:'Gráfico da função de 1º grau · Taxa de variação · Função de 1º grau definida por partes'},
+  {n:7,titulo:'Equações e Funções de 2º Grau',bncc:['EM13MAT302','EM13MAT502','EM13MAT503'],desc:['D17','D18','D20','D21'],niveis:['N5.4','N6.6'],obj:'Determinar raízes de equação de 2º grau; reconhecer raízes em forma fatorada; fatorar polinômios de 2º grau; investigar pontos de máximo e mínimo.',obj2:'Equações de 2º grau completas · Máximo e mínimo da função de 2º grau'},
+  {n:8,titulo:'Gráficos de Funções de 2º Grau',bncc:['EM13MAT402','EM13MAT503'],desc:['D17','D18','D20','D25','D26'],niveis:['N2.2','N3.1','N3.2','N4.2','N5.10'],obj:'Converter representações algébricas de funções de 2º grau para representações geométricas; investigar máximos e mínimos; converter de um para outro.',obj2:'Equações de 2º grau · Gráfico da função de 2º grau · Máximo e mínimo'},
+  {n:9,titulo:'Perímetro e Semelhança',bncc:['EM13MAT201'],desc:['D1','D11'],niveis:['N2.1','N5.1','N7.5'],obj:'Calcular perímetro de polígonos e do círculo; resolver problemas envolvendo perímetros de figuras decompostas; reconhecer proporcionalidade em figuras semelhantes.',obj2:'Perímetro de polígonos e do círculo · Figuras planas semelhantes'},
+  {n:10,titulo:'Área',bncc:['EM13MAT201','EM13MAT307'],desc:['D11','D12'],niveis:['N2.1','N4.1','N7.3'],obj:'Calcular área de polígonos e do círculo; resolver problemas com composição e decomposição de figuras para determinação da área.',obj2:'Área de polígonos e do círculo'},
+  {n:11,titulo:'Razão e Proporção',bncc:['EM13MAT314','EM13MAT510'],desc:['D15'],niveis:['N3.4','N4.7','N5.6'],obj:'Resolver problemas com proporcionalidade direta e inversa (regra de três simples e composta); resolver problemas com grandezas determinadas pela razão ou produto de outras (velocidade, densidade, energia).',obj2:'Razão e proporção · Grandezas direta e inversamente proporcionais · Regra de três simples e composta'},
+  {n:12,titulo:'Sistemas de Equações Lineares',bncc:['EM13MAT301'],desc:['D9','D31'],niveis:['N4.4','N5.5'],obj:'Resolver sistemas de 2 equações com 2 incógnitas; representar graficamente sistemas de 1º grau com 2 incógnitas; resolver sistemas de 3 equações com 3 incógnitas.',obj2:'Sistemas 2×2 · Ponto de intersecção entre retas · Sistemas 3×3'},
+  {n:13,titulo:'Progressão Aritmética e Geométrica',bncc:['EM13MAT507','EM13MAT508'],desc:['D22'],niveis:['N2.4','N4.5'],obj:'Expressar regularidades em sequências numéricas; resolver problemas com PA utilizando razão, termo geral e soma; resolver problemas com PG.',obj2:'Sequências · Progressões aritméticas · Progressões geométricas'},
+  {n:14,titulo:'Análise Combinatória',bncc:['EM13MAT310'],desc:['D32'],niveis:['N4.8','N7.19','N8.15'],obj:'Resolver problemas de contagem com princípio multiplicativo (diagrama de árvore); calcular fatorial; resolver problemas com arranjo, combinação e permutação.',obj2:'Princípio fundamental da contagem · Arranjo simples · Combinação simples · Permutação'},
+  {n:15,titulo:'Probabilidade',bncc:['EM13MAT311','EM13MAT312'],desc:['D32','D33'],niveis:['N4.6','N4.8','N5.9','N7.20'],obj:'Resolver problemas com probabilidade simples; diferenciar eventos dependentes e independentes; calcular probabilidade da união e intersecção de eventos; probabilidade condicional.',obj2:'Noções de probabilidade · Probabilidade da união e intersecção · Probabilidade condicional'},
+  {n:16,titulo:'Funções Exponenciais e Logarítmicas',bncc:['EM13MAT304','EM13MAT403'],desc:['D27','D28','D29'],niveis:['N5.2','N5.7'],obj:'Utilizar propriedades de potenciação e logaritmos; resolver problemas com funções exponenciais; analisar e estabelecer relações entre função exponencial e logarítmica.',obj2:'Potenciação e logaritmos · Função exponencial · Relação exponencial ↔ logarítmica'},
+];
+
+const CEMATS=[
+  {n:1,desc:'Utilizar estratégias, conceitos e procedimentos matemáticos para interpretar situações em diversos contextos (cotidianos, Ciências, questões socioeconômicas ou tecnológicas), de modo a contribuir para uma formação geral.',
+   habs:['EM13MAT102','EM13MAT103','EM13MAT104']},
+  {n:2,desc:'Propor ou participar de ações para investigar desafios do mundo contemporâneo e tomar decisões éticas e socialmente responsáveis, com base na análise de problemas sociais.',
+   habs:['EM13MAT201','EM13MAT203']},
+  {n:3,desc:'Utilizar estratégias, conceitos, definições e procedimentos matemáticos para interpretar, construir modelos e resolver problemas em diversos contextos, analisando a plausibilidade dos resultados.',
+   habs:['EM13MAT301','EM13MAT302','EM13MAT303','EM13MAT304','EM13MAT307','EM13MAT310','EM13MAT311','EM13MAT312','EM13MAT313','EM13MAT314']},
+  {n:4,desc:'Compreender e utilizar, com flexibilidade e precisão, diferentes registros de representação matemáticos (algébrico, geométrico, estatístico, computacional etc.).',
+   habs:['EM13MAT401','EM13MAT402','EM13MAT403','EM13MAT407']},
+  {n:5,desc:'Investigar e estabelecer conjecturas a respeito de diferentes conceitos e propriedades matemáticas, empregando estratégias e recursos, como observação de padrões, experimentações e tecnologias.',
+   habs:['EM13MAT502','EM13MAT503','EM13MAT507','EM13MAT508','EM13MAT510']},
+];
+
+const ESCALA_EM=[
+  {n:'Nível 1',r:'225–249',cls:'n1',it:[{c:'N1.1',d:'Associar uma tabela de até duas entradas a informações apresentadas textualmente ou em gráfico de barras ou de linhas.'}]},
+  {n:'Nível 2',r:'250–274',cls:'n2',it:[{c:'N2.1',d:'Reconhecer coordenadas de pontos representados em plano cartesiano localizados no primeiro quadrante.'},{c:'N2.2',d:'Reconhecer os zeros de uma função dada graficamente.'},{c:'N2.3',d:'Determinar o valor de uma função afim, dada sua lei de formação.'},{c:'N2.4',d:'Determinar resultado utilizando o conceito de progressão aritmética.'},{c:'N2.5',d:'Associar um gráfico de setores a dados percentuais apresentados textualmente ou em uma tabela.'}]},
+  {n:'Nível 3',r:'275–299',cls:'n3',it:[{c:'N3.1',d:'Reconhecer o valor máximo de uma função quadrática representada graficamente.'},{c:'N3.2',d:'Reconhecer, em um gráfico, o intervalo no qual a função assume valor máximo.'},{c:'N3.3',d:'Determinar, por proporcionalidade, o gráfico de setores que representa uma situação com dados textuais.'},{c:'N3.4',d:'Determinar o quarto valor em relação de proporcionalidade direta a partir de três valores dados no cotidiano.'},{c:'N3.5',d:'Determinar um valor reajustado a partir de seu valor inicial e do percentual de reajuste.'},{c:'N3.6',d:'Resolver problemas utilizando operações fundamentais com números naturais.'}]},
+  {n:'Nível 4',r:'300–324',cls:'n4',it:[{c:'N4.1',d:'Resolver problemas envolvendo área de região composta por retângulos a partir de medidas em texto e figura.'},{c:'N4.2',d:'Reconhecer o gráfico de função a partir de valores fornecidos em um texto.'},{c:'N4.3',d:'Determinar a lei de formação de uma função linear a partir de dados em uma tabela.'},{c:'N4.4',d:'Determinar a solução de um sistema de duas equações lineares.'},{c:'N4.5',d:'Determinar um termo de progressão aritmética, dada sua forma geral.'},{c:'N4.6',d:'Determinar a probabilidade da ocorrência de um evento simples.'},{c:'N4.7',d:'Resolver problemas utilizando proporcionalidade direta ou inversa, cujos valores devem ser obtidos a partir de operações simples.'},{c:'N4.8',d:'Resolver problemas de contagem usando princípio multiplicativo.'}]},
+  {n:'Nível 5',r:'325–349',cls:'n5',it:[{c:'N5.1',d:'Determinar medidas de segmentos por meio da semelhança entre dois polígonos.'},{c:'N5.2',d:'Determinar o valor de variável dependente ou independente de uma função exponencial dada.'},{c:'N5.3',d:'Determinar o percentual que representa um valor em relação a outro.'},{c:'N5.4',d:'Determinar o valor de uma expressão algébrica.'},{c:'N5.5',d:'Determinar a solução de um sistema de três equações sendo uma com uma incógnita, outra com duas e a terceira com três incógnitas.'},{c:'N5.6',d:'Resolver problema envolvendo divisão proporcional do lucro em relação a dois investimentos iniciais diferentes.'},{c:'N5.7',d:'Resolver problema envolvendo operações, além das fundamentais, com números naturais.'},{c:'N5.8',d:'Resolver problema envolvendo a relação linear entre duas variáveis para a determinação de uma delas.'},{c:'N5.9',d:'Resolver problema envolvendo probabilidade de união de eventos.'},{c:'N5.10',d:'Avaliar o comportamento de uma função representada graficamente, quanto ao seu crescimento.'}]},
+  {n:'Nível 6',r:'350–374',cls:'n6',it:[{c:'N6.1',d:'Reconhecer coordenadas de pontos representados em plano cartesiano em quadrantes diferentes do primeiro.'},{c:'N6.2',d:'Associar um sólido geométrico simples a uma planificação usual dada.'},{c:'N6.3',d:'Resolver problemas envolvendo Teorema de Pitágoras para calcular a medida da hipotenusa de triângulo pitagórico.'},{c:'N6.5',d:'Determinar o volume de um paralelepípedo retângulo, dada sua representação espacial.'},{c:'N6.6',d:'Determinar os zeros de uma função quadrática, a partir de sua expressão algébrica.'},{c:'N6.7',d:'Resolver problemas de porcentagem envolvendo números racionais não inteiros.'}]},
+  {n:'Nível 7',r:'375–399',cls:'n7',it:[{c:'N7.1',d:'Determinar a medida de um dos lados de triângulo retângulo por meio de razões trigonométricas.'},{c:'N7.3',d:'Determinar a área de um polígono não convexo composto por retângulos e triângulos, a partir de informações fornecidas na figura.'},{c:'N7.4',d:'Resolver problemas por meio de semelhança de triângulos sem apoio de figura.'},{c:'N7.5',d:'Resolver problemas envolvendo perímetros de triângulos equiláteros que compõem uma figura.'},{c:'N7.6',d:'Reconhecer gráfico de função a partir de informações sobre sua variação descritas em um texto.'},{c:'N7.7',d:'Reconhecer os zeros de uma função quadrática em sua forma fatorada.'},{c:'N7.8',d:'Reconhecer gráfico de função afim a partir de sua representação algébrica.'},{c:'N7.11',d:'Determinar os pontos de máximo ou de mínimo a partir do gráfico de uma função.'},{c:'N7.13',d:'Determinar o ponto de intersecção de duas retas.'},{c:'N7.19',d:'Resolver problemas usando permutação.'},{c:'N7.20',d:'Resolver problemas utilizando probabilidade, envolvendo eventos independentes.'}]},
+  {n:'Nível 8',r:'400–424',cls:'n8',it:[{c:'N8.15',d:'Resolver problema usando arranjo.'},{c:'N8.16',d:'Resolver problema envolvendo a resolução de uma equação do 2º grau sendo dados seus coeficientes.'}]},
+];
+
+const DESCRITORES=[
+  {tema:'Espaço e Forma',descs:[{c:'D1',d:'Identificar figuras semelhantes mediante o reconhecimento de relações de proporcionalidade.'},{c:'D9',d:'Relacionar a determinação do ponto de interseção de duas ou mais retas com a resolução de um sistema de equações com duas incógnitas.'}]},
+  {tema:'Grandezas e Medidas',descs:[{c:'D11',d:'Resolver problema envolvendo o cálculo de perímetro de figuras planas.'},{c:'D12',d:'Resolver problema envolvendo o cálculo de área de figuras planas.'},{c:'D13',d:'Resolver problema envolvendo a área total e/ou volume de um sólido (prisma, pirâmide, cilindro, cone, esfera).'}]},
+  {tema:'Números e Operações / Álgebra e Funções (I)',descs:[{c:'D14',d:'Identificar a localização de números reais na reta numérica.'},{c:'D15',d:'Resolver problema que envolva variação proporcional, direta ou inversa, entre grandezas.'},{c:'D16',d:'Resolver problema que envolva porcentagem.'},{c:'D17',d:'Resolver problema envolvendo equação do 2º grau.'},{c:'D18',d:'Reconhecer expressão algébrica que representa uma função a partir de uma tabela.'},{c:'D19',d:'Resolver problema envolvendo uma função do 1º grau.'},{c:'D20',d:'Analisar crescimento/decrescimento, zeros de funções reais apresentadas em gráficos.'},{c:'D21',d:'Identificar o gráfico que representa uma situação descrita em um texto.'},{c:'D22',d:'Resolver problema envolvendo PA/PG dada a fórmula do termo geral.'},{c:'D23',d:'Reconhecer o gráfico de uma função polinomial de 1º grau por meio de seus coeficientes.'},{c:'D24',d:'Reconhecer a representação algébrica de uma função do 1º grau dado o seu gráfico.'},{c:'D25',d:'Resolver problemas que envolvam os pontos de máximo ou de mínimo no gráfico de uma função polinomial do 2º grau.'}]},
+  {tema:'Números e Operações / Álgebra e Funções (II)',descs:[{c:'D26',d:'Relacionar as raízes de um polinômio com sua decomposição em fatores do 1º grau.'},{c:'D27',d:'Identificar a representação algébrica e/ou gráfica de uma função exponencial.'},{c:'D28',d:'Identificar a representação algébrica e/ou gráfica de uma função logarítmica, reconhecendo-a como inversa da função exponencial.'},{c:'D29',d:'Resolver problema que envolva função exponencial.'},{c:'D31',d:'Determinar a solução de um sistema linear associando-o a uma matriz.'},{c:'D32',d:'Resolver problema de contagem utilizando o princípio multiplicativo ou noções de permutação simples, arranjo simples e/ou combinação simples.'},{c:'D33',d:'Calcular a probabilidade de um evento.'}]},
+  {tema:'Tratamento da Informação',descs:[{c:'D34',d:'Resolver problema envolvendo informações apresentadas em tabelas e/ou gráficos.'}]},
+];
+
+// ── STATE ──
+let alunos=[],editingId=null,modoAgrup='trio';
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded',()=>{
+  populateMissaoSelects();renderMissoes();renderJornadas();renderCemats();renderEscala();renderDescritores();renderTurma();
+});
+function populateMissaoSelects(){
+  ['inp-missao','mmissao'].forEach(id=>{
+    const s=document.getElementById(id);if(!s)return;
+    JORNADAS.forEach(j=>{const o=document.createElement('option');o.value=j.n;o.textContent=`Jornada ${j.n} – ${j.titulo}`;s.appendChild(o);});
+  });
+}
+
+// ── NAV ──
+function switchPanel(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nt').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(id==='agrupamentos')renderAgrupamentos();
+}
+
+// ── MISSÕES TABLE ──
+function renderMissoes(){
+  document.getElementById('mtbody').innerHTML=JORNADAS.map(j=>`<tr>
+    <td><strong style="color:var(--az)">Jornada ${j.n}</strong><br><span style="font-size:10px;color:var(--gold);font-weight:700">${j.titulo}</span></td>
+    <td>${j.bncc.map(b=>`<span class="th">${b}</span>`).join('')}</td>
+    <td>${j.niveis.map(n=>`<span class="tn">${n}</span>`).join('')}${j.desc.map(d=>`<span class="tn" style="background:var(--vm-l);color:var(--vm-e)">${d}</span>`).join('')}</td>
+    <td style="font-size:11px;color:var(--pt-m);line-height:1.5">${j.obj2}</td>
+  </tr>`).join('');
+}
+
+// ── JORNADAS ──
+function renderJornadas(){
+  document.getElementById('jornadas-grid').innerHTML=JORNADAS.map(j=>`
+    <div class="jcard">
+      <div class="jcard-title">Jornada ${j.n} – ${j.titulo}</div>
+      <div class="jcard-obj" style="font-size:10px;color:#888;margin-bottom:5px">${j.obj2}</div>
+      <div class="jcard-obj">${j.obj}</div>
+      <div class="jtags" style="margin-top:7px">
+        ${j.bncc.map(b=>`<span class="jtag-bncc">${b}</span>`).join('')}
+        ${j.niveis.map(n=>`<span class="jtag-saeb">${n}</span>`).join('')}
+        ${j.desc.map(d=>`<span class="jtag-desc">${d}</span>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// ── CEMATS ──
+function renderCemats(){
+  document.getElementById('cemat-area').innerHTML=CEMATS.map(c=>`
+    <div class="cemat-card">
+      <div class="cemat-title">CEMAT ${c.n}</div>
+      <div class="cemat-desc">${c.desc}</div>
+      <div class="cemat-habs">${c.habs.map(h=>`<span class="cemat-hab">${h}</span>`).join('')}</div>
+    </div>`).join('');
+}
+
+// ── ESCALA ──
+function renderEscala(){
+  document.getElementById('etable').innerHTML=`<thead><tr><th style="width:95px">Nível</th><th style="width:72px">Pontuação</th><th style="width:50px">Código</th><th>Descrição</th></tr></thead>
+  <tbody>${ESCALA_EM.map(n=>n.it.map((it,i)=>`<tr>
+    ${i===0?`<td rowspan="${n.it.length}"><span class="nb ${n.cls}">${n.n}</span></td><td rowspan="${n.it.length}" style="font-family:'DM Mono',monospace;font-size:9.5px;color:#ccc">${n.r}</td>`:''}
+    <td style="font-family:'DM Mono',monospace;font-size:10px;font-weight:700;color:var(--vm)">${it.c}</td>
+    <td style="font-size:11px">${it.d}</td></tr>`).join('')).join('')}</tbody>`;
+}
+
+// ── DESCRITORES ──
+function renderDescritores(){
+  const tabs=document.getElementById('desc-tabs');
+  const content=document.getElementById('desc-content');
+  tabs.innerHTML=DESCRITORES.map((d,i)=>`<button class="etab ${i===0?'active':''}" onclick="switchDesc(${i},this)">${d.tema}</button>`).join('');
+  renderDescTable(0);
+}
+function switchDesc(i,btn){document.querySelectorAll('#desc-tabs .etab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');renderDescTable(i);}
+function renderDescTable(i){
+  document.getElementById('desc-content').innerHTML=`<table class="tbl"><thead><tr><th style="width:55px">Código</th><th>Descritor</th></tr></thead>
+  <tbody>${DESCRITORES[i].descs.map(d=>`<tr><td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--vm)">${d.c}</td><td>${d.d}</td></tr>`).join('')}</tbody></table>`;
+}
+
+// ── TURMA ──
+// 3ª série EM é o alvo → defasagem conta para baixo
+function calcNivel(a){
+  if(!a.missao)return null;
+  const ordem={'9ef':4,'em1':3,'em2':2,'em3':1};
+  const def=(ordem[a.serie]||1)-1; // em3 = 0 (no nível), em2 = 1, em1 = 2, 9ef = 3
+  return def<=0?'proficiente':def<=2?'basico':'abaixo';
+}
+function addAluno(){
+  const nome=document.getElementById('inp-nome').value.trim();
+  if(!nome){document.getElementById('inp-nome').focus();return;}
+  if(alunos.length>=45){alert('Limite de 45 estudantes atingido.');return;}
+  alunos.push({id:Date.now()+Math.random(),nome,serie:document.getElementById('inp-serie').value,missao:document.getElementById('inp-missao').value,etapa:document.getElementById('inp-etapa').value});
+  document.getElementById('inp-nome').value='';renderTurma();renderAgrupamentos();
+}
+function importarLista(){
+  const txt=document.getElementById('import-area').value.trim();if(!txt)return;
+  txt.split('\n').map(n=>n.trim()).filter(n=>n).slice(0,45-alunos.length).forEach(nome=>{
+    if(alunos.length<45)alunos.push({id:Date.now()+Math.random(),nome,serie:'em3',missao:'',etapa:''});
+  });
+  document.getElementById('import-area').value='';renderTurma();renderAgrupamentos();
+}
+function removeAluno(id){alunos=alunos.filter(a=>a.id!==id);renderTurma();renderAgrupamentos();}
+function updateAluno(id,f,v){const a=alunos.find(a=>a.id===id);if(a){a[f]=v;renderTurma();renderAgrupamentos();}}
+function limparTurma(){if(!alunos.length)return;if(confirm('Remover todos os estudantes?')){alunos=[];renderTurma();renderAgrupamentos();}}
+
+function renderTurma(){
+  const grid=document.getElementById('agrid');
+  const search=document.getElementById('search-aluno').value.toLowerCase();
+  const filter=document.getElementById('filter-nivel').value;
+  document.getElementById('cbadge').textContent=`(${alunos.length}/45)`;
+  const prof=alunos.filter(a=>calcNivel(a)==='proficiente').length;
+  const bas=alunos.filter(a=>calcNivel(a)==='basico').length;
+  const ab=alunos.filter(a=>calcNivel(a)==='abaixo').length;
+  const sb=document.getElementById('sbar');
+  if(alunos.length>0){
+    sb.style.display='flex';
+    const pct=v=>alunos.length?Math.round(v/alunos.length*100):0;
+    sb.innerHTML=`<div class="sch sc-t"><div class="scn">${alunos.length}</div><div class="scl">Total</div></div>
+    <div class="sch sc-p"><div class="scn">${prof}</div><div class="scl">✅ Proficiente</div></div>
+    <div class="sch sc-b"><div class="scn">${bas}</div><div class="scl">⚠️ Básico</div></div>
+    <div class="sch sc-a"><div class="scn">${ab}</div><div class="scl">❌ Abaixo</div></div>
+    <div style="flex:1;background:#fff;border-radius:9px;padding:10px 15px;border:2px solid var(--bd);min-width:140px">
+      <div style="font-size:8.5px;font-weight:800;color:#ccc;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Distribuição</div>
+      <div style="display:flex;height:7px;border-radius:4px;overflow:hidden;background:#eee">
+        <div style="width:${pct(prof)}%;background:var(--vd)"></div>
+        <div style="width:${pct(bas)}%;background:var(--am)"></div>
+        <div style="width:${pct(ab)}%;background:var(--vm)"></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:4px;font-size:9px">
+        <span style="color:var(--vd);font-weight:700">■ ${pct(prof)}%</span>
+        <span style="color:var(--am);font-weight:700">■ ${pct(bas)}%</span>
+        <span style="color:var(--vm);font-weight:700">■ ${pct(ab)}%</span>
+      </div>
+    </div>`;
+  }else{sb.style.display='none';}
+  const serieLabel={'9ef':'9º ano EF','em1':'1ª série EM','em2':'2ª série EM','em3':'3ª série EM'};
+  const filtered=alunos.filter(a=>a.nome.toLowerCase().includes(search)&&(!filter||calcNivel(a)===filter));
+  if(!alunos.length){grid.innerHTML=`<div class="empty"><div class="ico">🎒</div><p>Nenhum estudante adicionado ainda.</p></div>`;return;}
+  if(!filtered.length){grid.innerHTML=`<div class="empty"><div class="ico">🔍</div><p>Nenhum estudante encontrado.</p></div>`;return;}
+  grid.innerHTML=filtered.map(a=>{
+    const nv=calcNivel(a);
+    let pc='ps',pl='– sem dado',cc='';
+    if(nv==='proficiente'){pc='pp';pl='✅ Proficiente';cc='proficiente';}
+    else if(nv==='basico'){pc='pb';pl='⚠️ Básico';cc='basico';}
+    else if(nv==='abaixo'){pc='pa';pl='❌ Abaixo';cc='abaixo';}
+    const jo=a.missao?JORNADAS.find(j=>j.n===parseInt(a.missao)):null;
+    return `<div class="ac ${cc}">
+      <button class="brm" onclick="removeAluno(${a.id})">✕</button>
+      <div class="anh">
+        <div><div class="an">${a.nome}</div><div class="anum">${serieLabel[a.serie]||a.serie} · ${a.missao?'J'+a.missao:'–'}</div></div>
+        <span class="np ${pc}">${pl}</span>
+      </div>
+      <div class="ab">
+        <div class="sr"><label>Série</label>
+          <select onchange="updateAluno(${a.id},'serie',this.value)">
+            ${Object.entries(serieLabel).map(([k,v])=>`<option value="${k}" ${a.serie===k?'selected':''}>${v}</option>`).join('')}
+          </select>
+        </div>
+        <div class="sr"><label>Jornada</label>
+          <select onchange="updateAluno(${a.id},'missao',this.value)">
+            <option value="" ${!a.missao?'selected':''}>– não definida –</option>
+            ${JORNADAS.map(j=>`<option value="${j.n}" ${a.missao==j.n?'selected':''}>J${j.n} – ${j.titulo.substring(0,25)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="sr">
+          <label>Etapa atual</label>
+          <select onchange="updateAluno(${a.id},'etapa',this.value)">
+            <option value="" ${!a.etapa?'selected':''}>– não definida –</option>
+            ${['1','2','3','4'].map(e=>`<option value="${e}" ${a.etapa===e?'selected':''}>Etapa 0${e}</option>`).join('')}
+          </select>
+        </div>
+        ${jo?`<div style="font-size:9.5px;color:#bbb;margin-top:3px">🗺️ ${jo.titulo}<br>${jo.bncc.slice(0,2).map(b=>`<span class="jtag-bncc">${b}</span>`).join('')}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── MODO + SUGESTÃO ──
+function setModo(m,btn){
+  modoAgrup=m;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  renderAgrupamentos();
+}
+
+function sugestaoModo(){
+  const ab=alunos.filter(a=>calcNivel(a)==='abaixo').length;
+  const prof=alunos.filter(a=>calcNivel(a)==='proficiente').length;
+  const bas=alunos.filter(a=>calcNivel(a)==='basico').length;
+  if(!alunos.length)return'';
+  const total=prof+bas+ab;
+  if(ab>total*0.5)return`💡 Muitos Abaixo do Básico (${ab}). Recomenda-se <strong>Sexteto</strong> para distribuir melhor o suporte.`;
+  if(ab>total*0.3)return`💡 Proporção elevada de Abaixo (${ab}). Recomenda-se <strong>Quarteto</strong> para não sobrecarregar os monitores.`;
+  if(ab<=total*0.3&&ab>0)return`✅ Distribuição equilibrada. <strong>Trio</strong> é o modo mais indicado para esta turma.`;
+  if(ab===0)return`✅ Sem estudantes Abaixo do Básico. Considere <strong>Dupla</strong> (Prof + Bás) para consolidar habilidades.`;
+  return'';
+}
+
+// ── AGRUPAMENTOS ──
+const RL={monitor:'Monitor (Proficiente)',par:'Par (Básico)',aprendente:'Aprendente (Abaixo do Básico)'};
+const RD={monitor:'Orienta e explica usando linguagem entre pares (ZDP).',par:'Auxilia o aprendente e consolida seu próprio conhecimento.',aprendente:'Recebe suporte em ambiente seguro e colaborativo.'};
+const RE={monitor:'🌟',par:'📘',aprendente:'🌱'};
+const RC={monitor:'gm-p',par:'gm-b',aprendente:'gm-a'};
+
+function buildGrupos(){
+  const P=[...alunos.filter(a=>calcNivel(a)==='proficiente')];
+  const B=[...alunos.filter(a=>calcNivel(a)==='basico')];
+  const A=[...alunos.filter(a=>calcNivel(a)==='abaixo')];
+  let grupos=[],g=1;
+  if(modoAgrup==='trio'){
+    while(P.length||B.length||A.length){
+      const gr={n:g++,membros:[],tipo:'Trio'};
+      if(P.length)gr.membros.push({...P.shift(),role:'monitor'});
+      if(B.length)gr.membros.push({...B.shift(),role:'par'});
+      if(A.length)gr.membros.push({...A.shift(),role:'aprendente'});
+      grupos.push(gr);if(g>60)break;
+    }
+  }else if(modoAgrup==='quad'){
+    while(P.length||B.length||A.length){
+      const gr={n:g++,membros:[],tipo:'Quarteto'};
+      if(P.length)gr.membros.push({...P.shift(),role:'monitor'});
+      if(B.length)gr.membros.push({...B.shift(),role:'par'});
+      if(A.length)gr.membros.push({...A.shift(),role:'aprendente'});
+      if(A.length&&gr.membros.length<4)gr.membros.push({...A.shift(),role:'aprendente'});
+      else if(B.length&&gr.membros.length<4)gr.membros.push({...B.shift(),role:'par'});
+      else if(P.length&&gr.membros.length<4)gr.membros.push({...P.shift(),role:'monitor'});
+      if(gr.membros.length)grupos.push(gr);if(g>60)break;
+    }
+  }else if(modoAgrup==='sext'){
+    while(P.length||B.length||A.length){
+      const gr={n:g++,membros:[],tipo:'Sexteto'};
+      if(P.length)gr.membros.push({...P.shift(),role:'monitor'});
+      if(B.length)gr.membros.push({...B.shift(),role:'par'});
+      for(let i=0;i<3;i++)if(A.length)gr.membros.push({...A.shift(),role:'aprendente'});
+      if(P.length&&gr.membros.length<6)gr.membros.push({...P.shift(),role:'monitor'});
+      if(B.length&&gr.membros.length<6)gr.membros.push({...B.shift(),role:'par'});
+      if(gr.membros.length)grupos.push(gr);if(g>60)break;
+    }
+  }else if(modoAgrup==='dupla'){
+    while(P.length&&B.length){grupos.push({n:g++,membros:[{...P.shift(),role:'monitor'},{...B.shift(),role:'par'}],tipo:'Dupla'});}
+    while(B.length&&A.length){grupos.push({n:g++,membros:[{...B.shift(),role:'par'},{...A.shift(),role:'aprendente'}],tipo:'Dupla'});}
+    while(P.length){grupos.push({n:g++,membros:[{...P.shift(),role:'monitor'}],tipo:'Dupla'});}
+    while(B.length){grupos.push({n:g++,membros:[{...B.shift(),role:'par'}],tipo:'Dupla'});}
+    while(A.length){grupos.push({n:g++,membros:[{...A.shift(),role:'aprendente'}],tipo:'Dupla'});}
+  }else if(modoAgrup==='ind'){
+    const todos=[...alunos.filter(a=>calcNivel(a)==='proficiente').map(a=>({...a,role:'monitor'})),
+                 ...alunos.filter(a=>calcNivel(a)==='basico').map(a=>({...a,role:'par'})),
+                 ...alunos.filter(a=>calcNivel(a)==='abaixo').map(a=>({...a,role:'aprendente'})),
+                 ...alunos.filter(a=>!calcNivel(a)).map(a=>({...a,role:'par'}))];
+    grupos=todos.map((a,i)=>({n:i+1,membros:[a],tipo:'Individual'}));
+  }
+  return grupos;
+}
+function modoLabel(){return{trio:'Trio',quad:'Quarteto',sext:'Sexteto',dupla:'Dupla',ind:'Individual'}[modoAgrup]||'Trio';}
+
+function renderAgrupamentos(){
+  const area=document.getElementById('agrup-area');
+  const sugg=document.getElementById('agrup-sugestao');
+  if(sugg)sugg.innerHTML=sugestaoModo();
+  if(!alunos.length){area.innerHTML=`<div class="empty card"><div class="ico">🤝</div><p>Cadastre estudantes na aba "Minha Turma" para gerar os agrupamentos.</p></div>`;return;}
+  const gs=buildGrupos();
+  const sem=alunos.filter(a=>!calcNivel(a));
+  const profN=alunos.filter(a=>calcNivel(a)==='proficiente').length;
+  const basN=alunos.filter(a=>calcNivel(a)==='basico').length;
+  const abN=alunos.filter(a=>calcNivel(a)==='abaixo').length;
+  let html=`<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px">
+    <div style="background:#fff;border-radius:9px;padding:10px 14px;border:2px solid var(--az)"><div style="font-size:20px;font-weight:900;color:var(--az)">${gs.length}</div><div style="font-size:8.5px;color:#ccc;font-weight:700;text-transform:uppercase">${modoLabel()}s</div></div>
+    <div style="background:#fff;border-radius:9px;padding:10px 14px;border:2px solid var(--vd)"><div style="font-size:20px;font-weight:900;color:var(--vd)">${profN}</div><div style="font-size:8.5px;color:#ccc;font-weight:700;text-transform:uppercase">🌟 Monitores</div></div>
+    <div style="background:#fff;border-radius:9px;padding:10px 14px;border:2px solid var(--am)"><div style="font-size:20px;font-weight:900;color:var(--am)">${basN}</div><div style="font-size:8.5px;color:#ccc;font-weight:700;text-transform:uppercase">📘 Pares</div></div>
+    <div style="background:#fff;border-radius:9px;padding:10px 14px;border:2px solid var(--vm)"><div style="font-size:20px;font-weight:900;color:var(--vm)">${abN}</div><div style="font-size:8.5px;color:#ccc;font-weight:700;text-transform:uppercase">🌱 Aprendentes</div></div>
+  </div>`;
+  if(!gs.length){html+=`<div class="card empty"><div class="ico">⚙️</div><p>Configure Série e Jornada dos estudantes para gerar os grupos.</p></div>`;}
+  else{html+=`<div class="ggrid">${gs.map(g=>{
+    const jorns=[...new Set(g.membros.map(m=>m.missao).filter(Boolean))];
+    const jrec=jorns.length?JORNADAS.filter(j=>jorns.includes(String(j.n))):[];
+    return `<div class="gc"><div class="gh"><span>${g.tipo} ${g.n}</span><span class="gn">${g.membros.length} membro${g.membros.length>1?'s':''}</span></div>
+      <div class="gb">
+        ${g.membros.map(m=>`<div class="gm ${RC[m.role]}">
+          <div class="mico">${RE[m.role]}</div>
+          <div class="minf">
+            <div class="mnome">${m.nome}</div>
+            <div class="mrole">${RL[m.role]}</div>
+            <div class="mdesc">${RD[m.role]}</div>
+            ${m.missao?`<div style="font-size:9px;color:#bbb;margin-top:2px">📍 Jornada ${m.missao}</div>`:''}
+          </div>
+        </div>`).join('')}
+        ${jrec.length?`<div class="mrec">💡 <strong>Conteúdo:</strong> ${jrec.map(j=>j.titulo).join(' · ')}</div>`:''}
+      </div></div>`;
+  }).join('')}</div>`;}
+  if(sem.length){html+=`<div class="card" style="margin-top:13px"><div class="ct">⚠️ Sem classificação (${sem.length})</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">${sem.map(a=>`<span style="background:var(--cl);border-radius:20px;padding:3px 11px;font-size:11px;font-weight:700;border:1px solid var(--bd)">${a.nome}</span>`).join('')}</div>
+  </div>`;}
+  area.innerHTML=html;
+}
+
+// ── PDF ──
+function exportarPDF(){
+  const st=document.getElementById('pdfst');
+  if(!alunos.length){st.textContent='⚠️ Nenhum estudante cadastrado.';return;}
+  st.textContent='⏳ Gerando PDF...';
+  try{
+    const {jsPDF}=window.jspdf;
+    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const W=210,M=14,date=new Date().toLocaleDateString('pt-BR');
+    const gs=buildGrupos();
+    const profN=alunos.filter(a=>calcNivel(a)==='proficiente').length;
+    const basN=alunos.filter(a=>calcNivel(a)==='basico').length;
+    const abN=alunos.filter(a=>calcNivel(a)==='abaixo').length;
+
+    function drawHeader(pg1){
+      doc.setFillColor(10,31,68);doc.rect(0,0,W,pg1?28:15,'F');
+      doc.setFillColor(208,2,27);doc.rect(0,pg1?28:15,W,2,'F');
+      doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');
+      if(pg1){
+        doc.setFontSize(13);doc.text('SP em Acao - Matematica 3 | 3a serie EM | Agrupamentos',M,11);
+        doc.setFontSize(8.5);doc.setFont('helvetica','normal');doc.setTextColor(160,180,220);
+        doc.text(`Modo: ${modoLabel()} | ${date} | ${alunos.length} estudantes | ${gs.length} grupos`,M,20);
+      }else{
+        doc.setFontSize(8.5);doc.text(`SP em Acao - Mat.3 | 3a serie EM | Agrupamentos (cont.) | Modo: ${modoLabel()}`,M,10);
+        doc.setFont('helvetica','normal');doc.setTextColor(160,180,220);doc.text(date,W-M,10,{align:'right'});
+      }
+    }
+    drawHeader(true);
+
+    let y=37;
+    [{cor:[19,138,54],l:'MONITOR (Proficiente)'},{cor:[184,134,11],l:'PAR (Basico)'},{cor:[208,2,27],l:'APRENDENTE (Abaixo do Basico)'}]
+    .forEach(lg=>{
+      doc.setFillColor(...lg.cor);doc.roundedRect(M,y,3.5,4,1,1,'F');
+      doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(60,60,60);
+      doc.text(lg.l,M+5.5,y+3);y+=6;
+    });
+
+    y+=2;
+    doc.setFillColor(238,241,250);doc.roundedRect(M,y,W-M*2,13,3,3,'F');
+    [{v:gs.length,l:modoLabel()+'S'},{v:profN,l:'MONITORES'},{v:basN,l:'PARES'},{v:abN,l:'APRENDENTES'}]
+    .forEach((r,i)=>{
+      const rx=M+5+i*49;
+      doc.setFont('helvetica','bold');doc.setFontSize(14);doc.setTextColor(208,2,27);doc.text(String(r.v),rx,y+8.5);
+      doc.setFontSize(6.5);doc.setFont('helvetica','normal');doc.setTextColor(130,130,130);doc.text(r.l,rx,y+12);
+    });
+    y+=19;
+
+    const CW=(W-M*2-5)/2,LH=8,BH=13;
+    let col=0,colY=[y,y];
+    gs.forEach(g=>{
+      const ch=BH+g.membros.length*LH+2;
+      if(colY[col]+ch>283){doc.addPage();drawHeader(false);colY=[20,20];col=0;}
+      const cx=M+col*(CW+5),cy=colY[col];
+      doc.setFillColor(215,218,228);doc.roundedRect(cx+1,cy+1,CW,ch,3,3,'F');
+      doc.setFillColor(255,255,255);doc.roundedRect(cx,cy,CW,ch,3,3,'F');
+      doc.setFillColor(10,31,68);doc.roundedRect(cx,cy,CW,9,3,3,'F');
+      doc.rect(cx,cy+5,CW,4,'F');
+      doc.setFillColor(208,2,27);doc.rect(cx,cy+8.5,CW,1.5,'F');
+      doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(255,255,255);
+      doc.text(`${g.tipo.toUpperCase()} ${g.n}`,cx+3,cy+6.5);
+      doc.setFontSize(6.5);doc.setTextColor(160,185,220);doc.text(`${g.membros.length} membro${g.membros.length>1?'s':''}`,cx+CW-3,cy+6.5,{align:'right'});
+      const corR={monitor:[19,138,54],par:[184,134,11],aprendente:[208,2,27]};
+      let my=cy+13;
+      g.membros.forEach(m=>{
+        const [r,gv,b]=corR[m.role]||[100,100,100];
+        doc.setFillColor(r,gv,b);doc.roundedRect(cx+3,my-2.8,2.5,5,0.8,0.8,'F');
+        doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(10,31,68);
+        doc.text((m.nome.length>25?m.nome.substring(0,24)+'…':m.nome),cx+7,my+0.5);
+        doc.setFont('helvetica','normal');doc.setFontSize(6);doc.setTextColor(r,gv,b);
+        doc.text((RL[m.role]||m.role),cx+7,my+4.5);
+        if(m.missao){doc.setTextColor(180,180,180);doc.text(`J${m.missao}`,cx+CW-3,my+0.5,{align:'right'});}
+        my+=LH;
+      });
+      colY[col]+=ch+4;col=(col+1)%2;
+    });
+    const total=doc.getNumberOfPages();
+    for(let i=1;i<=total;i++){
+      doc.setPage(i);doc.setFillColor(10,31,68);doc.rect(0,288,W,9,'F');doc.setFillColor(208,2,27);doc.rect(0,288,W,1.5,'F');
+      doc.setFont('helvetica','normal');doc.setFontSize(6);doc.setTextColor(100,130,180);
+      doc.text('SP em Acao - Matematica 3 | 3a serie EM | Agrupamentos baseados em Vygotsky (ZDP)',M,293.5);
+      doc.text(`Pag. ${i}/${total}`,W-M,293.5,{align:'right'});
+    }
+    doc.save(`Agrupamentos_Mat3_3serieEM_${date.replace(/\//g,'-')}.pdf`);
+    st.textContent='✅ PDF baixado!';setTimeout(()=>{st.textContent='';},3500);
+  }catch(e){console.error(e);st.textContent='❌ Erro ao gerar PDF.';}
+}
+
+// ── MODAL ──
+function openModal(id){editingId=id;const a=alunos.find(a=>a.id===id);document.getElementById('mnome').value=a.nome;document.getElementById('mserie').value=a.serie;document.getElementById('mmissao').value=a.missao||'';document.getElementById('metapa').value=a.etapa||'';document.getElementById('moverlay').classList.add('open');}
+function closeModal(){document.getElementById('moverlay').classList.remove('open');editingId=null;}
+function saveModal(){if(!editingId)return;const a=alunos.find(a=>a.id===editingId);a.nome=document.getElementById('mnome').value.trim()||a.nome;a.serie=document.getElementById('mserie').value;a.missao=document.getElementById('mmissao').value;a.etapa=document.getElementById('metapa').value;closeModal();renderTurma();renderAgrupamentos();}
+</script>
+
+<footer style="border-top:1px solid rgba(10,31,68,.15);padding:16px 28px;text-align:center;font-size:11px;color:#aaa;background:#f0f2f7;">
+  <strong style="color:#D0021B;font-size:11.5px;">URE-CAIEIRAS</strong><span style="margin:0 6px;color:#ccc">·</span>
+  <strong>SP em Ação · Matemática</strong> — Portal do Professor · Seduc-SP
+  <span style="margin:0 6px;color:#ccc">·</span> Agrupamentos baseados em Vygotsky (ZDP)
+  <br><a href="painel.html" style="color:#999;font-size:10px;text-decoration:none;margin-top:4px;display:inline-block;">← Voltar ao Painel Principal</a>
+</footer>
+</body>
+</html>
