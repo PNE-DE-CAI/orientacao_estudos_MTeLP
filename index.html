@@ -1,598 +1,419 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SP em Ação – Matemática | Portal do Professor-OE MT </title>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root{
-  --vm:#D0021B;--vm-e:#A00015;--vm-l:#FFF0F1;
-  --az:#0A1F44;--az-m:#163272;--az-l:#EEF2FA;
-  --pt:#111;--pt-m:#333;--pt-c:#666;
-  --cl:#F0F2F7;--bd:#D8DCE8;
-  --vd:#138A36;--vd-l:#E6F5EC;
-  --am:#B8860B;--am-l:#FFF8E1;
-  --gold:#C49A00;
-  --sh:0 6px 28px rgba(10,31,68,.12);
-  --sh-lg:0 16px 56px rgba(10,31,68,.20);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  font-family:'Sora',sans-serif;
-  background:var(--az);
-  color:white;
-  min-height:100vh;
-  overflow-x:hidden;
-}
-
-/* ── BACKGROUND PATTERN ── */
-body::before{
-  content:'';
-  position:fixed;
-  inset:0;
-  background:
-    radial-gradient(ellipse 80% 50% at 10% 20%, rgba(208,2,27,.18) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 70% at 90% 80%, rgba(22,50,114,.5) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(10,31,68,.8) 0%, transparent 100%);
-  pointer-events:none;
-  z-index:0;
-}
-
-/* ── GRID DECORATION ── */
-body::after{
-  content:'';
-  position:fixed;
-  inset:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-  background-size:60px 60px;
-  pointer-events:none;
-  z-index:0;
-}
-
-.wrap{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;}
-
-/* ── HEADER ── */
-header{
-  border-bottom:1px solid rgba(255,255,255,.08);
-  backdrop-filter:blur(12px);
-  background:rgba(10,31,68,.7);
-  position:sticky;top:0;z-index:100;
-}
-.header-inner{
-  max-width:1100px;margin:0 auto;padding:14px 28px;
-  display:flex;align-items:center;gap:16px;
-}
-.logo{
-  height:48px;width:auto;border-radius:7px;
-  background:white;padding:3px 7px;object-fit:contain;flex-shrink:0;
-}
-.divider{width:2px;height:36px;background:rgba(255,255,255,.15);flex-shrink:0;}
-.header-texts{flex:1}
-.header-title{font-size:17px;font-weight:900;letter-spacing:-.3px;line-height:1.2}
-.header-sub{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px}
-.header-badge{
-  background:var(--vm);color:white;font-weight:800;
-  font-size:10px;padding:4px 12px;border-radius:20px;
-  letter-spacing:1.2px;text-transform:uppercase;
-  flex-shrink:0;white-space:nowrap;
-}
-
-/* ── HERO ── */
-.hero{
-  text-align:center;padding:64px 28px 40px;
-  max-width:760px;margin:0 auto;
-}
-.hero-eyebrow{
-  display:inline-block;
-  background:rgba(208,2,27,.2);
-  border:1px solid rgba(208,2,27,.4);
-  color:rgba(255,100,100,.9);
-  font-size:10.5px;font-weight:800;
-  padding:4px 16px;border-radius:20px;
-  letter-spacing:1.5px;text-transform:uppercase;
-  margin-bottom:20px;
-}
-.hero h1{
-  font-size:clamp(28px,5vw,46px);
-  font-weight:900;
-  line-height:1.1;
-  letter-spacing:-1px;
-  margin-bottom:18px;
-}
-.hero h1 span{
-  color:var(--vm);
-  position:relative;
-  display:inline-block;
-}
-.hero h1 span::after{
-  content:'';
-  position:absolute;
-  bottom:-4px;left:0;right:0;
-  height:3px;background:var(--vm);
-  border-radius:2px;
-  opacity:.5;
-}
-.hero-desc{
-  font-size:15px;color:rgba(255,255,255,.6);
-  line-height:1.7;max-width:520px;margin:0 auto 36px;
-}
-
-/* ── STATS ── */
-.stats{
-  display:flex;gap:24px;justify-content:center;
-  flex-wrap:wrap;margin-bottom:60px;
-}
-.stat{text-align:center;}
-.stat-num{
-  font-size:32px;font-weight:900;color:white;
-  font-family:'DM Mono',monospace;
-  line-height:1;
-}
-.stat-num span{color:var(--vm);}
-.stat-label{font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-top:4px;font-weight:700;}
-.stat-sep{width:1px;background:rgba(255,255,255,.1);margin:4px 0;}
-
-/* ── CARDS GRID ── */
-.cards-section{
-  max-width:1100px;margin:0 auto;
-  padding:0 28px 80px;
-}
-.section-label{
-  font-size:10.5px;font-weight:800;
-  color:rgba(255,255,255,.35);
-  text-transform:uppercase;letter-spacing:2px;
-  margin-bottom:20px;
-  display:flex;align-items:center;gap:12px;
-}
-.section-label::after{
-  content:'';flex:1;height:1px;
-  background:rgba(255,255,255,.08);
-}
-
-.cards-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-  gap:20px;
-}
-
-/* ── CARD ── */
-.vol-card{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:20px;
-  padding:28px;
-  position:relative;
-  overflow:hidden;
-  cursor:pointer;
-  transition:all .3s cubic-bezier(.2,.8,.2,1);
-  text-decoration:none;
-  display:block;
-  color:white;
-}
-.vol-card::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:linear-gradient(135deg, rgba(255,255,255,.06) 0%, transparent 60%);
-  opacity:0;
-  transition:opacity .3s;
-}
-.vol-card:hover{
-  border-color:rgba(208,2,27,.5);
-  background:rgba(255,255,255,.07);
-  transform:translateY(-4px);
-  box-shadow:var(--sh-lg), 0 0 0 1px rgba(208,2,27,.3);
-}
-.vol-card:hover::before{opacity:1;}
-
-/* Accent bar */
-.vol-card::after{
-  content:'';
-  position:absolute;
-  top:0;left:0;right:0;
-  height:3px;
-  background:var(--vm);
-  border-radius:20px 20px 0 0;
-  opacity:.6;
-  transition:opacity .3s;
-}
-.vol-card:hover::after{opacity:1;}
-
-/* Card vol badge */
-.card-vol{
-  display:inline-flex;align-items:center;gap:6px;
-  background:rgba(208,2,27,.15);
-  border:1px solid rgba(208,2,27,.3);
-  color:rgba(255,130,130,.9);
-  font-size:10px;font-weight:800;
-  padding:3px 12px;border-radius:20px;
-  letter-spacing:1px;text-transform:uppercase;
-  margin-bottom:16px;
-}
-
-.card-title{
-  font-size:19px;font-weight:900;
-  letter-spacing:-.3px;margin-bottom:6px;
-  line-height:1.2;
-}
-.card-subtitle{
-  font-size:12px;color:rgba(255,255,255,.5);
-  margin-bottom:18px;font-weight:600;
-}
-
-/* Info row */
-.card-info{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:10px;margin-bottom:20px;
-}
-.info-block{
-  background:rgba(255,255,255,.05);
-  border-radius:10px;padding:10px 12px;
-  border:1px solid rgba(255,255,255,.06);
-}
-.info-label{
-  font-size:8.5px;color:rgba(255,255,255,.35);
-  font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;
-}
-.info-value{
-  font-size:13px;font-weight:700;color:white;
-}
-
-/* Features list */
-.card-features{
-  list-style:none;margin-bottom:22px;
-}
-.card-features li{
-  font-size:11.5px;color:rgba(255,255,255,.6);
-  padding:4px 0;
-  display:flex;align-items:center;gap:8px;
-  border-bottom:1px solid rgba(255,255,255,.04);
-}
-.card-features li:last-child{border-bottom:none;}
-.card-features li::before{
-  content:'';
-  width:5px;height:5px;
-  border-radius:50%;
-  background:var(--vm);
-  flex-shrink:0;
-  opacity:.7;
-}
-
-/* Tags */
-.card-tags{
-  display:flex;flex-wrap:wrap;gap:5px;margin-bottom:20px;
-}
-.tag{
-  font-size:9.5px;font-weight:700;
-  padding:3px 9px;border-radius:20px;
-  font-family:'DM Mono',monospace;
-}
-.tag-saeb{background:rgba(20,80,180,.25);color:rgba(130,180,255,.9);border:1px solid rgba(80,140,255,.2);}
-.tag-bncc{background:rgba(20,140,60,.2);color:rgba(100,220,140,.9);border:1px solid rgba(60,180,100,.2);}
-.tag-series{background:rgba(180,130,10,.2);color:rgba(240,200,80,.9);border:1px solid rgba(200,160,30,.2);}
-
-/* CTA Button */
-.card-cta{
-  display:flex;align-items:center;justify-content:space-between;
-  background:rgba(208,2,27,.15);
-  border:1px solid rgba(208,2,27,.3);
-  border-radius:10px;padding:12px 16px;
-  font-size:13px;font-weight:700;
-  color:rgba(255,150,150,.95);
-  transition:all .25s;
-}
-.vol-card:hover .card-cta{
-  background:var(--vm);
-  border-color:var(--vm);
-  color:white;
-}
-.cta-arrow{
-  width:28px;height:28px;border-radius:50%;
-  background:rgba(255,255,255,.1);
-  display:flex;align-items:center;justify-content:center;
-  font-size:14px;transition:all .25s;
-  flex-shrink:0;
-}
-.vol-card:hover .cta-arrow{background:rgba(255,255,255,.2);transform:translateX(3px);}
-
-/* ── EXTRA INFO SECTION ── */
-.info-section{
-  max-width:1100px;margin:0 auto;padding:0 28px 60px;
-}
-.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;}
-.info-card{
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.07);
-  border-radius:14px;padding:20px;
-}
-.info-card-icon{font-size:24px;margin-bottom:10px;}
-.info-card-title{font-size:13px;font-weight:800;margin-bottom:6px;color:rgba(255,255,255,.9);}
-.info-card-desc{font-size:11.5px;color:rgba(255,255,255,.45);line-height:1.6;}
-
-/* ── FOOTER ── */
-footer{
-  border-top:1px solid rgba(255,255,255,.07);
-  padding:24px 28px;
-  text-align:center;
-  font-size:11px;
-  color:rgba(255,255,255,.25);
-  margin-top:auto;
-}
-footer strong{color:rgba(255,255,255,.45);}
-
-/* ── HOVER GLOW ── */
-.vol-card.vol1:hover{box-shadow:var(--sh-lg), 0 0 40px rgba(208,2,27,.15), 0 0 0 1px rgba(208,2,27,.3);}
-.vol-card.vol2:hover{box-shadow:var(--sh-lg), 0 0 40px rgba(22,50,114,.3), 0 0 0 1px rgba(80,120,220,.3);}
-.vol-card.vol3:hover{box-shadow:var(--sh-lg), 0 0 40px rgba(180,130,0,.15), 0 0 0 1px rgba(200,160,30,.3);}
-
-.vol-card.vol2::after{background:rgba(80,130,220,1);}
-.vol-card.vol3::after{background:var(--gold);}
-.vol-card.vol2 .card-vol{background:rgba(40,80,200,.2);border-color:rgba(80,140,255,.3);color:rgba(140,180,255,.9);}
-.vol-card.vol3 .card-vol{background:rgba(180,130,0,.2);border-color:rgba(220,170,30,.3);color:rgba(240,200,80,.9);}
-.vol-card.vol2 .card-cta{background:rgba(40,80,200,.15);border-color:rgba(80,140,255,.3);color:rgba(140,180,255,.95);}
-.vol-card.vol3 .card-cta{background:rgba(180,130,0,.15);border-color:rgba(220,170,30,.3);color:rgba(240,200,80,.95);}
-.vol-card.vol2:hover .card-cta{background:var(--az-m);border-color:var(--az-m);color:white;}
-.vol-card.vol3:hover .card-cta{background:var(--gold);border-color:var(--gold);color:white;}
-
-@media(max-width:600px){
-  .header-inner{padding:10px 16px;}
-  .hero{padding:40px 16px 28px;}
-  .cards-section,.info-section{padding:0 16px 50px;}
-  .stats{gap:16px;}
-  .stat-num{font-size:24px;}
-  .card-info{grid-template-columns:1fr;}
-}
-
-/* ── ANIMATE IN ── */
-@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-.vol-card{animation:fadeUp .5s ease both;}
-.vol-card:nth-child(1){animation-delay:.1s}
-.vol-card:nth-child(2){animation-delay:.2s}
-.vol-card:nth-child(3){animation-delay:.3s}
-.hero{animation:fadeUp .6s ease both;}
-.stats{animation:fadeUp .6s ease .15s both;}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>SP em Ação · Matemática 2 | 9º ano EF | Apresentação + Quiz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --vm: #D0021B; --vm-e: #A00015; --vm-l: #FFF0F1;
+      --az: #0A1F44; --az-m: #163272; --az-l: #EEF2FA;
+      --pt: #111; --pt-m: #333; --cl: #F3F4F8; --bd: #DCDFE8;
+      --vd: #138A36; --vd-l: #E6F5EC; --am: #B8860B; --am-l: #FFF8E1;
+      --gold: #C49A00; --gold-l: #FFFBEA;
+      --sh: 0 4px 20px rgba(10,31,68,.08); --sh2: 0 8px 30px rgba(10,31,68,.12);
+    }
+    body {
+      font-family: 'Sora', sans-serif;
+      background: var(--cl);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .header {
+      background: var(--az);
+      border-bottom: 3px solid var(--vm);
+      box-shadow: 0 2px 12px rgba(0,0,0,.2);
+      flex-shrink: 0;
+    }
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 10px 22px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      flex-wrap: wrap;
+    }
+    .logo {
+      height: 42px;
+      background: white;
+      border-radius: 6px;
+      padding: 2px 5px;
+      object-fit: contain;
+    }
+    .divider { width: 2px; height: 32px; background: rgba(255,255,255,.2); }
+    .title-area { flex: 1; }
+    .main-title { font-size: 14px; font-weight: 800; color: white; line-height: 1.2; }
+    .sub { font-size: 10px; color: rgba(255,255,255,.6); }
+    .badge {
+      background: var(--vm); color: white; font-weight: 800; font-size: 9.5px;
+      padding: 3px 12px; border-radius: 30px; text-transform: uppercase;
+    }
+    .score-area {
+      background: rgba(255,255,255,.15); border-radius: 40px; padding: 4px 14px;
+      font-size: 13px; font-weight: 700; color: white; font-family: 'DM Mono', monospace;
+    }
+    .presentation-container {
+      flex: 1; display: flex; flex-direction: column; overflow: hidden;
+    }
+    .slides-wrapper {
+      flex: 1; overflow-y: auto; padding: 24px 28px;
+      scroll-behavior: smooth;
+    }
+    .slide {
+      max-width: 1100px; margin: 0 auto; background: white;
+      border-radius: 24px; box-shadow: var(--sh2); border: 1px solid var(--bd);
+      padding: 28px 32px; animation: fadeSlide 0.3s ease;
+    }
+    @keyframes fadeSlide { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: translateY(0);} }
+    .slide h1 {
+      font-size: 26px; font-weight: 800; color: var(--az);
+      margin-bottom: 16px; border-left: 5px solid var(--vm); padding-left: 18px;
+    }
+    .slide p, .slide li { font-size: 14px; line-height: 1.5; color: var(--pt-m); }
+    .grid-cards {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(210px,1fr));
+      gap: 14px; margin: 15px 0;
+    }
+    .info-card {
+      background: var(--az-l); border-radius: 16px; padding: 14px;
+      border-left: 4px solid var(--vm);
+    }
+    .info-card strong { color: var(--az); font-size: 15px; }
+    .badge-saeb {
+      background: var(--gold-l); color: var(--gold); font-family: 'DM Mono', monospace;
+      padding: 2px 8px; border-radius: 30px; font-size: 10px; font-weight: 700;
+      display: inline-block; margin: 3px 0;
+    }
+    .quiz-option {
+      background: var(--cl); border: 2px solid var(--bd); border-radius: 20px;
+      padding: 12px 18px; margin: 12px 0; cursor: pointer; transition: all 0.2s;
+      font-weight: 500;
+    }
+    .quiz-option:hover { background: var(--az-l); border-color: var(--az); }
+    .quiz-option.selected { background: var(--az-l); border-color: var(--vm); box-shadow: 0 2px 8px rgba(208,2,27,0.2); }
+    .feedback {
+      margin-top: 15px; padding: 12px; border-radius: 14px; font-weight: 600; font-size: 13px;
+    }
+    .correct-fb { background: var(--vd-l); color: #0a4b1f; border-left: 5px solid var(--vd); }
+    .wrong-fb { background: var(--vm-l); color: var(--vm-e); border-left: 5px solid var(--vm); }
+    .nav-buttons { display: flex; justify-content: space-between; margin-top: 28px; gap: 12px; }
+    .btn-nav {
+      background: white; border: 2px solid var(--az); padding: 8px 20px;
+      border-radius: 40px; font-weight: 700; font-size: 13px; cursor: pointer;
+      font-family: 'Sora', sans-serif; color: var(--az);
+    }
+    .btn-nav:hover { background: var(--az); color: white; }
+    .btn-primary { background: var(--vm); color: white; border: none; }
+    .btn-primary:hover { background: var(--vm-e); }
+    .slide-counter { text-align: center; font-size: 12px; font-weight: 600; color: #666; margin-top: 16px; }
+    .dots { display: flex; justify-content: center; gap: 8px; margin: 8px 0 12px; flex-wrap: wrap; }
+    .dot { width: 8px; height: 8px; background: #ccc; border-radius: 50%; transition: 0.2s; cursor: pointer; }
+    .dot.active { background: var(--vm); width: 24px; border-radius: 20px; }
+    footer {
+      background: #e9ecf3; text-align: center; font-size: 9px; padding: 8px;
+      color: #666; border-top: 1px solid var(--bd); flex-shrink: 0;
+    }
+    .restart-btn {
+      margin-top: 20px; background: var(--az); color: white; border: none;
+      padding: 10px 20px; border-radius: 40px; font-weight: bold; cursor: pointer;
+    }
+    @media (max-width: 700px) { .slide { padding: 18px; } .slide h1 { font-size: 22px; } }
+  </style>
 </head>
 <body>
-<div class="wrap">
-
-<header>
+<div class="header">
   <div class="header-inner">
-    <img src="https://i.ibb.co/0p01LzxB/logo3de.jpg" alt="SP em Ação" class="logo" onerror="this.style.display='none'">
+    <img src="https://i.ibb.co/0p01LzxB/logo3de.jpg" alt="Logo SP" class="logo" onerror="this.style.display='none'">
     <div class="divider"></div>
-    <div class="header-texts">
-      <div class="header-title">SP em Ação · Matemática</div>
-      <div class="header-sub">Portal do Professor · Gestão de Turma · Seduc-SP</div>
+    <div class="title-area">
+      <div class="main-title">SP em Ação · Matemática 2 | 9º ano EF</div>
+      <div class="sub">Manual do Professor · Matriz Saeb 9º ano · BNCC · Gestão de Aprendizagem</div>
     </div>
-    <div class="header-badge">Seduc-SP</div>
+    <div class="badge">URE-CAIEIRAS</div>
+    <div class="score-area" id="quizScoreDisplay"><i class="fas fa-star"></i> Quiz: 0/17</div>
   </div>
-</header>
+</div>
 
-<div class="wrap">
-
-  <!-- HERO -->
-  <section class="hero">
-    <a href="painel.html" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);color:rgba(255,255,255,.55);font-size:10.5px;font-weight:700;padding:5px 14px;border-radius:20px;text-decoration:none;margin-bottom:14px;">← Painel Principal</a>
-    <a href="index_lp.html" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);color:rgba(255,255,255,.55);font-size:10.5px;font-weight:700;padding:5px 14px;border-radius:20px;text-decoration:none;margin-bottom:14px;">← Portal de Língua Portuguesa</a>
-      <div class="hero-eyebrow">Portal do Professor - OE MT</div>
-    <h1>SP em Ação<br><span>Matemática</span></h1>
-    <p class="hero-desc">
-      Plataforma de gestão de turma para os três volumes da coleção.
-      Classifique estudantes, gere agrupamentos produtivos e exporte relatórios em PDF.
-    </p>
-
-    <div class="stats">
-      <div class="stat">
-        <div class="stat-num">3<span>×</span></div>
-        <div class="stat-label">Volumes</div>
-      </div>
-      <div class="stat-sep"></div>
-      <div class="stat">
-        <div class="stat-num">48<span>+</span></div>
-        <div class="stat-label">Missões / Jornadas</div>
-      </div>
-      <div class="stat-sep"></div>
-      <div class="stat">
-        <div class="stat-num">45</div>
-        <div class="stat-label">Alunos por turma</div>
-      </div>
-      <div class="stat-sep"></div>
-      <div class="stat">
-        <div class="stat-num">5<span>×</span></div>
-        <div class="stat-label">Modos de agrupamento</div>
-      </div>
+<div class="presentation-container">
+  <div class="slides-wrapper" id="slidesWrapper"><div id="slideContainer"></div></div>
+  <div class="dots" id="dotsContainer"></div>
+  <div style="padding: 0 28px 20px 28px;">
+    <div class="nav-buttons">
+      <button class="btn-nav" id="prevBtn"><i class="fas fa-arrow-left"></i> Anterior</button>
+      <button class="btn-nav btn-primary" id="nextBtn">Próximo <i class="fas fa-arrow-right"></i></button>
     </div>
-  </section>
-
-  <!-- CARDS -->
-  <section class="cards-section">
-    <div class="section-label">Selecione o volume</div>
-    <div class="cards-grid">
-
-      <!-- VOL 1 -->
-      <a href="mat2_5ano_turma.html" class="vol-card vol1">
-        <div class="card-vol">📕 Volume 1</div>
-        <div class="card-title">Matemática 1</div>
-        <div class="card-subtitle"> 5º ano do Ensino Fundamental</div>
-        <div class="card-info">
-          <div class="info-block">
-            <div class="info-label">Referência Saeb</div>
-            <div class="info-value">6º ano EF & 7º ano EF</div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">Missões</div>
-            <div class="info-value">16 missões</div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">Bimestres</div>
-            <div class="info-value">4 bimestres</div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">Aulas</div>
-            <div class="info-value">64 aulas</div>
-          </div>
-        </div>
-        <ul class="card-features">
-          <li>Números · Álgebra · Geometria</li>
-          <li>Grandezas e Medidas · Estatística</li>
-          <li>Escala de Proficiência Saeb (Níveis 0–10)</li>
-          <li>Articulação Saeb × BNCC Anos Iniciais</li>
-          <li>Campo de Etapa 01–04 por estudante</li>
-          <li>Agrupamentos: Trio, Quarteto, Sexteto, Dupla, Individual</li>
-        </ul>
-        <div class="card-tags">
-          <span class="tag tag-saeb">Saeb 5º ano</span>
-          <span class="tag tag-bncc">BNCC EF</span>
-          <span class="tag tag-series">Anos Iniciais</span>
-        </div>
-        <div class="card-cta">
-          Abrir Volume 1
-          <div class="cta-arrow">→</div>
-        </div>
-      </a>
-
-      <!-- VOL 2 -->
-      <a href="mat2_9ano_turma.html" class="vol-card vol2">
-        <div class="card-vol">📘 Volume 2</div>
-        <div class="card-title">Matemática 2</div>
-        <div class="card-subtitle">9º ano do Ensino Fundamental</div>
-        <div class="card-info">
-          <div class="info-block">
-            <div class="info-label">Referência Saeb</div>
-            <div class="info-value">8º ano EF, 9º ano EF & 1ª série EM</div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">Missões</div>
-            <div class="info-value">16 missões</div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">Bimestres</div>
-            <div class="info-value">4 bimestres</div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">Aulas</div>
-            <div class="info-value">64 aulas</div>
-          </div>
-        </div>
-        <ul class="card-features">
-          <li>Números · Álgebra · Geometria</li>
-          <li>Grandezas e Medidas · Estatística</li>
-          <li>Escala de Proficiência Saeb (Níveis 1–9)</li>
-          <li>Articulação Saeb × BNCC Anos Finais</li>
-          <li>Campo de Etapa 01–04 por estudante</li>
-          <li>Agrupamentos: Trio, Quarteto, Sexteto, Dupla, Individual</li>
-        </ul>
-        <div class="card-tags">
-          <span class="tag tag-saeb">Saeb 9º ano</span>
-          <span class="tag tag-bncc">BNCC EF</span>
-          <span class="tag tag-series">Anos Finais</span>
-        </div>
-        <div class="card-cta">
-          Abrir Volume 2
-          <div class="cta-arrow">→</div>
-        </div>
-      </a>
-
-      <!-- VOL 3 -->
-      <a href="mat3_3serieEM_turma.html" class="vol-card vol3">
-        <div class="card-vol">📗 Volume 3</div>
-        <div class="card-title">Matemática 3</div>
-        <div class="card-subtitle">3ª série do Ensino Médio</div>
-        <div class="card-info">
-          <div class="info-block">
-            <div class="info-label">Referência Saeb</div>
-            <div class="info-value">2ª série EM & 3ª série EM</div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">Jornadas</div>
-            <div class="info-value">16 jornadas</div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">Bimestres</div>
-            <div class="info-value">4 bimestres</div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">Aulas</div>
-            <div class="info-value">64 aulas</div>
-          </div>
-        </div>
-        <ul class="card-features">
-          <li>Funções · Álgebra · Geometria · Combinatória</li>
-          <li>Probabilidade · Estatística · Análise de dados</li>
-          <li>Escala de Proficiência Saeb EM (Níveis 1–10)</li>
-          <li>BNCC EM – Competências CEMAT 1–5</li>
-          <li>Campo de Etapa 01–04 por estudante</li>
-          <li>Sugestão automática de modo de agrupamento</li>
-        </ul>
-        <div class="card-tags">
-          <span class="tag tag-saeb">Saeb 3ª série EM</span>
-          <span class="tag tag-bncc">BNCC EM</span>
-          <span class="tag tag-series">Ensino Médio</span>
-        </div>
-        <div class="card-cta">
-          Abrir Volume 3
-          <div class="cta-arrow">→</div>
-        </div>
-      </a>
-
-    </div>
-  </section>
-
-  <!-- INFO SECTION -->
-  <section class="info-section">
-    <div class="section-label">Recursos disponíveis em todos os volumes</div>
-    <div class="info-grid">
-      <div class="info-card">
-        <div class="info-card-icon">👥</div>
-        <div class="info-card-title">Gestão de até 45 estudantes</div>
-        <div class="info-card-desc">Adicione individualmente ou importe uma lista. Configure Série, Missão/Jornada e <strong style="color:rgba(255,255,255,.65)">Etapa (01–04)</strong> para cada aluno.</div>
-      </div>
-      <div class="info-card">
-        <div class="info-card-icon">📊</div>
-        <div class="info-card-title">Classificação automática</div>
-        <div class="info-card-desc"><strong style="color:rgba(255,255,255,.65)">Proficiente</strong> (série adequada), <strong style="color:rgba(255,255,255,.65)">Básico</strong> (1–2 anos de defasagem) ou <strong style="color:rgba(255,255,255,.65)">Abaixo do Básico</strong> (+2 anos) — calculado automaticamente com base na série.</div>
-      </div>
-      <div class="info-card">
-        <div class="info-card-icon">🤝</div>
-        <div class="info-card-title">5 modos de agrupamento</div>
-        <div class="info-card-desc">Trio, Quarteto (4 alunos), Sexteto (6 alunos), Dupla e Individual. Baseado na ZDP de Vygotsky: Monitor → Par → Aprendente.</div>
-      </div>
-      <div class="info-card">
-        <div class="info-card-icon">📄</div>
-        <div class="info-card-title">Exportar PDF dos Agrupamentos</div>
-        <div class="info-card-desc">Baixe um relatório em PDF com todos os grupos formados, papéis de cada membro, missões/jornadas em foco e habilidades Saeb recomendadas.</div>
-      </div>
-      <div class="info-card">
-        <div class="info-card-icon">📚</div>
-        <div class="info-card-title">Referência curricular completa</div>
-        <div class="info-card-desc">Habilidades Saeb, Escala de Proficiência, articulação com a BNCC e planejamento bimestral — tudo integrado em um só lugar.</div>
-      </div>
-      <div class="info-card">
-        <div class="info-card-icon">🔎</div>
-        <div class="info-card-title">Busca, filtros e importação</div>
-        <div class="info-card-desc">Filtre por nível de proficiência, busque estudantes por nome e importe listas com um clique. Exportação de agrupamentos no modo selecionado.</div>
-      </div>
-    </div>
-  </section>
-
-</div><!-- /wrap inner -->
-
+    <div class="slide-counter" id="slideCounter"></div>
+  </div>
+</div>
 <footer>
-  <strong><span style="color:#EF5350;font-size:12px;letter-spacing:.5px;">URE-CAIEIRAS</span></strong><span style="margin:0 6px;opacity:.35">·</span>
-  <span style="margin:0 6px;opacity:.35">·</span>
-  <strong>SP em Ação · Matemática</strong> — Portal do Professor · Seduc-SP ·
-  Material complementar ao didático regular da rede de ensino ·
-  Agrupamentos baseados em Vygotsky (ZDP)
-  <br>
-  <br><a href="painel.html" style="color:rgba(255,255,255,.4);font-size:10px;text-decoration:none;margin-top:5px;display:inline-block;">← Voltar ao Painel Principal</a>
+  <strong>SP em Ação · Matemática 2</strong> — Baseado na Matriz Saeb 9º ano EF + BNCC | Agrupamentos e Missões | Quiz interativo
 </footer>
 
-</div><!-- /wrap outer -->
+<script>
+  // ======================= DADOS 9º ANO (extraídos do mat2_9ano_turma.html) =======================
+  const MISSIONS = [
+    { n:1, h:['9N1.1','9N1.2','9N1.9','9N2.1'], nv:['N2.2','N4.6','N5.5','N5.7'], f:'Números · Racionais e operações' },
+    { n:2, h:['9N1.8','9N2.1'], nv:['N2.1','N2.3','N3.4'], f:'Números · Frações e porcentagem' },
+    { n:3, h:['9N2.3'], nv:['N3.5','N4.6','N5.8','N6.14'], f:'Números · Porcentagens e acréscimos' },
+    { n:4, h:['9N1.4'], nv:['N1.1','N3.6','N4.8','N4.9'], f:'Números · Ordenação e reta numérica' },
+    { n:5, h:['9G2.1'], nv:['N3.1','N3.3','N4.2','N5.2'], f:'Geometria · Localização e deslocamento' },
+    { n:6, h:['9G1.6','9G2.8','9M2.2'], nv:['N3.3','N4.1','N4.2','N4.3','N5.2'], f:'Geometria · Triângulos, coordenadas e perímetro' },
+    { n:7, h:['9E1.2','9E2.1','9E2.2'], nv:['N1.2','N2.4','N2.5','N4.10'], f:'Estatística · Tabelas e gráficos' },
+    { n:8, h:['9E1.1','9E1.2','9E1.3','9E1.5','9E2.1','9E2.2','9E2.3'], nv:['N1.2','N2.5','N3.8','N3.9','N3.10','N4.10'], f:'Estatística · Análise e pesquisa' },
+    { n:9, h:['9A2.1'], nv:['N3.7','N5.5','N5.9','N8.7'], f:'Álgebra · Proporcionalidade direta e inversa' },
+    { n:10, h:['9A2.1'], nv:['N3.7','N8.7'], f:'Álgebra · Proporcionalidade (aprofundamento)' },
+    { n:11, h:['9A1.1','9A1.2','9A2.2','9A2.3'], nv:['N4.7','N5.6'], f:'Álgebra · Equações e sistemas 1º grau' },
+    { n:12, h:['9A1.1','9A1.2','9A1.5','9A1.8','9A2.5'], nv:['N2.2*','N4.2*','N5.6','N5.10*'], f:'Álgebra · Funções afim e plano cartesiano' },
+    { n:13, h:['9M2.1'], nv:['N4.4','N7.11','N8.2'], f:'Grandezas · Conversões de medidas' },
+    { n:14, h:['9M2.2'], nv:['N4.4','N4.5','N5.3'], f:'Grandezas · Perímetro' },
+    { n:15, h:['9M2.2','9M2.3'], nv:['N5.3','N7.8','N7.9','N8.4'], f:'Grandezas · Área de figuras planas' },
+    { n:16, h:['9M2.4'], nv:['N5.4','N7.10'], f:'Grandezas · Volume de prismas e cilindros' }
+  ];
+
+  const ESCALA = [
+    { n:'Nível 1', r:'200–224', cls:'n1', it:[{c:'N1.1',d:'Reconhecer o maior ou menor número em uma coleção de racionais decimais.'},{c:'N1.2',d:'Interpretar dados em tabela e gráfico de colunas.'}] },
+    { n:'Nível 2', r:'225–249', cls:'n2', it:[{c:'N2.1',d:'Reconhecer fração parte-todo em figura.'},{c:'N2.2',d:'Associar quantia monetária por extenso à decimal.'},{c:'N2.3',d:'Determinar fração irredutível simplificando por 3.'},{c:'N2.4',d:'Interpretar gráfico de linha simples.'},{c:'N2.5',d:'Associar gráfico de colunas a tabela.'}] },
+    { n:'Nível 3', r:'250–274', cls:'n3', it:[{c:'N3.1',d:'Reconhecer ângulo de giro na movimentação.'},{c:'N3.2',d:'Reconhecer planificação de sólido simples.'},{c:'N3.3',d:'Localizar objeto em planta baixa com dois critérios.'},{c:'N3.4',d:'Fração irredutível simplificando por 7.'},{c:'N3.5',d:'Operações com inteiros em situações-problema.'},{c:'N3.6',d:'Localizar inteiro positivo na reta.'},{c:'N3.7',d:'Proporcionalidade direta com inteiros.'},{c:'N3.8',d:'Associar tabela a gráfico de setores.'},{c:'N3.9',d:'Analisar dados em tabela simples.'},{c:'N3.10',d:'Analisar gráfico de linha com mais de uma grandeza.'}] },
+    { n:'Nível 4', r:'275–299', cls:'n4', it:[{c:'N4.1',d:'Localizar ponto no plano cartesiano por coordenadas.'},{c:'N4.2',d:'Reconhecer coordenadas de ponto no plano.'},{c:'N4.3',d:'Interpretar movimentação com referencial diferente.'},{c:'N4.4',d:'Converter unidades de comprimento (m→cm).'},{c:'N4.5',d:'Relação entre dobra de lados e perímetro.'},{c:'N4.6',d:'Soma de racionais em sistema monetário.'},{c:'N4.7',d:'Valor numérico de expressão algébrica 1º grau.'},{c:'N4.8',d:'Localizar inteiros negativos na reta.'},{c:'N4.9',d:'Localizar racionais decimais na reta.'},{c:'N4.10',d:'Analisar tabela de dupla entrada.'}] },
+    { n:'Nível 5', r:'300–324', cls:'n5', it:[{c:'N5.1',d:'Ângulo não se altera em ampliação/redução.'},{c:'N5.2',d:'Localizar dois ou mais pontos no sistema de coordenadas.'},{c:'N5.3',d:'Determinar perímetro de região retangular.'},{c:'N5.4',d:'Determinar volume por contagem de blocos.'},{c:'N5.5',d:'Associar fração com denominador 10 à decimal.'},{c:'N5.6',d:'Associar situação-problema à linguagem algébrica (eq. 1º grau/sistema).'},{c:'N5.7',d:'Operações com racionais envolvendo divisão por inteiros.'},{c:'N5.8',d:'Determinar porcentagem com inteiros.'},{c:'N5.9',d:'Proporcionalidade direta com racionais decimais.'}] }
+  ];
+
+  const EIXOS = [
+    { nome:'I. Números', desc:'Operações com números reais, notação científica, porcentagens, frações, múltiplos e divisores. Habilidades como 9N2.1 e 9N2.3 são fundamentais para resolver problemas cotidianos.' },
+    { nome:'II. Álgebra', desc:'Equações e funções de 1º e 2º grau, sistemas lineares, proporcionalidade direta/inversa. Associar equações a retas no plano cartesiano (9A1.5, 9A2.5).' },
+    { nome:'III. Geometria', desc:'Figuras planas e espaciais, transformações, semelhança, coordenadas, Teorema de Pitágoras. Habilidades 9G1.6, 9G2.4, 9G2.8.' },
+    { nome:'IV. Grandezas e Medidas', desc:'Conversões de unidades, perímetro, área, volume de prismas e cilindros. Resolver problemas com 9M2.1 a 9M2.4.' },
+    { nome:'V. Probabilidade e Estatística', desc:'Leitura e construção de gráficos, análise de dados, medidas de tendência central, probabilidade simples. Destaque para 9E1.2, 9E2.1 e 9E2.4.' }
+  ];
+
+  // Conteúdo informativo (13 slides)
+  const infoSlides = [
+    { title: "📘 Visão Geral do Material - 9º ano", content: `<p><strong>SP em Ação · Matemática 2</strong> é um material complementar alinhado à BNCC e à Matriz de Referência do Saeb para o 9º ano do Ensino Fundamental. São <strong>16 missões</strong> distribuídas em 32 semanas (4 bimestres, 4 missões por bimestre). Cada missão equivale a 2 semanas / 4 aulas.</p>
+    <div class="grid-cards"><div class="info-card"><strong>📅 1º Bimestre</strong><br>Missões 1 a 4: Números, frações, porcentagem, reta numérica</div>
+    <div class="info-card"><strong>📅 2º Bimestre</strong><br>Missões 5 a 8: Geometria, localização, triângulos, estatística</div>
+    <div class="info-card"><strong>📅 3º Bimestre</strong><br>Missões 9 a 12: Proporcionalidade, equações, funções, sistemas</div>
+    <div class="info-card"><strong>📅 4º Bimestre</strong><br>Missões 13 a 16: Grandezas, perímetro, área, volume</div></div>
+    <p>⚡ <strong>Foco Saeb 9º ano:</strong> níveis 1 a 5 da escala, com destaque para N2.2, N4.2 e N5.10 (Missão 12).</p>` },
+    { title: "🧩 Distribuição das Missões", content: `<p>As 16 missões trabalham de forma integrada os cinco eixos do conhecimento. Exemplo: Missão 1 (Números) desenvolve 9N1.1, 9N1.2, 9N1.9 e 9N2.1. Missão 12 (Álgebra) aborda funções afim, plano cartesiano e os descritores N2.2, N4.2, N5.10 da escala.</p>
+    <div class="badge-saeb">Missão 12 – Funções afim e plano cartesiano: destaque para N2.2 (zeros), N4.2 (gráfico a partir de texto), N5.10 (crescimento).</div>` },
+    { title: "🔢 Eixo I. Números (Matriz Saeb 9º ano)", content: `<p><strong>Eixo cognitivo I – Compreender e aplicar:</strong> 9N1.1 (escrever racionais), 9N1.4 (comparar/ordenar reais), 9N1.8 (frações equivalentes).<br>
+    <strong>Eixo cognitivo II – Resolver problemas:</strong> 9N2.1 (operações com reais e notação científica), 9N2.3 (porcentagens), 9N2.4 (múltiplos e divisores).</p>
+    <div class="info-card"><i class="fas fa-chart-line"></i> Exemplo de item Saeb: N2.1 – reconhecer fração parte-todo em figura.</div>` },
+    { title: "📐 Eixo II. Álgebra", content: `<p>Modelagem de situações por meio de equações e funções. <strong>Habilidades:</strong> 9A1.1 (equação 1º grau), 9A1.5 (reta no plano cartesiano), 9A2.1 (proporcionalidade), 9A2.5 (função afim).</p>
+    <p><strong>Missões 9 a 12:</strong> proporcionalidade, equações, sistemas lineares, funções afim e quadrática. Articulação com BNCC: EF09MA06, EF09MA07, EF08MA08.</p>
+    <div class="badge-saeb">Descritores Saeb associados: D18, D19, D20, D21, D23, D24.</div>` },
+    { title: "📏 Eixo III. Geometria", content: `<p>Estudo de figuras planas e espaciais, localização e transformações. <strong>Habilidades:</strong> 9G1.6 (classificar triângulos/quadriláteros), 9G2.4 (Teorema de Pitágoras), 9G2.8 (distância entre pontos no plano).</p>
+    <div class="grid-cards"><div class="info-card">Semelhança de polígonos (9G1.7)</div><div class="info-card">Planificação de sólidos (9G1.3)</div><div class="info-card">Ângulos formados por retas paralelas (9G1.10)</div></div>` },
+    { title: "⚖️ Eixo IV. Grandezas e Medidas", content: `<p>Conversões, perímetro, área e volume. <strong>Habilidades Saeb:</strong> 9M2.1 (conversões entre unidades usuais), 9M2.2 (perímetro), 9M2.3 (área), 9M2.4 (volume de prismas e cilindros).</p>
+    <p>Essas habilidades são exploradas nas Missões 13 a 16, com contextos do cotidiano: compras, construção, armazenamento.</p>
+    <div class="badge-saeb">Descritores D11, D12, D13 – resolução de problemas com perímetro, área e volume.</div>` },
+    { title: "📊 Eixo V. Probabilidade e Estatística", content: `<p>Leitura e interpretação de dados, planejamento de pesquisas, probabilidade. <strong>Habilidades:</strong> 9E1.2 (construir gráficos), 9E2.1 (resolver problemas com tabelas/gráficos), 9E2.4 (probabilidade de eventos).</p>
+    <p><strong>Missões 7 e 8</strong> focam em tabelas, gráficos e análise estatística. BNCC: EF06MA32, EF09MA21, EF09MA22.</p>
+    <div class="info-card">Média, moda, mediana, amplitude – medidas de tendência central (9E1.4 / 9E1.5).</div>` },
+    { title: "🧠 Eixos Cognitivos", content: `<p><strong>Eixo Cognitivo I – Compreender e aplicar conceitos e procedimentos:</strong> envolve reconhecer, calcular, representar. Ex: 9N1.1, 9A1.7, 9G1.5.</p>
+    <p><strong>Eixo Cognitivo II – Resolver problemas e argumentar:</strong> modelagem, interpretação, justificativas. Ex: 9N2.1, 9A2.3, 9G2.4.</p>
+    <p>Os dois eixos permeiam todas as missões e preparam os estudantes para o Saeb e para o ENEM.</p>` },
+    { title: "📈 Escala de Proficiência Saeb – 9º ano", content: `<p>A Escala Saeb para Matemática do 9º ano possui níveis de 1 a 9. <strong>Foco no volume 2:</strong> Níveis 1 a 5, com destaque para:</p>
+    <ul><li><strong>N2.2</strong> – Associar número racional (quantia monetária) escrito por extenso à decimal.</li>
+    <li><strong>N4.2</strong> – Reconhecer coordenadas de um ponto no plano cartesiano.</li>
+    <li><strong>N5.10</strong> – Avaliar o comportamento de uma função representada graficamente (crescimento).</li></ul>
+    <p>Esses descritores são trabalhados na Missão 12 e em outras jornadas.</p>` },
+    { title: "🎯 Missão 12 em destaque", content: `<p><strong>Missão 12 – Funções afim e plano cartesiano</strong>: relaciona equações de 1º grau a retas, identifica zeros e analisa crescimento. Habilidades Saeb: 9A1.1, 9A1.2, 9A1.5, 9A1.8, 9A2.5. Níveis da escala N2.2*, N4.2*, N5.10* (destaque para a 3ª série EM, mas associados também a conteúdos do 9º ano).</p>
+    <div class="info-card"><i class="fas fa-chart-line"></i> <strong>Dica pedagógica:</strong> use o plano cartesiano para conectar representações algébrica e geométrica.</div>` },
+    { title: "🔗 Articulação Saeb - BNCC", content: `<p>A Matriz Saeb está alinhada à BNCC do Ensino Fundamental – Anos Finais. Exemplos:<br>
+    • 9N1.1 ↔ EF06MA01 (comparar números racionais)<br>
+    • 9A2.1 ↔ EF09MA07/EF09MA08 (proporcionalidade)<br>
+    • 9G2.8 ↔ EF09MA16 (distância entre pontos)<br>
+    • 9E2.1 ↔ EF06MA32 (interpretar gráficos e tabelas)<br>
+    O material oferece integração completa para desenvolver competências gerais da BNCC.</p>` },
+    { title: "📌 Metodologia e Agrupamentos", content: `<p>Baseado na Zona de Desenvolvimento Proximal (Vygotsky). O professor pode organizar trios, quartetos ou sextetos com base nos níveis de proficiência: <strong>Monitor (Proficiente)</strong>, <strong>Par (Básico)</strong>, <strong>Aprendente (Abaixo)</strong>. Estratégia colaborativa potencializa a aprendizagem.</p>
+    <div class="grid-cards"><div class="info-card">✅ Trio: 1 Monitor + 1 Par + 1 Aprendente</div><div class="info-card">⚡ Quarteto/Sexteto quando muitos abaixo do básico</div></div>
+    <p>Use o painel de gestão de turma para acompanhar o progresso de cada estudante.</p>` },
+    { title: "🎓 Considerações Finais", content: `<p>O <strong>SP em Ação – Matemática 2</strong> oferece 16 missões completas, alinhadas à BNCC e à Matriz Saeb, com foco em competências e habilidades críticas: números, álgebra, geometria, grandezas e estatística.</p>
+    <p><strong>Diferencial:</strong> flexibilidade de uso, escalas de proficiência, descritores direcionados e suporte à gestão de turma. Prepare seus estudantes para o Saeb e para os desafios do mundo contemporâneo!</p>
+    <div style="background:var(--gold-l); border-radius:16px; padding:12px; margin-top:10px;"><i class="fas fa-lightbulb"></i> <strong>Próximos slides:</strong> Quiz interativo com 17 perguntas sobre o conteúdo do manual.</div>` }
+  ];
+
+  // QUIZ (17 questões adaptadas ao 9º ano)
+  const quizData = [
+    { question: "Quantas semanas de planejamento o material prevê para as 16 missões?", options: ["28 semanas", "32 semanas", "36 semanas", "40 semanas"], correct: 1, explanation: "O manual descreve 32 semanas (4 bimestres, 8 semanas cada)." },
+    { question: "Qual eixo do conhecimento Saeb aborda equações e funções de 1º e 2º grau?", options: ["Números", "Álgebra", "Geometria", "Grandezas e Medidas"], correct: 1, explanation: "Álgebra é o eixo responsável por equações, funções e modelagem algébrica." },
+    { question: "Qual código da Escala de Proficiência (nível 2) significa 'Associar número racional (quantia monetária) escrito por extenso à decimal'?", options: ["N1.4", "N2.2", "N3.5", "N4.2"], correct: 1, explanation: "N2.2: associar um número racional que representa quantia monetária, escrito por extenso, à sua representação decimal." },
+    { question: "Quantas missões compõem o 1º bimestre?", options: ["3 missões", "4 missões", "5 missões", "6 missões"], correct: 1, explanation: "1º bimestre: Missões 1 a 4 (Números, frações, porcentagem, reta numérica)." },
+    { question: "Qual habilidade Saeb corresponde a 'Resolver problemas com números reais e notação científica'?", options: ["9N1.3", "9N2.1", "9A2.5", "9M2.3"], correct: 1, explanation: "9N2.1: resolver problemas com números reais, inclusive notação científica." },
+    { question: "O descritor N5.10 (nível 5) avalia qual competência?", options: ["Calcular área de figuras planas", "Avaliar comportamento de função gráfica (crescimento)", "Resolver sistema linear 2x2", "Identificar porcentagem"], correct: 1, explanation: "N5.10: Avaliar o comportamento de uma função representada graficamente quanto ao crescimento." },
+    { question: "Qual eixo cognitivo está relacionado a 'Compreender e aplicar conceitos e procedimentos'?", options: ["Eixo I", "Eixo II", "Eixo III", "Eixo V"], correct: 0, explanation: "Eixo Cognitivo I: compreender e aplicar conceitos/procedimentos. Eixo II: resolver problemas e argumentar." },
+    { question: "Qual habilidade da BNCC está associada a 'Resolver problemas com porcentagens, aumentos e descontos'?", options: ["EF06MA07", "EF09MA05", "EF08MA06", "EF09MA04"], correct: 1, explanation: "EF09MA05: resolver problemas que envolvam porcentagens, com a ideia de aplicação de percentuais sucessivos." },
+    { question: "Na escala de proficiência, o nível N4.2 descreve:", options: ["Reconhecer coordenadas de ponto no plano cartesiano", "Determinar volume de cubo", "Interpretar gráfico de setores", "Calcular probabilidade"], correct: 0, explanation: "N4.2: Reconhecer as coordenadas de um ponto dado em um plano cartesiano." },
+    { question: "Qual descritor Saeb está ligado à resolução de sistemas lineares associando a matriz?", options: ["D9", "D31", "D22", "D17"], correct: 1, explanation: "D31: Determinar a solução de um sistema linear associando-o a uma matriz." },
+    { question: "O eixo Grandezas e Medidas inclui habilidade de:", options: ["Resolver problemas com área de figuras planas", "Interpretar gráficos de setores", "Classificar triângulos", "Identificar progressões"], correct: 0, explanation: "9M2.3: resolver problemas que envolvam área de figuras planas." },
+    { question: "Qual missão trabalha 'Funções afim e plano cartesiano' de forma aprofundada?", options: ["Missão 8", "Missão 10", "Missão 12", "Missão 14"], correct: 2, explanation: "Missão 12: Funções afim e plano cartesiano, associando equações a retas." },
+    { question: "Na articulação Saeb-BNCC, a habilidade 9E2.1 está relacionada a:", options: ["Resolver problemas com tabelas e gráficos", "Calcular juros compostos", "Determinar função exponencial", "Construir sólidos geométricos"], correct: 0, explanation: "9E2.1: resolver problemas com dados estatísticos em tabelas e gráficos." },
+    { question: "Qual a principal função do agrupamento produtivo (ZDP) sugerido no material?", options: ["Avaliação individual", "Colaboração entre níveis distintos (monitor/par/aprendente)", "Realizar simulados", "Lista de exercícios extras"], correct: 1, explanation: "Agrupamentos baseados em Vygotsky: monitor (proficiente) ajuda par e aprendente." },
+    { question: "Qual código da BNCC trabalha 'Gráficos de funções de 2º grau e máximos/mínimos' no 9º ano?", options: ["EF09MA06", "EF09MA07", "EF08MA07", "EF09MA08"], correct: 0, explanation: "EF09MA06: compreender funções e suas representações (incluindo gráficos)." },
+    { question: "O total de aulas sugerido para o desenvolvimento de todas as missões é de:", options: ["48 aulas", "56 aulas", "64 aulas", "72 aulas"], correct: 2, explanation: "16 missões × 4 aulas = 64 aulas (32 semanas)." },
+    { question: "Qual habilidade Saeb está diretamente ligada ao cálculo do perímetro de figuras planas?", options: ["9M2.1", "9M2.2", "9M2.3", "9M2.4"], correct: 1, explanation: "9M2.2: resolver problemas que envolvam perímetro de figuras planas." }
+  ];
+
+  // Telas inicial e final
+  const startSlide = {
+    type: "start",
+    title: "🎓 Bem-vindo ao SP em Ação - Matemática 2 (9º ano)",
+    content: `<div style="text-align: center; margin: 20px 0;">
+      <i class="fas fa-chalkboard-teacher" style="font-size: 48px; color: var(--vm); margin-bottom: 15px; display: inline-block;"></i>
+      <h2 style="color: var(--az);">Apresentação interativa + Quiz</h2>
+      <p style="font-size: 16px;">Explore o conteúdo do Manual do Professor, entenda a estrutura das 16 Missões, os eixos Saeb, a escala de proficiência e muito mais.</p>
+      <div style="background: var(--az-l); border-radius: 20px; padding: 16px; margin: 20px 0;">
+        <p><strong>📚 O que você vai encontrar:</strong></p>
+        <p>✅ 13 slides de fundamentação teórica e prática<br>✅ 17 questões interativas para testar seus conhecimentos<br>
+        <p><strong>🎯 Clique em "Próximo" para iniciar a jornada!</strong></p>
+      </div>
+      <button id="startBtn" class="btn-nav btn-primary" style="margin-top: 10px;">Começar apresentação <i class="fas fa-arrow-right"></i></button>
+    </div>`
+  };
+
+  const endSlide = {
+    type: "end",
+    title: "🏆 Parabéns! Você concluiu a apresentação",
+    content: `<div style="text-align: center;">
+      <i class="fas fa-trophy" style="font-size: 52px; color: var(--gold); margin-bottom: 15px;"></i>
+      <h2 style="color: var(--az);">Quiz finalizado</h2>
+      <div id="finalScoreMessage" style="font-size: 20px; font-weight: 800; margin: 20px 0; background: var(--cl); border-radius: 40px; padding: 12px;"></div>
+      <p>Você revisou os principais conceitos do material SP em Ação - Matemática 2, alinhado à BNCC e à Matriz Saeb para o 9º ano.</p>
+      <p><strong>Continue aplicando essas estratégias em sala de aula e potencialize a aprendizagem dos seus estudantes!</strong></p>
+      <button id="restartBtn" class="restart-btn"><i class="fas fa-redo-alt"></i> Reiniciar apresentação</button>
+    </div>`
+  };
+
+  // Montagem dos slides: start + 13 info + 17 quiz + end
+  const allSlides = [];
+  allSlides.push({ type: "start", data: startSlide });
+  for(let i=0; i<infoSlides.length; i++) allSlides.push({ type: "info", data: infoSlides[i] });
+  for(let i=0; i<quizData.length; i++) allSlides.push({ type: "quiz", data: quizData[i], indexQuiz: i });
+  allSlides.push({ type: "end", data: endSlide });
+
+  let userAnswers = new Array(quizData.length).fill(null);
+  let currentSlide = 0;
+
+  function updateScoreDisplay() {
+    let correctCount = 0;
+    for(let i=0; i<quizData.length; i++) if(userAnswers[i] !== null && userAnswers[i] === quizData[i].correct) correctCount++;
+    document.getElementById("quizScoreDisplay").innerHTML = `<i class="fas fa-star"></i> Quiz: ${correctCount}/${quizData.length}`;
+    return correctCount;
+  }
+
+  function renderSlide() {
+    const container = document.getElementById("slideContainer");
+    if(!container) return;
+    const slideObj = allSlides[currentSlide];
+    let html = `<div class="slide">`;
+    if(slideObj.type === "start") {
+      html += `<h1>${slideObj.data.title}</h1><div>${slideObj.data.content}</div></div>`;
+      container.innerHTML = html;
+      const startBtn = document.getElementById("startBtn");
+      if(startBtn) startBtn.addEventListener("click", () => { if(currentSlide < allSlides.length-1) { currentSlide++; renderSlide(); } });
+    } 
+    else if(slideObj.type === "end") {
+      const correctCount = updateScoreDisplay();
+      html += `<h1>${slideObj.data.title}</h1>`;
+      let finalMsg = slideObj.data.content;
+      finalMsg = finalMsg.replace('<div id="finalScoreMessage" style="font-size: 20px; font-weight: 800; margin: 20px 0; background: var(--cl); border-radius: 40px; padding: 12px;"></div>', 
+        `<div id="finalScoreMessage" style="font-size: 20px; font-weight: 800; margin: 20px 0; background: var(--cl); border-radius: 40px; padding: 12px;">🎯 Você acertou ${correctCount} de ${quizData.length} questões! 🎯</div>`);
+      html += `<div>${finalMsg}</div></div>`;
+      container.innerHTML = html;
+      const restartBtn = document.getElementById("restartBtn");
+      if(restartBtn) restartBtn.addEventListener("click", () => { userAnswers.fill(null); currentSlide = 0; renderSlide(); updateScoreDisplay(); });
+    }
+    else if(slideObj.type === "info") {
+      html += `<h1>${slideObj.data.title}</h1><div>${slideObj.data.content}</div></div>`;
+      container.innerHTML = html;
+    } 
+    else if(slideObj.type === "quiz") {
+      const q = slideObj.data;
+      const qIndex = slideObj.indexQuiz;
+      const selectedOpt = userAnswers[qIndex];
+      html += `<h1><i class="fas fa-question-circle" style="color:var(--vm);"></i> Quiz: Questão ${currentSlide - (1 + infoSlides.length) + 1}/${quizData.length}</h1>`;
+      html += `<div style="background:var(--az-l); border-radius:20px; padding:12px 20px; margin-bottom:18px;"><strong style="font-size:18px;">❓ ${q.question}</strong></div>`;
+      html += `<div class="quiz-options">`;
+      q.options.forEach((opt, idx) => {
+        let isSelected = (selectedOpt === idx);
+        html += `<div class="quiz-option ${isSelected ? 'selected' : ''}" data-qidx="${qIndex}" data-optidx="${idx}">${String.fromCharCode(65+idx)}. ${opt}</div>`;
+      });
+      html += `</div>`;
+      if(selectedOpt !== null) {
+        const isCorrect = (selectedOpt === q.correct);
+        const correctLetter = String.fromCharCode(65+q.correct);
+        html += `<div class="feedback ${isCorrect ? 'correct-fb' : 'wrong-fb'}">
+          <i class="fas ${isCorrect ? 'fa-check-circle' : 'fa-times-circle'}"></i> 
+          ${isCorrect ? '✅ Correta!' : `❌ Incorreta. Resposta correta: ${correctLetter}. ${q.explanation}`}
+          ${isCorrect ? ` ${q.explanation}` : ''}
+        </div>`;
+      } else {
+        html += `<div class="feedback" style="background:#f0f0f0;"><i class="fas fa-lightbulb"></i> Selecione uma alternativa para ver o feedback.</div>`;
+      }
+      html += `</div>`;
+      container.innerHTML = html;
+      document.querySelectorAll('.quiz-option').forEach(el => {
+        el.addEventListener('click', (e) => {
+          const qidx = parseInt(el.dataset.qidx);
+          const optidx = parseInt(el.dataset.optidx);
+          if(!isNaN(qidx) && !isNaN(optidx)) {
+            userAnswers[qidx] = optidx;
+            renderSlide();
+            updateScoreDisplay();
+          }
+        });
+      });
+    }
+    updateDotsAndCounter();
+  }
+
+  function updateDotsAndCounter() {
+    const dotsDiv = document.getElementById("dotsContainer");
+    const counterSpan = document.getElementById("slideCounter");
+    if(dotsDiv) {
+      let dotsHtml = "";
+      for(let i=0; i<allSlides.length; i++) {
+        let activeClass = (i === currentSlide) ? "active" : "";
+        dotsHtml += `<div class="dot ${activeClass}" data-slideidx="${i}"></div>`;
+      }
+      dotsDiv.innerHTML = dotsHtml;
+      document.querySelectorAll('.dot').forEach(dot => {
+        dot.addEventListener('click', (e) => {
+          const idx = parseInt(dot.dataset.slideidx);
+          if(!isNaN(idx) && idx>=0 && idx<allSlides.length) { currentSlide = idx; renderSlide(); }
+        });
+      });
+    }
+    if(counterSpan) {
+      let slideLabel = "";
+      if(currentSlide === 0) slideLabel = "Tela Inicial";
+      else if(currentSlide === allSlides.length-1) slideLabel = "Tela Final";
+      else if(allSlides[currentSlide].type === "quiz") slideLabel = `Quiz (${currentSlide - (1 + infoSlides.length) + 1}/${quizData.length})`;
+      else slideLabel = `📖 Conteúdo ${currentSlide - 1} / ${infoSlides.length}`;
+      counterSpan.innerText = `Slide ${currentSlide+1} de ${allSlides.length}   |   ${slideLabel}`;
+    }
+  }
+
+  function nextSlide() {
+    if(currentSlide < allSlides.length - 1) currentSlide++;
+    else alert("Você concluiu toda a apresentação! Parabéns! 🎉 Use 'Reiniciar' na tela final para refazer.");
+    renderSlide();
+  }
+  function prevSlide() { if(currentSlide > 0) { currentSlide--; renderSlide(); } }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    renderSlide();
+    document.getElementById("nextBtn").addEventListener("click", nextSlide);
+    document.getElementById("prevBtn").addEventListener("click", prevSlide);
+    updateScoreDisplay();
+  });
+</script>
 </body>
 </html>
-
-
